@@ -1,0 +1,12 @@
+syntax on
+set showmode
+set showcmd
+set autoindent
+set tabstop=4
+set expandtab
+set softtabstop=4
+set cursorline
+set ruler
+set showmatch
+set hlsearch
+set paste

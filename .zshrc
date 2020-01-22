@@ -58,7 +58,7 @@ export UPDATE_ZSH_DAYS=30
 # "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
 # or set a custom format using the strftime function format specifications,
 # see 'man strftime' for details.
-# HIST_STAMPS="yyyy-mm-dd"
+HIST_STAMPS="yyyy-mm-dd"
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
@@ -258,8 +258,8 @@ export VISUAL=vim
 export EDITOR=vim
 
 # proxy server
-export http_proxy=http://172.19.64.17:8080
-export https_proxy=http://172.19.64.17:8080
+# export http_proxy=http://172.19.64.17:8080
+# export https_proxy=http://172.19.64.17:8080
 
 # EPICS
 uname=`uname`
@@ -300,11 +300,11 @@ alias   du='du -h --max-depth=1'
 # setenv PATH /usr/new/pkg/git/current/bin:$PATH
 
 # set ssh Server
-# alias   vera      'ssh -X sdcswd@vera'
-# alias   ganeza    'ssh -X sdcswd@ganeza'
-# alias   ganapati  'ssh -X sdcswd@ganapati'
-# alias   wang      'ssh -X sdcswd@wang'
-# alias   abcob06   'ssh -X sdcswd@abcob06'
+# alias   vera='ssh -X sdcswd@vera'
+# alias   ganeza='ssh -X sdcswd@ganeza'
+# alias   ganapati='ssh -X sdcswd@ganapati'
+# alias   wang='ssh -X sdcswd@wang'
+# alias   abcob06='ssh -X sdcswd@abcob06'
 
 # for pyenv
 # Install

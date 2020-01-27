@@ -8,7 +8,7 @@ export ZSH=$HOME/.oh-my-zsh
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="ys"
+# ZSH_THEME="ys"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -111,7 +111,7 @@ source "$ANTIGEN"
 antigen use oh-my-zsh
 
 # Load the theme.
-# antigen theme robbyrussell
+antigen theme ys
 # antigen theme https://github.com/denysdovhan/spaceship-prompt spaceship
 
 # Bundles from the default repo (robbyrussell's oh-my-zsh).
@@ -203,7 +203,7 @@ bindkey '^[[1~' beginning-of-line
 bindkey '^[[H' beginning-of-line
 # End
 bindkey '^[[4~' end-of-line
-bindkey '^[[F' beginning-of-line
+bindkey '^[[F' end-of-line
 # shift + left, right, up, down
 bindkey '^[[1;5D' backward-word
 bindkey '^[[1;5C' forward-word
@@ -258,8 +258,11 @@ export VISUAL=vim
 export EDITOR=vim
 
 # proxy server
-# export http_proxy=http://172.19.64.17:8080
-# export https_proxy=http://172.19.64.17:8080
+PROXY_SERVER=172.19.64.17:8080
+# export http_proxy=http://${PROXY_SERVER}
+# export https_proxy=https://${PROXY_SERVER}
+alias setproxy="export http_proxy=http://${PROXY_SERVER}; export https_proxy=https://${PROXY_SERVER}"
+alias unsetproxy="unset http_proxy=http://${PROXY_SERVER}; unset https_proxy=https://${PROXY_SERVER}"
 
 # EPICS
 uname=`uname`
@@ -296,6 +299,9 @@ alias   ..2='cd ../..'
 alias   ..3='cd ../../..'
 alias   lsg='ls -lhFa | grep'
 alias   du='du -h --max-depth=1'
+alias   df='df -h'
+alias   lw='ll `which \!*`'
+
 # set git in linac server
 # setenv PATH /usr/new/pkg/git/current/bin:$PATH
 

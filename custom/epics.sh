@@ -22,7 +22,7 @@ if [ -e '/cont/VxWorks/vw68' ];then
         export  WIND_HOME='/cont/VxWorks/vw68'
 fi
 
-export  EPICS_BASE="${Home}/epics/R3.14.12.8/base"
+export  EPICS_BASE="~/epics/R3.14.12.8/base"
 export  EPICS_HOST_ARCH=${HOST_ARCH}
 export  EPICS_EXTENSIONS="$EPICS_BASE/../extensions"
 export  EPICS_CA_MAX_ARRAY_BYTES=10000000
@@ -34,5 +34,5 @@ export  PATH=${EPICS_EXTENSIONS}/bin/${EPICS_HOST_ARCH}:$PATH
 alias cdb="cd ${EPICS_BASE}"
 alias cde="cd ${EPICS_EXTENSIONS}/bin/${EPICS_HOST_ARCH}"
 alias cdi="cd ${EPICS_BASE}/../ioc"
-alias cdd="cd ${HOME}/epics/download"
-alias cdp="cd ${HOME}/workspace/python"
+alias cdd="cd ~/epics/download"
+alias cdp="cd ~/workspace/python"

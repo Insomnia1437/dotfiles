@@ -57,7 +57,7 @@ set PROXY_SERVER=172.19.64.17:8080
 alias setproxy    'setenv http_proxy    http://${PROXY_SERVER}; setenv https_proxy    https://${PROXY_SERVER}'
 alias noproxy    'unset http_proxy; unset https_proxy'
 
-setenv  EPICS_BASE "${Home}/epics/R3.14.12.8/base"
+setenv  EPICS_BASE "~/epics/R3.14.12.8/base"
 setenv  EPICS_HOST_ARCH ${HOST_ARCH}
 setenv  EPICS_EXTENSIONS "$EPICS_BASE/../extensions"
 setenv  EPICS_CA_MAX_ARRAY_BYTES 10000000
@@ -69,6 +69,6 @@ setenv  PATH ${EPICS_EXTENSIONS}/bin/${EPICS_HOST_ARCH}:$PATH
 alias cdb "cd ${EPICS_BASE}"
 alias cde "cd ${EPICS_EXTENSIONS}/bin/${EPICS_HOST_ARCH}"
 alias cdi "cd ${EPICS_BASE}/../ioc"
-alias cdd "cd ${HOME}/epics/download"
-alias cdp "cd ${HOME}/workspace/python"
+alias cdd "cd ~/epics/download"
+alias cdp "cd ~/workspace/python"
 

@@ -2,7 +2,7 @@
 # setenv PATH /usr/new/pkg/git/current/bin:$PATH
 
 export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
+# export LC_ALL=en_US.UTF-8
 export TERM="xterm-256color"
 
 # set ssh Server

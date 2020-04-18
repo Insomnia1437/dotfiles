@@ -1,0 +1,58 @@
+#############################################################################
+##
+## .tcshrc.local
+##
+## Author: Simos Xenitellis (simos.lists@googlemail.com)
+##
+## This is the .tcshrc.local file, part of the TCSHRC project
+## at http://tcshrc.sourceforge.net
+##
+## Here you add your aliases, sets, completions and bindkeys that you want
+## to override from the default settings.
+
+alias   la      'ls -lAh'
+alias   ll      'ls -lh'
+alias   rm      'rm -i'
+alias   cp      'cp -i'
+alias   mv      'mv -i'
+alias   vi      'vim'
+alias   lw      'll `which \!*`'
+alias   cd..    'cd ..'
+alias   cd~     'cd ~'
+alias   ..      'cd ..'
+alias   ..2     'cd ../..'
+alias   ..3     'cd ../../..'
+alias   lsg     'ls -lhFa | grep'
+alias   duh     'du -h --max-depth    1'
+alias   dfh     'df -h'
+alias   free    'free -h'
+alias   psg     'ps axuww | grep \!* | grep -v grep'
+alias   psgl    'ps axlww | grep \!* | grep -v grep'
+alias   ff      'find . -type f -name'
+alias   fd      'find . -type d -name'
+
+# set git in linac server
+# setenv PATH /usr/new/pkg/git/current/bin:$PATH
+
+setenv LANG    en_US.UTF-8
+setenv LC_ALL    en_US.UTF-8
+setenv TERM    "xterm-256color"
+
+# set ssh Server
+# alias   vera    'ssh -X sdcswd@vera'
+# alias   ganeza    'ssh -X sdcswd@ganeza'
+# alias   ganapati    'ssh -X sdcswd@ganapati'
+# alias   wang    'ssh -X sdcswd@wang'
+# alias   abcob06    'ssh -X sdcswd@abcob06'
+# alias   abco7    'ssh sdcswd@abco7'
+
+# for elasticsearch
+# setenv ES_HEAP_SIZE    6g
+
+# proxy server
+set PROXY_SERVER=172.19.64.17:8080
+# setenv http_proxy    http://${PROXY_SERVER}
+# setenv https_proxy    https://${PROXY_SERVER}
+
+alias setproxy    'setenv http_proxy    http://${PROXY_SERVER}; setenv https_proxy    https://${PROXY_SERVER}'
+alias noproxy    'unset http_proxy; unset https_proxy'

@@ -1,0 +1,9 @@
+[user]
+        name = sdcswd
+        email = sdcswd@gmail.com
+[core]
+        autocrlf = false
+[http]
+        # proxy = http://172.19.64.17:8080
+[https]
+        # proxy = https://172.19.64.17:8080

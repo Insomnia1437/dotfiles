@@ -6,7 +6,7 @@ export LANG=en_US.UTF-8
 export TERM="xterm-256color"
 
 # https://superuser.com/questions/1195962/cannot-make-directory-var-run-screen-permission-denied
-if [[ ! -e /var/run/screen && ! -e /run/screen ]];then
+if [[ ! -e /var/run/screen && ! -e /run/screen && ! -f ~/.screen ]];then
     mkdir ~/.screen
     chmod 700 ~/.screen
     export SCREENDIR=~/.screen

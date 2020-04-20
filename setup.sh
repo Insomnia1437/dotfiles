@@ -64,13 +64,13 @@ create_symlinks() {
     fi
     if [ -e $dotfile_dst ]; then
         if [ -h $dotfile_dst ]; then
-            /bin/ln -sf $PWD/$dotfile_src $dotfile_dst
+            /bin/ln -sfT $PWD/$dotfile_src $dotfile_dst
             echo "Update existed symlink $dotfile_dst"
         else
             echo "[WARN] Ignore due to $dotfile_dst exists and is not a symlink"
         fi
     else
-        /bin/ln -sf $PWD/$dotfile_src $dotfile_dst
+        /bin/ln -sfT $PWD/$dotfile_src $dotfile_dst
         echo "Create symlink $dotfile_dst"
     fi
 }

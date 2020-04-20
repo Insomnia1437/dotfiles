@@ -17,6 +17,7 @@ alias   cp      'cp -i'
 alias   mv      'mv -i'
 alias   vi      'vim'
 alias   lw      'll `which \!*`'
+alias   lsd     'ls -dl'
 alias   cd..    'cd ..'
 alias   cd~     'cd ~'
 alias   ..      'cd ..'
@@ -25,7 +26,7 @@ alias   ..3     'cd ../../..'
 alias   lsg     'ls -lhFa | grep'
 alias   duh     'du -h --max-depth    1'
 alias   dfh     'df -h'
-alias   free    'free -h'
+alias   freeh    'free -h'
 alias   psg     'ps axuww | grep \!* | grep -v grep'
 alias   psgl    'ps axlww | grep \!* | grep -v grep'
 alias   ff      'find . -type f -name'
@@ -57,14 +58,38 @@ set PROXY_SERVER=172.19.64.17:8080
 alias setproxy    'setenv http_proxy    http://${PROXY_SERVER}; setenv https_proxy    https://${PROXY_SERVER}'
 alias noproxy    'unset http_proxy; unset https_proxy'
 
+set uname=`uname`
+set arch=`uname -m`
+switch ( $uname )
+case "Linux":
+        set  HOST_ARCH = "linux-( $arch )"
+        breaksw
+case "Darwin":
+        set HOST_ARCH = "darwin-x86"
+        breaksw
+default:
+        echo "Unknown OS Type"
+        breaksw
+endsw
+
+# add Raspberry PI 4B (armv7l)
+switch ( $arch )
+case "armv7l":
+    set HOST_ARCH = "linux-arm"
+    breaksw
+default:
+    echo "Unknown arch"
+    breaksw
+endsw
+
 setenv  EPICS_BASE "~/epics/R3.14.12.8/base"
-setenv  EPICS_HOST_ARCH ${HOST_ARCH}
+setenv  EPICS_HOST_ARCH "${HOST_ARCH}"
 setenv  EPICS_EXTENSIONS "$EPICS_BASE/../extensions"
 setenv  EPICS_CA_MAX_ARRAY_BYTES 10000000
 # setenv EPICS_CA_AUTO_ADDR_LIST NO
 # setenv EPICS_CA_ADDR_LIST '172.19.64.78'
-setenv  PATH $EPICS_BASE/bin/$EPICS_HOST_ARCH:$PATH
-setenv  PATH ${EPICS_EXTENSIONS}/bin/${EPICS_HOST_ARCH}:$PATH
+setenv  PATH "$EPICS_BASE/bin/$EPICS_HOST_ARCH\:$PATH"
+setenv  PATH "${EPICS_EXTENSIONS}/bin/${EPICS_HOST_ARCH}\:$PATH"
 
 alias cdb "cd ${EPICS_BASE}"
 alias cde "cd ${EPICS_EXTENSIONS}/bin/${EPICS_HOST_ARCH}"

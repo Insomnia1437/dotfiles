@@ -5,6 +5,12 @@ export LANG=en_US.UTF-8
 # export LC_ALL=en_US.UTF-8
 export TERM="xterm-256color"
 
+if [ ! -e "~/.screen" ];then
+    mkdir ~/.screen
+    chmod 700 ~/.screen
+fi
+export SCREENDIR=~/.screen
+
 # set ssh Server
 # alias   vera='ssh -X sdcswd@vera'
 # alias   ganeza='ssh -X sdcswd@ganeza'

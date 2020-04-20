@@ -25,7 +25,7 @@ make backup
 make install
 ```
 
-## sh快捷键
+## shell
 
 ```
 ⌃ + u：清空当前行
@@ -42,7 +42,15 @@ make install
 ⌃ + t：交换光标和之前的字符
 ```
 
-## screen 快捷键
+## vim
+
+default <leader> key is '\'
+```
+<leader> p: toggle paste
+<leader> l: toggle list
+```
+
+## screen
 
 ```
 C-a ? -> 显示所有键绑定信息
@@ -65,7 +73,7 @@ C-a t -> Time，显示当前时间，和系统的 load
 C-a k -> kill window，强行关闭当前的 window
 ```
 
-## tmux 快捷键
+## tmux
 
 **默认prefix command key是ctrl b，改成ctrl a，和`screen`一致**
 

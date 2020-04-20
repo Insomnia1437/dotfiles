@@ -214,9 +214,9 @@ config_pyenv() {
 
 
 check_installed
-[ -v IS_BASH ] && [ "$IS_BASH" -eq 1 ] && config_bash
-[ -v IS_TCSH ] && [ "$IS_TCSH" -eq 1 ] && config_tcsh
-[ -v IS_ZSH ] && [ "$IS_ZSH" -eq 1 ] && config_zsh
+[ "$IS_BASH" -eq 1 ] && config_bash
+[ "$IS_TCSH" -eq 1 ] && config_tcsh
+[ "$IS_ZSH" -eq 1 ] && config_zsh
 [ $IS_GIT -eq 1 ] && config_git
 [ $IS_VIM -eq 1 ] && [ $IS_GIT -eq 1 ] && config_vim
 [ $IS_GIT -eq 1 ] && config_pyenv

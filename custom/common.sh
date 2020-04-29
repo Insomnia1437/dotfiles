@@ -5,6 +5,9 @@ export LANG=en_US.UTF-8
 # export LC_ALL=en_US.UTF-8
 export TERM="xterm-256color"
 
+export VISUAL=vim
+export EDITOR=vim
+
 # https://superuser.com/questions/1195962/cannot-make-directory-var-run-screen-permission-denied
 if [[ ! -e /var/run/screen && ! -e /run/screen && ! -f ~/.screen ]];then
     mkdir ~/.screen

@@ -62,7 +62,7 @@ set uname=`uname`
 set arch=`uname -m`
 switch ( $uname )
 case "Linux":
-        set  HOST_ARCH = "linux-( $arch )"
+        set  HOST_ARCH = "linux-$arch"
         breaksw
 case "Darwin":
         set HOST_ARCH = "darwin-x86"
@@ -83,17 +83,19 @@ default:
 endsw
 
 setenv  EPICS_BASE "~/epics/R3.14.12.8/base"
-setenv  EPICS_HOST_ARCH "${HOST_ARCH}"
+setenv  EPICS_HOST_ARCH "$HOST_ARCH"
 setenv  EPICS_EXTENSIONS "$EPICS_BASE/../extensions"
 setenv  EPICS_CA_MAX_ARRAY_BYTES 10000000
 # setenv EPICS_CA_AUTO_ADDR_LIST NO
 # setenv EPICS_CA_ADDR_LIST '172.19.64.78'
-setenv  PATH "$EPICS_BASE/bin/$EPICS_HOST_ARCH\:$PATH"
-setenv  PATH "${EPICS_EXTENSIONS}/bin/${EPICS_HOST_ARCH}\:$PATH"
+setenv  PATH "$EPICS_BASE/bin/$EPICS_HOST_ARCH:$PATH"
+setenv  PATH "$EPICS_EXTENSIONS/bin/$EPICS_HOST_ARCH:$PATH"
 
-alias cdb "cd ${EPICS_BASE}"
-alias cde "cd ${EPICS_EXTENSIONS}/bin/${EPICS_HOST_ARCH}"
-alias cdi "cd ${EPICS_BASE}/../ioc"
+setenv  LD_LIBRARY_PATH "$EPICS_BASE/lib/$EPICS_HOST_ARCH:$LD_LIBRARY_PATH"
+
+alias cdb "cd $EPICS_BASE"
+alias cde "cd $EPICS_EXTENSIONS/bin/$EPICS_HOST_ARCH"
+alias cdi "cd $EPICS_BASE/../ioc"
 alias cdd "cd ~/epics/download"
 alias cdp "cd ~/workspace/python"
 

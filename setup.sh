@@ -108,7 +108,7 @@ _install_vundle(){
 }
 
 config_vim() {
-    _install_vundle
+    # _install_vundle
     create_symlinks "vim/vimrc" ".vimrc"
 }
 
@@ -145,6 +145,27 @@ _install_oh_my_zsh() {
         echo "Change directory to `pwd`"
         echo "${OH_MY_ZSH} exists. Git pull to update..."
         git pull
+
+        if [ -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"  ]; then
+            echo "zsh-autosuggestions exists, update..."
+            cd "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+            git pull
+        else
+            git clone https://github.com/zsh-users/zsh-autosuggestions ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+        
+        if [ -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"  ]; then
+            echo "zsh-autosuggestions exists, update..."
+            cd "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+            git pull
+        else
+            git clone https://github.com/zsh-users/zsh-autosuggestions ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+
+        if [ -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-completions"  ]; then
+            echo "zsh-completions exists, update..."
+            cd "${HOME}/.oh-my-zsh/custom/plugins/zsh-completions"
+            git pull
+        else
+            git clone https://github.com/zsh-users/zsh-syntax-highlighting ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
         cd - > /dev/null 2>&1
         echo "Change directory back to `pwd`"
     else

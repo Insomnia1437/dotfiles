@@ -60,7 +60,7 @@ alias noproxy    'unset http_proxy; unset https_proxy'
 
 set uname=`uname`
 set arch=`uname -m`
-switch ( $uname )
+switch ($uname)
 case "Linux":
         set  HOST_ARCH = "linux-$arch"
         breaksw
@@ -73,7 +73,7 @@ default:
 endsw
 
 # add Raspberry PI 4B (armv7l)
-switch ( $arch )
+switch ($arch)
 case "armv7l":
     set HOST_ARCH = "linux-arm"
     breaksw

@@ -44,10 +44,12 @@ make install
 
 ## vim
 
-default <leader> key is '\'
+default <leader> key is `\`, change to `,`
 ```
-<leader> p: toggle paste
-<leader> l: toggle list
+<F2> :set nu! nu?<CR>
+<F3> :set list! list?<CR>
+<F4> :set wrap! wrap?<CR>
+set pastetoggle=<F5>
 ```
 
 ## screen

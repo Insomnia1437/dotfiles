@@ -1,5 +1,5 @@
 #!/bin/bash
-
+PROJ_PATH=`pwd`
 OH_MY_ZSH=$HOME"/.oh-my-zsh"
 VUNDLE=$HOME"/.vim/bundle/Vundle.vim"
 PYENV_ROOT=$HOME"/.pyenv"
@@ -98,7 +98,7 @@ _install_vundle(){
         echo "Change directory to `pwd`"
         echo "${VUNDLE} exists. Git pull to update..."
         git pull
-        cd - > /dev/null 2>&1
+        cd ${PROJ_PATH} > /dev/null 2>&1
         echo "Change directory back to `pwd`"
     else
         echo "${VUNDLE} not exists. Git clone to create..."
@@ -150,23 +150,30 @@ _install_oh_my_zsh() {
             echo "zsh-autosuggestions exists, update..."
             cd "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
             git pull
+            cd ${PROJ_PATH} > /dev/null 2>&1
         else
             git clone https://github.com/zsh-users/zsh-autosuggestions ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-        
-        if [ -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"  ]; then
-            echo "zsh-autosuggestions exists, update..."
-            cd "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
-            git pull
-        else
-            git clone https://github.com/zsh-users/zsh-autosuggestions ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+        fi
 
         if [ -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-completions"  ]; then
             echo "zsh-completions exists, update..."
             cd "${HOME}/.oh-my-zsh/custom/plugins/zsh-completions"
             git pull
+            cd ${PROJ_PATH} > /dev/null 2>&1
+        else
+            git clone https://github.com/zsh-users/zsh-completions ${HOME}/.oh-my-zsh/custom/plugins/zsh-completions
+        fi
+
+        if [ -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"  ]; then
+            echo "zsh-completions exists, update..."
+            cd "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+            git pull
+            cd ${PROJ_PATH} > /dev/null 2>&1
         else
             git clone https://github.com/zsh-users/zsh-syntax-highlighting ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-        cd - > /dev/null 2>&1
+        fi
+
+        cd ${PROJ_PATH} > /dev/null 2>&1
         echo "Change directory back to `pwd`"
     else
         echo "${OH_MY_ZSH} not exists. Install..."
@@ -218,7 +225,7 @@ _install_pyenv() {
         echo "Change directory to `pwd`"
         echo "${PYENV_ROOT} exists. Git pull to update..."
         git pull
-        cd - > /dev/null 2>&1
+        cd ${PROJ_PATH} > /dev/null 2>&1
         echo "Change directory back to `pwd`"
     else
         echo "${PYENV_ROOT} not exists. Install..."

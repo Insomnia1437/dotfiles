@@ -8,8 +8,11 @@ export TERM="xterm-256color"
 export VISUAL=vim
 export EDITOR=vim
 
+# add node and npm to path
+export PATH=/usr/new/pkg/node/current_x64/bin/:$PATH
+
 # https://superuser.com/questions/1195962/cannot-make-directory-var-run-screen-permission-denied
-if [[ ! -e /var/run/screen && ! -e /run/screen && ! -f ~/.screen ]];then
+if [[ ! -e /var/run/screen && ! -e /run/screen && ! -d ~/.screen ]];then
     mkdir ~/.screen
     chmod 700 ~/.screen
     export SCREENDIR=~/.screen

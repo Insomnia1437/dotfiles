@@ -118,7 +118,10 @@ set mouse=a
 " ============================ theme and status line ============================
 
 " theme
-set termguicolors
+if has("termguicolors")
+    " enable true color
+    set termguicolors
+endif
 set background=dark
 colorscheme desert
 

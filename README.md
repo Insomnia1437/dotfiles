@@ -44,6 +44,8 @@ make install
 
 ## vim
 
+对于vim `paste` 产生缩进，可以用系统reg进行粘贴，命令模式输入：`"+p`
+
 default <leader> key is `\`, change to `,`
 ```
 <F2> :set nu! nu?<CR>

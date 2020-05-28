@@ -38,17 +38,17 @@ switch ( $OSTYPE )
 	# PAGE DOWN : search in history forwards for line beginning as current.
 	bindkey    ^[[6~   history-search-forward
 
-	# ESC-left-arrow : go to beginning of left word.        
+	# Ctrl-left-arrow : go to beginning of left word.        
 	# The second version is used to fix a strange bug where the binding
 	# stops working after some usage. Did not manage to recreate.
-	bindkey    ^[^[[D vi-word-back
-	bindkey	   OD vi-word-back
+	bindkey    ^[[1;5D vi-word-back          # not freebsd specific
+	#bindkey	   OD vi-word-back
 
-	# ESC-right-arrow : go to beginning of right word.
+	# Ctrl-right-arrow : go to beginning of right word.
 	# The second version is used to fix a strange bug where the binding
 	# stops working after some usage. Did not manage to recreate.
-	bindkey    ^[^[[C vi-word-fwd
-	bindkey	   OC vi-word-fwd
+	bindkey     ^[[1;5C vi-word-fwd		# also not freebsd specific
+	#bindkey	   OC vi-word-fwd
 
 	# F1 : help on command currently typed(if 'ls passwd', help on 'ls').
 	# first: while in console mode, second: while in X
@@ -149,17 +149,17 @@ switch ( $OSTYPE )
 	bindkey ^[[G history-search-forward 
 	bindkey ^[[6~ history-search-forward 	# for x
 
-	# ESC-left-arrow : go to beginning of left word.        
+	# Ctrl-left-arrow : go to beginning of left word.        
 	# The second version is used to fix a strange bug where the binding
 	# stops working after some usage. Did not manage to recreate.
-	bindkey ^[^[[D vi-word-back          # not freebsd specific
-	bindkey	   OD vi-word-back
+	bindkey    ^[[1;5D vi-word-back          # not freebsd specific
+	#bindkey	   OD vi-word-back
 
-	# ESC-right-arrow : go to beginning of right word.
+	# Ctrl-right-arrow : go to beginning of right word.
 	# The second version is used to fix a strange bug where the binding
 	# stops working after some usage. Did not manage to recreate.
-	bindkey ^[^[[C vi-word-fwd		# also not freebsd specific
-	bindkey	   OC vi-word-fwd
+	bindkey     ^[[1;5C vi-word-fwd		# also not freebsd specific
+	#bindkey	   OC vi-word-fwd
 
 	# F1 : help on command currently typed(if 'ls passwd', help on 'ls').
 	# first: while in console mode, second: while in X
@@ -261,17 +261,17 @@ switch ( $OSTYPE )
 	bindkey ^[[G history-search-forward 
 	bindkey ^[[6~ history-search-forward 	# for x
 
-	# ESC-left-arrow : go to beginning of left word.        
+	# Ctrl-left-arrow : go to beginning of left word.        
 	# The second version is used to fix a strange bug where the binding
 	# stops working after some usage. Did not manage to recreate.
-	bindkey ^[^[[D vi-word-back          # not freebsd specific
-	bindkey	   OD vi-word-back
+	bindkey    ^[[1;5D vi-word-back          # not freebsd specific
+	#bindkey	   OD vi-word-back
 
-	# ESC-right-arrow : go to beginning of right word.
+	# Ctrl-right-arrow : go to beginning of right word.
 	# The second version is used to fix a strange bug where the binding
 	# stops working after some usage. Did not manage to recreate.
-	bindkey ^[^[[C vi-word-fwd		# also not freebsd specific
-	bindkey	   OC vi-word-fwd
+	bindkey     ^[[1;5C vi-word-fwd		# also not freebsd specific
+	#bindkey	   OC vi-word-fwd
 
 	# F1 : help on command currently typed(if 'ls passwd', help on 'ls').
 	# first: while in console mode, second: while in X
@@ -374,17 +374,17 @@ switch ( $OSTYPE )
 	bindkey ^[[G history-search-forward 
 	bindkey ^[[6~ history-search-forward 	# for x
 
-	# ESC-left-arrow : go to beginning of left word.        
+	# Ctrl-left-arrow : go to beginning of left word.        
 	# The second version is used to fix a strange bug where the binding
 	# stops working after some usage. Did not manage to recreate.
-	bindkey ^[^[[D vi-word-back          # not freebsd specific
-	bindkey	   OD vi-word-back
+	bindkey    ^[[1;5D vi-word-back          # not freebsd specific
+	#bindkey	   OD vi-word-back
 
-	# ESC-right-arrow : go to beginning of right word.
+	# Ctrl-right-arrow : go to beginning of right word.
 	# The second version is used to fix a strange bug where the binding
 	# stops working after some usage. Did not manage to recreate.
-	bindkey ^[^[[C vi-word-fwd		# also not freebsd specific
-	bindkey	   OC vi-word-fwd
+	bindkey     ^[[1;5C vi-word-fwd		# also not freebsd specific
+	#bindkey	   OC vi-word-fwd
 
 	# F1 : help on command currently typed(if 'ls passwd', help on 'ls').
 	# first: while in console mode, second: while in X

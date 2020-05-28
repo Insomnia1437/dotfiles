@@ -64,13 +64,13 @@ create_symlinks() {
     fi
     if [ -e $dotfile_dst ]; then
         if [ -h $dotfile_dst ]; then
-            /bin/ln -sfT $PWD/$dotfile_src $dotfile_dst
+            /bin/ln -nsf ${PROJ_PATH}/$dotfile_src $dotfile_dst
             echo "Update existed symlink $dotfile_dst"
         else
             echo "[WARN] Ignore due to $dotfile_dst exists and is not a symlink"
         fi
     else
-        /bin/ln -sfT $PWD/$dotfile_src $dotfile_dst
+        /bin/ln -nsf ${PROJ_PATH}/$dotfile_src $dotfile_dst
         echo "Create symlink $dotfile_dst"
     fi
 }
@@ -165,12 +165,21 @@ _install_oh_my_zsh() {
         fi
 
         if [ -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"  ]; then
-            echo "zsh-completions exists, update..."
+            echo "zsh-syntax-highlighting exists, update..."
             cd "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
             git pull
             cd ${PROJ_PATH} > /dev/null 2>&1
         else
             git clone https://github.com/zsh-users/zsh-syntax-highlighting ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+        fi
+
+        if [ -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-history-substring-search"  ]; then
+            echo "zsh-history-substring-search exists, update..."
+            cd "${HOME}/.oh-my-zsh/custom/plugins/zsh-history-substring-search"
+            git pull
+            cd ${PROJ_PATH} > /dev/null 2>&1
+        else
+            git clone https://github.com/zsh-users/zsh-syntax-highlighting ${HOME}/.oh-my-zsh/custom/plugins/zsh-history-substring-search
         fi
 
         cd ${PROJ_PATH} > /dev/null 2>&1
@@ -186,6 +195,8 @@ _install_oh_my_zsh() {
         git clone https://github.com/zsh-users/zsh-completions ${HOME}/.oh-my-zsh/custom/plugins/zsh-completions
         # install syntax-highlighting
         git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+        # install zsh-history-substring-search
+        git clone https://github.com/zsh-users/zsh-history-substring-search ${HOME}/.oh-my-zsh/custom/plugins/zsh-history-substring-search
         echo "Install oh-my-zsh success..."
     fi
 }

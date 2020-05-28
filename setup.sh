@@ -3,6 +3,7 @@ PROJ_PATH=`pwd`
 OH_MY_ZSH=$HOME"/.oh-my-zsh"
 VUNDLE=$HOME"/.vim/bundle/Vundle.vim"
 PYENV_ROOT=$HOME"/.pyenv"
+TPM=$HOME"/.tmux/plugins/tpm"
 
 IS_VIM=0
 IS_GIT=0
@@ -209,9 +210,26 @@ config_zsh() {
 
 
 #
+# Tmux Plugin Manager TPM
+#
+_install_tpm(){
+    if [ -d "${TPM}" ]; then
+        cd "${TPM}"
+        echo "Change directory to `pwd`"
+        echo "${TPM} exists. Git pull to update..."
+        git pull
+        cd ${PROJ_PATH} > /dev/null 2>&1
+        echo "Change directory back to `pwd`"
+    else
+        echo "${TPM} not exists. Git clone to create..."
+        git clone https://github.com/tmux-plugins/tpm.git  ${TPM}
+    fi
+}
+#
 # TMUX
 #
 config_tmux(){
+    _install_tpm
     create_symlinks "tmux/tmux.conf" ".tmux.conf"
     # create_symlinks "tmux/tmux.sh" ".tmux.sh"
 }

@@ -81,6 +81,8 @@ C-a k -> kill window，强行关闭当前的 window
 
 **默认prefix command key是ctrl b，改成ctrl a，和`screen`一致**
 
+使用插件：Press prefix + I (capital i, as in Install) to fetch the plugin.
+
 ```
 prefix $: rename session
 prefix [: enter copy mode, use `q` to quit

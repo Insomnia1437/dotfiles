@@ -85,8 +85,8 @@ setenv  EPICS_EXTENSIONS "~/epics/R3.14.12.8/extensions"
 setenv  EPICS_CA_MAX_ARRAY_BYTES 10000000
 # setenv EPICS_CA_AUTO_ADDR_LIST NO
 # setenv EPICS_CA_ADDR_LIST '172.19.64.78'
-setenv  PATH "$EPICS_BASE/bin/$EPICS_HOST_ARCH\:$PATH"
-setenv  PATH "$EPICS_EXTENSIONS/bin/$EPICS_HOST_ARCH\:$PATH"
+# setenv  PATH "$EPICS_BASE/bin/$EPICS_HOST_ARCH\:$PATH"
+# setenv  PATH "$EPICS_EXTENSIONS/bin/$EPICS_HOST_ARCH\:$PATH"
 
 if ( $?LD_LIBRARY_PATH ) then
 	setenv  LD_LIBRARY_PATH "$EPICS_BASE/lib/$EPICS_HOST_ARCH\:$LD_LIBRARY_PATH"
@@ -101,6 +101,7 @@ setenv  PATH "/usr/new/pkg/node/current_x64/bin/\:$PATH"
 alias cdb "cd $EPICS_BASE"
 alias cde "cd $EPICS_EXTENSIONS"
 alias cdi "cd $EPICS_BASE/../ioc"
+alias cdm "cd $EPICS_BASE/../modules"
 alias cdd "cd ~/epics/download"
 alias cdp "cd ~/workspace/python"
 

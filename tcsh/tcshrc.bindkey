@@ -20,6 +20,8 @@
 
 switch ( $OSTYPE )
       case "linux*":         # Linux
+	bindkey "^W" backward-delete-word
+
 	# INSERT : toggles overwrite or insert mode.
 	bindkey    ^[[2~  overwrite-mode 
 
@@ -38,16 +40,16 @@ switch ( $OSTYPE )
 	# PAGE DOWN : search in history forwards for line beginning as current.
 	bindkey    ^[[6~   history-search-forward
 
-	# Ctrl-left-arrow : go to beginning of left word.        
+	# Ctrl-left-arrow : go to beginning of left word.
 	# The second version is used to fix a strange bug where the binding
 	# stops working after some usage. Did not manage to recreate.
-	bindkey    ^[[1;5D vi-word-back          # not freebsd specific
+	bindkey    "^[[1;5D" vi-word-back          # not freebsd specific
 	#bindkey	   OD vi-word-back
 
 	# Ctrl-right-arrow : go to beginning of right word.
 	# The second version is used to fix a strange bug where the binding
 	# stops working after some usage. Did not manage to recreate.
-	bindkey     ^[[1;5C vi-word-fwd		# also not freebsd specific
+	bindkey     "^[[1;5C" vi-word-fwd		# also not freebsd specific
 	#bindkey	   OC vi-word-fwd
 
 	# F1 : help on command currently typed(if 'ls passwd', help on 'ls').
@@ -152,13 +154,13 @@ switch ( $OSTYPE )
 	# Ctrl-left-arrow : go to beginning of left word.        
 	# The second version is used to fix a strange bug where the binding
 	# stops working after some usage. Did not manage to recreate.
-	bindkey    ^[[1;5D vi-word-back          # not freebsd specific
+	bindkey    "^[[1;5D" vi-word-back          # not freebsd specific
 	#bindkey	   OD vi-word-back
 
 	# Ctrl-right-arrow : go to beginning of right word.
 	# The second version is used to fix a strange bug where the binding
 	# stops working after some usage. Did not manage to recreate.
-	bindkey     ^[[1;5C vi-word-fwd		# also not freebsd specific
+	bindkey     "^[[1;5C" vi-word-fwd		# also not freebsd specific
 	#bindkey	   OC vi-word-fwd
 
 	# F1 : help on command currently typed(if 'ls passwd', help on 'ls').
@@ -237,6 +239,8 @@ switch ( $OSTYPE )
 	# default behaviour
 	breaksw;
       case "darwin*":        # OS/X, by Phil Hudson <Philip.Hudson@Sun.COM>
+
+	bindkey "^W" backward-delete-word
 	# INSERT : toggles overwrite or insert mode.
 	bindkey ^[[L overwrite-mode 
 	bindkey    ^[[2~  overwrite-mode	# for x
@@ -264,13 +268,13 @@ switch ( $OSTYPE )
 	# Ctrl-left-arrow : go to beginning of left word.        
 	# The second version is used to fix a strange bug where the binding
 	# stops working after some usage. Did not manage to recreate.
-	bindkey    ^[[1;5D vi-word-back          # not freebsd specific
+	bindkey    "^[[1;5D" vi-word-back          # not freebsd specific
 	#bindkey	   OD vi-word-back
 
 	# Ctrl-right-arrow : go to beginning of right word.
 	# The second version is used to fix a strange bug where the binding
 	# stops working after some usage. Did not manage to recreate.
-	bindkey     ^[[1;5C vi-word-fwd		# also not freebsd specific
+	bindkey     "^[[1;5C" vi-word-fwd		# also not freebsd specific
 	#bindkey	   OC vi-word-fwd
 
 	# F1 : help on command currently typed(if 'ls passwd', help on 'ls').
@@ -377,13 +381,13 @@ switch ( $OSTYPE )
 	# Ctrl-left-arrow : go to beginning of left word.        
 	# The second version is used to fix a strange bug where the binding
 	# stops working after some usage. Did not manage to recreate.
-	bindkey    ^[[1;5D vi-word-back          # not freebsd specific
+	bindkey    "^[[1;5D" vi-word-back          # not freebsd specific
 	#bindkey	   OD vi-word-back
 
 	# Ctrl-right-arrow : go to beginning of right word.
 	# The second version is used to fix a strange bug where the binding
 	# stops working after some usage. Did not manage to recreate.
-	bindkey     ^[[1;5C vi-word-fwd		# also not freebsd specific
+	bindkey     "^[[1;5C" vi-word-fwd		# also not freebsd specific
 	#bindkey	   OC vi-word-fwd
 
 	# F1 : help on command currently typed(if 'ls passwd', help on 'ls').

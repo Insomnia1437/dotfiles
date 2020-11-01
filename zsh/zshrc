@@ -2,12 +2,11 @@
 
 HIST_STAMPS="yyyy-mm-dd"
 DISABLE_AUTO_UPDATE="true"
-DISABLE_UPDATE_PROMPT="true"
 ZSH_THEME="ys"
 
 
 # Note that zsh-syntax-highlighting must be the last plugin sourced.
-plugins=(git tmux history systemd z sudo zsh-autosuggestions zsh-completions
+plugins=(git history systemd z sudo zsh-autosuggestions zsh-completions
         extract safe-paste colored-man-pages history-substring-search
         zsh-syntax-highlighting
         )

@@ -22,11 +22,11 @@ if [ -e '/cont/VxWorks/vw68' ];then
         export  WIND_HOME='/cont/VxWorks/vw68'
 fi
 
-export  EPICS_BASE="~/epics/R3.14.12.8/base"
+export  EPICS_BASE="~/epics/R3.15.5/base"
 export  EPICS_HOST_ARCH=${HOST_ARCH}
-export  EPICS_EXTENSIONS="~/epics/R3.14.12.8/extensions"
+export  EPICS_EXTENSIONS="~/epics/R3.15.5/extensions"
 export  EPICS_CA_MAX_ARRAY_BYTES=10000000
-# export EPICS_CA_AUTO_ADDR_LIST NO
+# export EPICS_CA_AUTO_ADDR_LIST=NO
 # export EPICS_CA_ADDR_LIST='172.19.64.78'
 # export  PATH=$EPICS_BASE/bin/$EPICS_HOST_ARCH:$PATH
 # export  PATH=${EPICS_EXTENSIONS}/bin/${EPICS_HOST_ARCH}:$PATH

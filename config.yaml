@@ -1,0 +1,93 @@
+config:
+  backup: true
+  create: true
+  banner: false
+  link_dotfile_default: nolink
+  link_on_import: nolink
+  dotpath: dotfiles
+variables:
+  linac_proxy: 172.19.64.17:8080
+actions:
+  pre:
+    install_bash_it: test -e ~/.bash_it || (git clone --depth=1 https://github.com/Bash-it/bash-it.git
+      ~/.bash_it)
+  post:
+    install_oh_my_zsh: test -e ~/.oh-my-zsh || (git clone https://github.com/robbyrussell/oh-my-zsh.git
+      ~/.config/oh-my-zsh)
+    install_zsh_autosuggestions: test -e ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+      || (git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions)
+    install_zsh_completions: test -e ~/.oh-my-zsh/custom/plugins/zsh-completions ||
+      (git clone https://github.com/zsh-users/zsh-completions ~/.oh-my-zsh/custom/plugins/zsh-completions)
+    install_zsh_syntax_highlighting: test -e ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+      || (git clone https://github.com/zsh-users/zsh-syntax-highlighting ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting)
+    install_zsh_history_substring_search: test -e ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search
+      || (git clone https://github.com/zsh-users/zsh-history-substring-search ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search)
+    install_pyenv: test -e ~/.pyenv || (git clone https://github.com/pyenv/pyenv.git
+      ~/.pyenv)
+    install_pyenv_virtualenv: test -e ~/.pyenv/plugins/pyenv-virtualenv || (git clone
+      https://github.com/pyenv/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv)
+dotfiles:
+  d_common:
+    src: common
+    dst: ~/.config/common
+    chmod: '744'
+    ignore_missing_in_dotdrop: true
+  f_gitconfig:
+    src: git/gitconfig
+    dst: ~/.gitconfig
+    chmod: '644'
+  f_vimrc:
+    src: vim/vimrc
+    dst: ~/.vimrc
+    chmod: '644'
+  f_tmuxconf:
+    src: tmux/tmux.conf
+    dst: ~/.tmux.conf
+    chmod: '644'
+  f_screenrc:
+    src: screen/screenrc
+    dst: ~/.screenrc
+    chmod: '644'
+  f_zshrc:
+    src: zsh/zshrc
+    dst: ~/.zshrc
+    chmod: '644'
+    actions:
+    - install_oh_my_zsh
+    - install_zsh_autosuggestions
+    - install_zsh_completions
+    - install_zsh_syntax_highlighting
+    - install_zsh_history_substring_search
+  f_bashrc:
+    src: bash/bashrc
+    dst: ~/.bashrc
+    chmod: '644'
+    actions:
+    - install_bash_it
+  f_tcshrc:
+    src: tcsh/tcshrc
+    dst: ~/.tcshrc
+    chmod: '644'
+  f_tcshrc_epics:
+    src: tcsh/tcshrc.epics
+    dst: ~/.tcshrc.epics
+    chmod: '644'
+profiles:
+  server-linac:
+    dotfiles:
+    - ALL
+    actions:
+    - install_pyenv
+    - install_pyenv_virtualenv
+  normal:
+    dotfiles:
+    - ALL
+  raspi:
+    dotfiles:
+    - f_zshrc
+    - f_vimrc
+    - f_tmuxconf
+    - d_common
+  laptop-macos:
+    dotfiles:
+    - ALL

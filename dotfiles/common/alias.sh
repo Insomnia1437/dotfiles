@@ -1,0 +1,31 @@
+alias   rm="rm -i"
+alias   cp="cp -i"
+alias   mv="mv -i"
+alias   grep="grep --color"
+alias   vi="vim"
+alias   l="ls -AlhF --color=auto"
+alias   lsd="ls -dlh --color=auto"
+alias   type="type -a"
+alias   cd..="cd .."
+alias   cd~="cd ~"
+alias   ..="cd .."
+alias   ...="cd ../.."
+alias   ..2="cd ../.."
+alias   ..3="cd ../../.."
+alias   lsg="ls -lhFa | grep"
+alias   duh="du -h --max-depth=1"
+alias   dfh="df -h"
+alias   freeh="free -h"
+alias   psg="ps axuww | grep -v grep | grep"
+alias   psgl="ps axlww | grep -v grep | grep"
+alias   ff="find . -type f -name"
+alias   fd="find . -type d -name"
+alias   cdp="cd ${HOME}/workspace/python"
+alias   cdd="cd ${HOME}/downloads"
+
+alias   dotdrop="${HOME}/.config/dotfiles/dotdrop.sh"
+
+{%@@ if profile == "server-linac" @@%}
+# for sad
+alias   sad="/usr/new/pkg/SAD/bin/gs"
+{%@@ endif @@%}

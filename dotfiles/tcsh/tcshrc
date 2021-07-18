@@ -1,0 +1,140 @@
+# Everything else is interactive
+if ($?prompt == 0) then	
+	exit(0)
+endif
+
+{%@@ if profile == "server-linac" @@%}
+source /usr/users/skelton/cmd/cshrc
+# proxy server
+set PROXY_SERVER={{@@ linac_proxy @@}}
+
+if ($?HTTP_PROXY == 0) then
+    setenv HTTP_PROXY    http://${PROXY_SERVER}
+    setenv HTTPs_PROXY    https://${PROXY_SERVER}
+endif
+
+alias setproxy    'setenv http_proxy    http://${PROXY_SERVER}; setenv https_proxy    https://${PROXY_SERVER}'
+alias noproxy    'unset http_proxy; unset https_proxy'
+# for git
+setenv PATH "/usr/new/pkg/git/current/bin:${PATH}"
+# add node and npm to path
+setenv PATH "/usr/new/pkg/node/11.7.0_c6_x64/bin/:${PATH}"
+# for tmux
+setenv PATH "/usr/new/pkg/tmux/3.1b_x64/bin/:${PATH}"
+# tmux requires libevent 2.x
+if ( $?LD_LIBRARY_PATH != 0 ) then
+    setenv LD_LIBRARY_PATH "/usr/new/pkg/libevent/2.1.12_x64/lib/:${LD_LIBRARY_PATH}"
+else
+    setenv LD_LIBRARY_PATH "/usr/new/pkg/libevent/2.1.12_x64/lib/"
+endif
+
+# for vxworks
+setenv  WIND_HOME '/cont/VxWorks/vw68'
+# for sad
+alias   sad     "/usr/new/pkg/SAD/bin/gs"
+
+{%@@ endif @@%}
+
+# do not exit when pressing ctrl-D
+# set ignoreeof
+# set nobeep
+# set ellipsis
+# set rmstar
+# set echo_style=both
+# set backslash_quote
+# set parseoctal
+# unset noclobber
+# set history=10000
+set inputmode=insert
+set time=(8 "\
+Time spent in user mode   (CPU seconds) : %Us\
+Time spent in kernel mode (CPU seconds) : %Ss\
+Total time                              : %Es\
+CPU utilisation (percentage)            : %P\
+Times the process was swapped           : %W\
+Times of major page faults              : %F\
+Times of minor page faults              : %R")
+
+set prompt='%B%n%b@%U%m%u %S%/%s [%P]\
+%# '
+# copy form https://learnxinyminutes.com/docs/tcsh/
+# set prompt = "%{\033[32m%}%n@%m%b %C4 %B%{\033[35m%}%t\
+# %# "
+set prompt2="%R?"
+set prompt3="CORRECT> %B%R%b (y|n|e)?"
+
+setenv LANG     en_US.UTF-8
+setenv LC_ALL   en_US.UTF-8
+setenv TERM     "xterm-256color"
+# setenv LESS     "-i -M -q -s -x4"
+set vimcmd = `where vim`
+if ($vimcmd != "") alias   vi      "vim"
+# alias   vi      "vim"
+alias   rm      "rm -i"
+alias   cp      "cp -i"
+alias   mv      "mv -i"
+alias   grep    "grep --color"
+alias   l       "ls -AlhF --color=auto"
+alias   lsd     "ls -dlh --color=auto"
+alias   cd..    "cd .."
+alias   cd~     "cd ~"
+alias   ..      "cd .."
+alias   lsg     "ls -lhFa | grep"
+alias   duh     "du -h --max-depth=1"
+alias   dfh     "df -h"
+alias   freeh   "free -h"
+alias   psg     'ps axuww | grep \!* | grep -v grep'
+alias   psgl    'ps axlww | grep \!* | grep -v grep'
+alias   ff      "find . -type f -name"
+alias   fd      "find . -type d -name"
+alias   cdp     "cd ${HOME}/workspace/python"
+alias   cdd     "cd ${HOME}/downloads"
+alias   dotdrop "${HOME}/.config/dotfiles/dotdrop.sh"
+alias   bye     "exit"
+alias epics314 "source ~/.tcshrc.epics R3.14.12.8"
+alias epics315 "source ~/.tcshrc.epics R3.15.5"
+
+source "${HOME}/.tcshrc.epics"
+
+# bindkey 
+# Select emacs bindings
+# bindkey -e 
+# Select vi bindings
+# http://www.kitebird.com/csh-tcsh-book/bindings.pdf
+# bindkey -v 
+
+# bindkey -s '^Xp'        '. `echo $path`^X*)^A^Dset path = ( '
+switch ( $OSTYPE )
+    case "linux":
+        # follow the convention of zsh, change vi-mode keybingding, 
+        # since default keybinding ESC (^[) conflicts with CTRL-LEFT (^[[1;5D)
+        # bindkey "^X^V"      vi-cmd-mode
+        # bindkey "^W"        backward-delete-word
+        bindkey "^[[1;5D"  backward-word
+        bindkey "^[[1;5C"  forward-word
+        bindkey "^[[5~"    end-of-line
+        bindkey "^[[6~"    beginning-of-line
+        bindkey "^[L"      downcase-word
+        bindkey "^[U"      upcase-word
+        bindkey "^[l"      downcase-word
+        bindkey "^[u"      upcase-word
+    breaksw;
+    case "FreeBSD*":
+    case "freebsd*":
+    case "darwin*":
+        bindkey "^W"        backward-delete-word
+        bindkey "^[[H"      beginning-of-line
+        bindkey "^[[F"      end-of-line
+        bindkey "^[[1;5C"   vi-word-fwd
+        bindkey "^[[1;5D"   vi-word-back
+#     breaksw;
+#     default:
+
+#     breaksw;
+endsw
+# this file is not managed by dotdrop and git
+if ( -e "~/.tcshrc.local" )  then
+    source "~/.tcshrc.local"
+else
+    exit 1
+endif

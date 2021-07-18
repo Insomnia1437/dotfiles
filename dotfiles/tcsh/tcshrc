@@ -29,7 +29,8 @@ else
 endif
 
 # for vxworks
-setenv  WIND_HOME '/cont/VxWorks/vw68'
+eval `/cont/VxWorks/vw68/wrenv.sh -p vxworks-6.8 -o print_env -f csh`
+setenv PATH "/usr/bin/:${PATH}"
 # for sad
 alias   sad     "/usr/new/pkg/SAD/bin/gs"
 
@@ -66,11 +67,15 @@ set prompt3="CORRECT> %B%R%b (y|n|e)?"
 setenv LANG     en_US.UTF-8
 setenv LC_ALL   en_US.UTF-8
 setenv TERM     "xterm-256color"
-# setenv LESS     "-i -M -q -s -x4"
+setenv LESS     "-iMq"
 
 # some old server does not have vim
-set vimcmd = `where vim`
-if ($vimcmd != "") alias   vi      "vim"
+if ( -e `where vim` ) then
+    alias   vi      "vim"
+endif
+if ( -e `where less` ) then
+    alias more 'less'
+endif
 # alias   vi      "vim"
 alias   rm      "rm -i"
 alias   cp      "cp -i"
@@ -94,7 +99,9 @@ alias   cdd     "cd ${HOME}/downloads"
 alias   dotdrop "${HOME}/.config/dotfiles/dotdrop.sh"
 alias   bye     "exit"
 alias   q     "exit"
-alias epics314 "source ~/.tcshrc.epics R3.14.12.8"
+
+alias epics314121 "source ~/.tcshrc.epics R3.14.12.1"
+alias epics314128 "source ~/.tcshrc.epics R3.14.12.8"
 alias epics315 "source ~/.tcshrc.epics R3.15.5"
 
 source "${HOME}/.tcshrc.epics"
@@ -112,7 +119,7 @@ switch ( $OSTYPE )
         # follow the convention of zsh, change vi-mode keybingding, 
         # since default keybinding ESC (^[) conflicts with CTRL-LEFT (^[[1;5D)
         # bindkey "^X^V"      vi-cmd-mode
-        # bindkey "^W"        backward-delete-word
+        bindkey "^W"       backward-delete-word
         bindkey "^[[1;5D"  backward-word
         bindkey "^[[1;5C"  forward-word
         bindkey "^[[5~"    end-of-line
@@ -130,9 +137,8 @@ switch ( $OSTYPE )
         bindkey "^[[F"      end-of-line
         bindkey "^[[1;5C"   vi-word-fwd
         bindkey "^[[1;5D"   vi-word-back
-#     breaksw;
+    breaksw;
 #     default:
-
 #     breaksw;
 endsw
 # this file is not managed by dotdrop and git

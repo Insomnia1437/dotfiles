@@ -2,7 +2,11 @@
 
 ### Installation
 
-```
+```shell
+# https://stackoverflow.com/questions/3796927/how-to-git-clone-including-submodules
+# for version 2.13 of git and later
+git clone --recurse-submodules https://github.com/Insomnia1437/dotfiles.git ~/.config/dotfiles
+# otherwise
 git clone --recursive https://github.com/Insomnia1437/dotfiles.git ~/.config/dotfiles
 cd ~/.config/dotfiles
 pip3 install -r requirements.txt
@@ -49,23 +53,5 @@ check it using
 |beginning-of-line       |CTRL-A  |
 |clear-screen            |CTRL-L  |
 |complete-word           |TAB  |
-|down-history            |CTRL-NDOWN-ARROW  |
 |end-of-line             |CTRL-E  |
-|expand-line             |CTRL-X  |
 |kill-line               |CTRL-K  |
-|list-glob               |CTRL-G  |
-|list-or-eof             |CTRL-D  |
-|newline                 |LINEFEED,RETURN  |
-|quoted-insert           |CTRL-V  |
-|redisplay               |CTRL-R  |
-|run-help                |META-?  |
-|transpose-chars         |CTRL-T  |
-|tty-dsusp               |CTRL-Y  |
-|tty-flush-output        |CTRL-O  |
-|tty-sigintr             |CTRL-C  |
-|tty-sigquit             |CTRL-\  |
-|tty-sigtsusp            |CTRL-Z  |
-|tty-start-output        |CTRL-Q  |
-|tty-stop-output         |CTRL-S  |
-|up-history              |CTRL-P,UP-ARROW  |
-|vi-cmd-mode             |ESC  |

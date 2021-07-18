@@ -5,7 +5,7 @@ DISABLE_AUTO_UPDATE="true"
 ZSH_THEME="ys"
 
 # Note that zsh-syntax-highlighting must be the last plugin sourced.
-plugins=(git history systemd z sudo zsh-autosuggestions zsh-completions
+plugins=(git history z sudo zsh-autosuggestions zsh-completions
         extract safe-paste colored-man-pages history-substring-search
         zsh-syntax-highlighting
         )

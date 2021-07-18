@@ -1,7 +1,7 @@
 export LANG="en_US.UTF-8"
 export LANGUAGE="en_US.UTF-8"
 export TERM="xterm-256color"
-# export LESS="-i -M -q -s -x4"
+export LESS="-iMq"
 # if command -v nvim &> /dev/null; then
 #   alias vi='nvim'
 # else
@@ -45,7 +45,8 @@ export  EPICS_HOST_ARCH="darwin-x86"
 export  EPICS_HOST_ARCH="linux-x86_64"
 {%@@ endif @@%}
 
-alias epics314="source ~/.config/common/epics.sh R3.14.12.8"
+alias epics314128="source ~/.config/common/epics.sh R3.14.12.8"
+alias epics314121="source ~/.config/common/epics.sh R3.14.12.1"
 alias epics315="source ~/.config/common/epics.sh R3.15.5"
 
 # alias epics7="source ~/.config/common/epics.sh R7.0.3"

@@ -67,6 +67,8 @@ setenv LANG     en_US.UTF-8
 setenv LC_ALL   en_US.UTF-8
 setenv TERM     "xterm-256color"
 # setenv LESS     "-i -M -q -s -x4"
+
+# some old server does not have vim
 set vimcmd = `where vim`
 if ($vimcmd != "") alias   vi      "vim"
 # alias   vi      "vim"
@@ -91,6 +93,7 @@ alias   cdp     "cd ${HOME}/workspace/python"
 alias   cdd     "cd ${HOME}/downloads"
 alias   dotdrop "${HOME}/.config/dotfiles/dotdrop.sh"
 alias   bye     "exit"
+alias   q     "exit"
 alias epics314 "source ~/.tcshrc.epics R3.14.12.8"
 alias epics315 "source ~/.tcshrc.epics R3.15.5"
 

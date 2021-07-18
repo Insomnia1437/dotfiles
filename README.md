@@ -3,7 +3,7 @@
 ### Installation
 
 ```
-git clone --recursive https://github.com/Insomnia1437/dotfiles.git ~/.config
+git clone --recursive https://github.com/Insomnia1437/dotfiles.git ~/.config/dotfiles
 cd ~/.config/dotfiles
 pip3 install -r requirements.txt
 ```

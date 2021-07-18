@@ -22,7 +22,7 @@ alias   ff="find . -type f -name"
 alias   fd="find . -type d -name"
 alias   cdp="cd ${HOME}/workspace/python"
 alias   cdd="cd ${HOME}/downloads"
-
+alias   q="exit"
 alias   dotdrop="${HOME}/.config/dotfiles/dotdrop.sh"
 
 {%@@ if profile == "server-linac" @@%}

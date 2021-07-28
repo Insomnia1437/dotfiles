@@ -9,19 +9,14 @@ variables:
   linac_proxy: 172.19.64.17:8080
 actions:
   pre:
-    install_bash_it: test -e ~/.bash_it || (git clone --depth=1 https://github.com/Bash-it/bash-it.git
-      ~/.bash_it)
+    install_bash_it: test -e ~/.bash_it || (git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it)
+    install_oh_my_zsh: test -e ~/.oh-my-zsh || (git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh)
   post:
-    install_oh_my_zsh: test -e ~/.oh-my-zsh || (git clone https://github.com/robbyrussell/oh-my-zsh.git
-      ~/.config/oh-my-zsh)
-    install_zsh_autosuggestions: test -e ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-      || (git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions)
+    install_zsh_autosuggestions: test -e ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions || (git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions)
     install_zsh_completions: test -e ~/.oh-my-zsh/custom/plugins/zsh-completions ||
       (git clone https://github.com/zsh-users/zsh-completions ~/.oh-my-zsh/custom/plugins/zsh-completions)
-    install_zsh_syntax_highlighting: test -e ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-      || (git clone https://github.com/zsh-users/zsh-syntax-highlighting ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting)
-    install_zsh_history_substring_search: test -e ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search
-      || (git clone https://github.com/zsh-users/zsh-history-substring-search ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search)
+    install_zsh_syntax_highlighting: test -e ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting || (git clone https://github.com/zsh-users/zsh-syntax-highlighting ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting)
+    install_zsh_history_substring_search: test -e ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search || (git clone https://github.com/zsh-users/zsh-history-substring-search ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search)
     install_pyenv: test -e ~/.pyenv || (git clone https://github.com/pyenv/pyenv.git
       ~/.pyenv)
     install_pyenv_virtualenv: test -e ~/.pyenv/plugins/pyenv-virtualenv || (git clone
@@ -58,6 +53,9 @@ dotfiles:
     - install_zsh_completions
     - install_zsh_syntax_highlighting
     - install_zsh_history_substring_search
+  f_zshtheme:
+    src: zsh/sdcswd.zsh-theme
+    dst: ~/.oh-my-zsh/custom/theme/sdcswd.zsh-theme
   f_bashrc:
     src: bash/bashrc
     dst: ~/.bashrc
@@ -81,13 +79,25 @@ profiles:
     - install_pyenv_virtualenv
   normal:
     dotfiles:
-    - ALL
+    - f_zshrc
+    - f_bashrc
+    - f_vimrc
+    - f_tmuxconf
+    - d_common
   raspi:
     dotfiles:
     - f_zshrc
+    - f_bashrc
     - f_vimrc
     - f_tmuxconf
     - d_common
   laptop-macos:
     dotfiles:
-    - ALL
+    - f_zshrc
+    - f_vimrc
+    - f_gitconfig
+    - f_tmuxconf
+    - d_common
+    actions:
+    - install_pyenv
+    - install_pyenv_virtualenv

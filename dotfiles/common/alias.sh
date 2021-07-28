@@ -24,7 +24,7 @@ alias   cdp="cd ${HOME}/workspace/python"
 alias   cdd="cd ${HOME}/downloads"
 alias   q="exit"
 alias   dotdrop="${HOME}/.config/dotfiles/dotdrop.sh"
-
+alias   grepconf='grep "^[^#]"'
 {%@@ if profile == "server-linac" @@%}
 # for sad
 alias   sad="/usr/new/pkg/SAD/bin/gs"

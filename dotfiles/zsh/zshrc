@@ -2,8 +2,8 @@ export ZSH=$HOME/.oh-my-zsh
 
 HIST_STAMPS="yyyy-mm-dd"
 DISABLE_AUTO_UPDATE="true"
-ZSH_THEME="ys"
-
+ZSH_THEME="example"
+ZSH_THEME_TERM_TITLE_IDLE=""
 # Note that zsh-syntax-highlighting must be the last plugin sourced.
 plugins=(git history z sudo zsh-autosuggestions zsh-completions
         extract safe-paste colored-man-pages history-substring-search
@@ -46,7 +46,17 @@ ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]=fg=009
 ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]=fg=009
 ZSH_HIGHLIGHT_STYLES[assign]=none
 
+# https://unix.stackexchange.com/questions/250690/how-to-configure-ctrlw-as-delete-word-in-zsh
+# autoload -U select-word-style
+# select-word-style bash
 
+# export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
+my-backward-delete-word() {
+    local WORDCHARS=${WORDCHARS/\//}
+    zle backward-delete-word
+}
+zle -N my-backward-delete-word
+bindkey '^W' my-backward-delete-word
 # How to know your keymap:
 # Run cat -v in your favorite terminal emulator to observe key codes.
 # (NOTE: In some cases, cat -v shows the wrong key codes.

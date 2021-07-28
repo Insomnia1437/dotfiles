@@ -4,6 +4,20 @@ if [ -z "$_INIT_SH_LOADED" ]; then
 else
     return
 fi
+# if not running interactively
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# both for bash and zsh
+source ~/.config/common/alias.sh
+source ~/.config/common/export.sh
+source ~/.config/common/proxy.sh
+source ~/.config/common/epics.sh
+# pyenv should be the last
+source ~/.config/common/pyenv.sh
+
 
 # remove duplicated path
 if [ -n "$PATH" ]; then
@@ -19,12 +33,6 @@ if [ -n "$PATH" ]; then
     PATH=${PATH#:}
     unset old_PATH x
 fi
-# both for bash and zsh
-source ~/.config/common/alias.sh
-source ~/.config/common/export.sh
-source ~/.config/common/proxy.sh
-source ~/.config/common/pyenv.sh
-source ~/.config/common/epics.sh
 
 # for some temperary config like 
 # export EPICS_CA_AUTO_ADDR_LIST=NO

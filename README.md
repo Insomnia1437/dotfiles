@@ -9,7 +9,7 @@ git clone --recurse-submodules https://github.com/Insomnia1437/dotfiles.git ~/.c
 # otherwise
 git clone --recursive https://github.com/Insomnia1437/dotfiles.git ~/.config/dotfiles
 cd ~/.config/dotfiles
-pip3 install -r requirements.txt
+pip3 install -r requirements.txt --user
 ```
 
 ### Update dotdrop submodule

@@ -55,7 +55,7 @@ dotfiles:
     - install_zsh_history_substring_search
   f_zshtheme:
     src: zsh/sdcswd.zsh-theme
-    dst: ~/.oh-my-zsh/custom/theme/sdcswd.zsh-theme
+    dst: ~/.oh-my-zsh/custom/themes/sdcswd.zsh-theme
   f_bashrc:
     src: bash/bashrc
     dst: ~/.bashrc
@@ -80,6 +80,7 @@ profiles:
   normal:
     dotfiles:
     - f_zshrc
+    - f_zshtheme
     - f_bashrc
     - f_vimrc
     - f_tmuxconf
@@ -87,6 +88,7 @@ profiles:
   raspi:
     dotfiles:
     - f_zshrc
+    - f_zshtheme
     - f_bashrc
     - f_vimrc
     - f_tmuxconf
@@ -94,6 +96,7 @@ profiles:
   laptop-macos:
     dotfiles:
     - f_zshrc
+    - f_zshtheme
     - f_vimrc
     - f_gitconfig
     - f_tmuxconf

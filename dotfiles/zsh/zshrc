@@ -2,7 +2,7 @@ export ZSH=$HOME/.oh-my-zsh
 
 HIST_STAMPS="yyyy-mm-dd"
 DISABLE_AUTO_UPDATE="true"
-ZSH_THEME="example"
+ZSH_THEME="sdcswd"
 ZSH_THEME_TERM_TITLE_IDLE=""
 # Note that zsh-syntax-highlighting must be the last plugin sourced.
 plugins=(git history z sudo zsh-autosuggestions zsh-completions

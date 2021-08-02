@@ -72,4 +72,7 @@ bindkey '^[L' down-case-word
 bindkey '^[l' down-case-word
 bindkey '^[U' up-case-word
 bindkey '^[u' up-case-word
+
+compinit -d ~/.config/.zcompdump-sdcswd
+
 source ~/.config/common/init.sh

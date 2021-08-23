@@ -145,34 +145,6 @@ autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab
 autocmd FileType vim setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab
 autocmd BufRead,BufNew *.md,*.mkd,*.markdown  set filetype=markdown.mkd
 
-autocmd BufNewFile *.sh,*.py exec ":call AutoSetFileHead()"
-function! AutoSetFileHead()
-    " .sh
-    if &filetype == 'sh'
-        call setline(1, "\#!/bin/bash")
-        call append(1,  "# sdcswd @ " . strftime('%Y-%m-%d', localtime()))
-    endif
-
-    " python
-    if &filetype == 'python'
-        call setline(1, "\#!/usr/bin/env python")
-        call append(1, "\# encoding: utf-8")
-        call append(2,  "# sdcswd @ " . strftime('%Y-%m-%d', localtime()))
-    endif
-
-    normal G
-    normal o
-    normal o
-endfunc
-
-autocmd FileType c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
-fun! <SID>StripTrailingWhitespaces()
-    let l = line(".")
-    let c = col(".")
-    %s/\s\+$//e
-    call cursor(l, c)
-endfun
-
 " ============================ key map ============================
 
 " nnoremap k gk
@@ -236,7 +208,7 @@ map Y y$
 
 "Map ; to : and save a million keystrokes
 " ex mode commands made easy
-nnoremap ; :
+" nnoremap ; :
 
 " Shift+H goto head of the line, Shift+L goto end of the line
 nnoremap H ^

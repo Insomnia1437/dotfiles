@@ -71,7 +71,7 @@ set    cyan="%{\033[1;36m%}"
 set   white="%{\033[0;37m%}"
 set     end="%{\033[0m%}" # This is needed at the end... :(
 
-set prompt="${blue}%n ${magenta}@ ${green}%B%m%b ${white}in ${yellow}%/ ${white}[%T]\
+set prompt="${blue}%n ${magenta}@ ${green}%B%m%b ${white}in  ${yellow}%~ ${white}[%T]\
 ${yellow}%#${end} "
 # copy form https://learnxinyminutes.com/docs/tcsh/
 # will cause some problem on FreeBSD    2021 Jul by D.W 
@@ -104,7 +104,7 @@ alias   cd~     "cd ~"
 alias   ..      "cd .."
 alias   lsg     "ls -lhFa | grep"
 alias   duh     "du -h --max-depth=1"
-alias   dfh     "df -h"
+alias   dfh     "df -Th"
 alias   freeh   "free -h"
 alias   psg     'ps axuww | grep \!* | grep -v grep'
 alias   psgl    'ps axlww | grep \!* | grep -v grep'

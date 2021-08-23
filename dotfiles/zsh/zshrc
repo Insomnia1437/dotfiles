@@ -57,6 +57,8 @@ my-backward-delete-word() {
 }
 zle -N my-backward-delete-word
 bindkey '^W' my-backward-delete-word
+bindkey '^[[H' beginning-of-line
+bindkey '^[[F' end-of-line
 # How to know your keymap:
 # Run cat -v in your favorite terminal emulator to observe key codes.
 # (NOTE: In some cases, cat -v shows the wrong key codes.

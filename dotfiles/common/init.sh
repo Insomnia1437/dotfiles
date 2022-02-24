@@ -16,8 +16,9 @@ source ~/.config/common/export.sh
 source ~/.config/common/proxy.sh
 source ~/.config/common/epics.sh
 # pyenv should be the last
+{%@@ if profile == "server-linac" or profile == "laptop-macos" @@%}
 source ~/.config/common/pyenv.sh
-
+{%@@ endif @@%}
 
 # remove duplicated path
 if [ -n "$PATH" ]; then

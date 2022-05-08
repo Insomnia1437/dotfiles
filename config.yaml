@@ -43,6 +43,10 @@ dotfiles:
     src: screen/screenrc
     dst: ~/.screenrc
     chmod: '644'
+  f_alacritty:
+    src: config/alacritty/alacritty.yml
+    dst: ~/.config/alacritty/alacritty.yml
+    chmod: '644'
   f_zshrc:
     src: zsh/zshrc
     dst: ~/.zshrc
@@ -100,6 +104,7 @@ profiles:
     - f_vimrc
     - f_gitconfig
     - f_tmuxconf
+    - f_alacritty
     - d_common
     actions:
     - install_pyenv

@@ -40,6 +40,6 @@ fi
 # export EPICS_CA_ADDR_LIST='172.19.64.78'
 
 # this file is not managed by dotdrop and git
-if [ -f "~/.config/common/local.sh" ]; then
-    source "~/.config/common/local.sh"
+if [ -f ~/.config/common/local.sh ]; then
+    source ~/.config/common/local.sh
 fi

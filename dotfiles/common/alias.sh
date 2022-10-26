@@ -26,8 +26,9 @@ alias   psg="ps axuww | grep -v grep | grep"
 alias   psgl="ps axlww | grep -v grep | grep"
 alias   ff="find . -type f -name"
 alias   fd="find . -type d -name"
-alias   cdp="cd ${HOME}/workspace/python"
-alias   cdd="cd ${HOME}/downloads"
+alias   cdw="cd ${HOME}/workspace"
+# follow the XDG standards, https://wiki.archlinux.org/title/XDG_user_directories
+alias   cdd="cd ${HOME}/Downloads"
 alias   q="exit"
 alias   dotdrop="${HOME}/.config/dotfiles/dotdrop.sh"
 alias   grepconf='grep "^[^#]"'

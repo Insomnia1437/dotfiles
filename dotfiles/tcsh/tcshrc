@@ -110,8 +110,9 @@ alias   psg     'ps axuww | grep \!* | grep -v grep'
 alias   psgl    'ps axlww | grep \!* | grep -v grep'
 alias   ff      "find . -type f -name"
 alias   fd      "find . -type d -name"
-alias   cdp     "cd ${HOME}/workspace/python"
-alias   cdd     "cd ${HOME}/downloads"
+alias   cdw     "cd ${HOME}/workspace"
+# follow the XDG standards, https://wiki.archlinux.org/title/XDG_user_directories
+alias   cdd     "cd ${HOME}/Downloads"
 alias   dotdrop "${HOME}/.config/dotfiles/dotdrop.sh"
 alias   bye     "exit"
 alias   q       "exit"

@@ -1,3 +1,13 @@
+# first load local configuration (init.sh calls local.sh), then zsh;
+# because I may want to use tcsh/bash on some servers.
+# example of local.sh
+# case "$(hostname)" in
+#    aaa|bbb|)
+#        /usr/bin/tcsh    ;;
+#esac
+
+source ~/.config/common/init.sh
+
 export ZSH=$HOME/.oh-my-zsh
 
 HIST_STAMPS="yyyy-mm-dd"
@@ -77,4 +87,3 @@ bindkey '^[u' up-case-word
 
 compinit -d ~/.config/.zcompdump-sdcswd
 
-source ~/.config/common/init.sh

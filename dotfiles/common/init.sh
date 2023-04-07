@@ -7,7 +7,7 @@ fi
 # if not running interactively
 case $- in
     *i*) ;;
-      *) return;;
+    *) return;;
 esac
 
 # both for bash and zsh

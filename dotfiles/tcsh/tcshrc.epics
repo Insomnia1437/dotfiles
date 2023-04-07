@@ -1,25 +1,25 @@
 setenv EPICS_HOST_ARCH "linux-x86_64"
 if ($?EPICS_VERSION != 0) then
-        # to match the colon. Should colon be escaped?
-        set old_path1="${HOME}/epics/${EPICS_VERSION}/base/bin/${EPICS_HOST_ARCH}\(:\)\{0,1\}"
-        set old_path2="${HOME}/epics/${EPICS_VERSION}/extensions/bin/${EPICS_HOST_ARCH}\(:\)\{0,1\}"
-        set old_path3="${HOME}/epics/${EPICS_VERSION}/base/lib/${EPICS_HOST_ARCH}\(:\)\{0,1\}"
-        # remove old path for epics base and extesion
-        # use "#" for sed to avoid escape of "/"
-        setenv  PATH `echo ${PATH} | sed "s#${old_path1}##g"`
-        setenv  PATH `echo ${PATH} | sed "s#${old_path2}##g"`
-        setenv  LD_LIBRARY_PATH `echo ${LD_LIBRARY_PATH} | sed "s#${old_path3}##g"`
-        # keep the environment clean
-        unset EPICS_VERSION old_path1 old_path2 old_path3
+    # to match the colon. Should colon be escaped?
+    set old_path1="${HOME}/epics/${EPICS_VERSION}/base/bin/${EPICS_HOST_ARCH}\(:\)\{0,1\}"
+    set old_path2="${HOME}/epics/${EPICS_VERSION}/extensions/bin/${EPICS_HOST_ARCH}\(:\)\{0,1\}"
+    set old_path3="${HOME}/epics/${EPICS_VERSION}/base/lib/${EPICS_HOST_ARCH}\(:\)\{0,1\}"
+    # remove old path for epics base and extesion
+    # use "#" for sed to avoid escape of "/"
+    setenv  PATH `echo ${PATH} | sed "s#${old_path1}##g"`
+    setenv  PATH `echo ${PATH} | sed "s#${old_path2}##g"`
+    setenv  LD_LIBRARY_PATH `echo ${LD_LIBRARY_PATH} | sed "s#${old_path3}##g"`
+    # keep the environment clean
+    unset EPICS_VERSION old_path1 old_path2 old_path3
 endif
 
 # https://learnxinyminutes.com/docs/tcsh/
 
 if ( $1 =~ "R3*" || $1 =~ "R7*" ) then
-        set EPICS_VERSION=$1
-        echo "Use EPICS $1"
+    set EPICS_VERSION=$1
+    echo "Use EPICS $1"
 else
-        set EPICS_VERSION="R3.14.12.8"
+    set EPICS_VERSION="R3.14.12.8"
 endif
 
 setenv  EPICS_VERSION "${EPICS_VERSION}"

@@ -21,6 +21,9 @@ $ git submodule update --remote dotdrop
 $ git add dotdrop
 $ git commit -m 'update dotdrop'
 $ git push
+# on another machine
+$ git submodule update
+$ git pull
 ```
 
 ### Use dotdrop

@@ -2,7 +2,7 @@
 {%@@ if profile == "laptop-macos" @@%}
 window:
   dimensions:
-    colums: 600
+    columns: 600
     lines: 400
   position:
     x: 20

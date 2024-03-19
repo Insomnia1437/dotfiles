@@ -1,13 +1,32 @@
 [user]
-        name = sdcswd
-        email = sdcswd@gmail.com
+        name = {{@@ GIT_NAME @@}}
+        email = {{@@ GIT_EMAIL @@}}
+{%@@ if USE_GPG == "YES" @@%}
+        signingkey = {{@@ GPG_KEY @@}}
+[commit]
+        gpgsign = false
+{%@@ endif @@%}
 [core]
         autocrlf = false
+[init]
+        defaultBranch = main
+[pull]
+        ff = only
 
-{%@@ if profile == "server-linac" @@%}
-[http]
-        proxy = http://172.19.64.17:8080
-        
-[https]
-        proxy = https://172.19.64.17:8080
+# if system proxy ENV is set, this may be not necessary? 
+# {%@@ if USE_PROXY == "YES" @@%}
+# [http]
+#         proxy = http://{{@@ PROXY @@}}
+# [https]
+#         proxy = https://{{@@ PROXY @@}}
+# {%@@ endif @@%}
+
+{%@@ if GIT_VERSION >= "2.13" @@%}
+# The contents of this file are included only for GitLab.com URLs
+[includeIf "hasconfig:remote.*.url:git@**gitlab**:**/**"]
+        # Edit this line to point to your alternative configuration file
+        path = ~/.gitconfig-gitlab
+[includeIf "hasconfig:remote.*.url:http*://**gitlab**/**/**"]
+        # Edit this line to point to your alternative configuration file
+        path = ~/.gitconfig-gitlab
 {%@@ endif @@%}

@@ -3,12 +3,14 @@ alias   cp="cp -i"
 alias   mv="mv -i"
 alias   grep="grep --color"
 alias   vi="vim"
-{%@@ if profile == "laptop-macos" @@%}
+{%@@ if os == "darwin" @@%}
 alias   l="ls -AlhF"
 alias   lsd="ls -dlh"
+alias   dfh="df -h"
 {%@@ else @@%}
 alias   l="ls -AlhF --color=auto"
 alias   lsd="ls -dlh --color=auto"
+alias   dfh="df -Th"
 {%@@ endif @@%}
 alias   type="type -a"
 alias   cd..="cd .."
@@ -20,7 +22,6 @@ alias   ..3="cd ../../.."
 alias   lsg="ls -lhFa | grep"
 alias   duh="du -h --max-depth=1"
 #alias  duhome='du -h --max-depth=1 --exclude "./.*"'
-alias   dfh="df -Th"
 alias   freeh="free -h"
 alias   psg="ps axuww | grep -v grep | grep"
 alias   psgl="ps axlww | grep -v grep | grep"

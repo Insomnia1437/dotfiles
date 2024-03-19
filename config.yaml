@@ -2,110 +2,265 @@ config:
   backup: true
   create: true
   banner: false
+  check_version: false
+  force_chmod: false
+  template_dotfile_default: true
+  showdiff: false
+  longkey: false
+  keepdot: false
   link_dotfile_default: nolink
   link_on_import: nolink
   dotpath: dotfiles
+  workdir: ~/.config/dotfiles
+  import_variables:
+    - uservariables.yaml:optional
+  # default_actions:
+  # - create_local_file
+  cmpignore:
+    - "*/README.md"
+  upignore:
+    - "*/README.md"
+  instignore:
+    - "*/README.md"
+  impignore:
+    - "*/README.md"
 variables:
-  linac_proxy: 172.19.64.17:8080
+  HOME: "{{@@ env['HOME'] @@}}"
+  REPO_HOME: "{{@@ env['PWD'] @@}}"
+  REPO_SCRIPT_PATH: "{{@@ env['PWD'] @@}}/scripts"
+  SSH_CONFIG: "ssh_config"
+  GIT_EMAIL_B64: "c2Rjc3dkQGdtYWlsLmNvbQ=="
+  GIT_NAME_B64: "RFc="
+  GITLAB_EMAIL_B64: "ZGkud2FuZ0BrZWsuanA="
+  USE_PROXY: "NO"
+  PROXY: ""
+  USE_GPG: "NO"
+  USE_PYENV: "NO"
+  USE_NERD_FONT: "NO"
+  GPG_KEY: "DF9D81D26E95ACF5"
+  GPG_KEY_GITLAB: "45B834BCEBCDEC22"
+  # dir_available: (test -d /tmp/cookiedir || mkdir -p /tmp/cookiedir)
+  # use this for saving disk space (really necessary?)
+  GIT_DEPTH: "5"
+  GIT_INSTALL_SH: "bash {{@@ REPO_SCRIPT_PATH @@}}/git_install.sh {{@@ GIT_DEPTH @@}}"
+  FONT_NAME: "SourceCodePro"
+  FONT_VERSION: "v3.1.1"
+  FONT_RUL: "https://github.com/ryanoasis/nerd-fonts/releases/download/{{@@ FONT_VERSION @@}}/{{@@ FONT_NAME @@}}.tar.xz"
+dynvariables:
+  # HOME: "echo $HOME"
+  # USER: "echo $USER"
+  # TMUX_VERSION: tmux -V | cut -f 2 -d " "
+  GIT_VERSION: git --version | cut -f 3 -d " "
+  EPICS_HOST_ARCH: bash {{@@ REPO_SCRIPT_PATH @@}}/epics_host_arch.sh
+  GIT_EMAIL: echo "{{@@ GIT_EMAIL_B64 @@}}" | base64 --decode
+  GIT_NAME: echo "{{@@ GIT_NAME_B64 @@}}" | base64 --decode
+  GITLAB_EMAIL: echo "{{@@ GITLAB_EMAIL_B64 @@}}" | base64 --decode
+  GITLAB_NAME: echo "{{@@ GIT_NAME_B64 @@}}" | base64 --decode
+  # test_dynvar1: >-
+  #   echo "abc" $$
+  #   echo "123"
+uservariables:
+  # this will save user input value to uservariables.yaml
+  # GIT_EMAIL: "git_email"
+  # GIT_NAME: "git_name"
 actions:
   pre:
-    install_bash_it: test -e ~/.bash_it || (git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it)
-    install_oh_my_zsh: test -e ~/.oh-my-zsh || (git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh)
+    install_font:
   post:
-    install_zsh_autosuggestions: test -e ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions || (git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions)
-    install_zsh_completions: test -e ~/.oh-my-zsh/custom/plugins/zsh-completions ||
-      (git clone https://github.com/zsh-users/zsh-completions ~/.oh-my-zsh/custom/plugins/zsh-completions)
-    install_zsh_syntax_highlighting: test -e ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting || (git clone https://github.com/zsh-users/zsh-syntax-highlighting ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting)
-    install_zsh_history_substring_search: test -e ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search || (git clone https://github.com/zsh-users/zsh-history-substring-search ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search)
-    install_pyenv: test -e ~/.pyenv || (git clone https://github.com/pyenv/pyenv.git
-      ~/.pyenv)
-    install_pyenv_virtualenv: test -e ~/.pyenv/plugins/pyenv-virtualenv || (git clone
-      https://github.com/pyenv/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv)
+    # create_local_file: test -e ~/.config/common/local.sh && touch ~/.config/common/local.sh
+    check_and_create: test -e {0} || touch {0}
+    # install_bash_it: test -e ~/.bash_it || (git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it)
+    install_tpm: "{{@@ GIT_INSTALL_SH @@}} https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm"
+    install_bash_it: "{{@@ GIT_INSTALL_SH @@}} https://github.com/Bash-it/bash-it.git ~/.bash_it"
+    install_oh_my_zsh: "{{@@ GIT_INSTALL_SH @@}} https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh"
+    install_alacritty_theme: "{{@@ GIT_INSTALL_SH @@}} https://github.com/alacritty/alacritty-theme ~/.config/alacritty/themes"
+    # install_libmagic_macos: brew install libmagic
+    install_zsh_autosuggestions: "{{@@ GIT_INSTALL_SH @@}} https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+    install_zsh_completions: "{{@@ GIT_INSTALL_SH @@}} https://github.com/zsh-users/zsh-completions ~/.oh-my-zsh/custom/plugins/zsh-completions"
+    install_zsh_syntax_highlighting: "{{@@ GIT_INSTALL_SH @@}} https://github.com/zsh-users/zsh-syntax-highlighting ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+    install_zsh_history_substring_search: "{{@@ GIT_INSTALL_SH @@}} https://github.com/zsh-users/zsh-history-substring-search ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search"
+    install_pyenv: "{{@@ GIT_INSTALL_SH @@}} https://github.com/pyenv/pyenv.git ~/.pyenv"
+    install_pyenv_virtualenv: "{{@@ GIT_INSTALL_SH @@}} https://github.com/pyenv/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv"
+
 dotfiles:
   d_common:
     src: common
     dst: ~/.config/common
-    chmod: '744'
+    chmod: "744"
     ignore_missing_in_dotdrop: true
+    actions:
+      - check_and_create ~/.config/common/local.sh
+  f_pyenv:
+    src: pyenv/pyenv.sh
+    dst: ~/.config/common/pyenv.sh
+    chmod: "744"
+    actions:
+      - install_pyenv
+      - install_pyenv_virtualenv
   f_gitconfig:
     src: git/gitconfig
     dst: ~/.gitconfig
-    chmod: '644'
+    chmod: "644"
+  f_gitconfig_gitlab:
+    src: git/gitconfig-gitlab
+    dst: ~/.gitconfig-gitlab
+    chmod: "644"
+  f_vim_theme:
+    src: vim/catppuccin_latte.vim
+    dst: ~/.vim/colors/catppuccin_latte.vim
+    chmod: "644"
   f_vimrc:
     src: vim/vimrc
     dst: ~/.vimrc
-    chmod: '644'
+    chmod: "644"
   f_tmuxconf:
     src: tmux/tmux.conf
     dst: ~/.tmux.conf
-    chmod: '644'
+    chmod: "644"
+    actions:
+      - install_tpm
   f_screenrc:
     src: screen/screenrc
     dst: ~/.screenrc
-    chmod: '644'
+    chmod: "644"
   f_alacritty:
     src: config/alacritty/alacritty.yml
     dst: ~/.config/alacritty/alacritty.yml
-    chmod: '644'
+    chmod: "644"
+    actions:
+      - install_alacritty_theme
   f_zshrc:
     src: zsh/zshrc
     dst: ~/.zshrc
-    chmod: '644'
+    chmod: "644"
     actions:
-    - install_oh_my_zsh
-    - install_zsh_autosuggestions
-    - install_zsh_completions
-    - install_zsh_syntax_highlighting
-    - install_zsh_history_substring_search
+      - install_oh_my_zsh
+      - install_zsh_autosuggestions
+      - install_zsh_completions
+      - install_zsh_syntax_highlighting
+      - install_zsh_history_substring_search
   f_zshtheme:
     src: zsh/sdcswd.zsh-theme
     dst: ~/.oh-my-zsh/custom/themes/sdcswd.zsh-theme
+  f_dotdrop_zsh_comp:
+    src: zsh/_dotdrop.sh-completion.zsh
+    dst: /usr/local/share/zsh/site-functions/_dotdrop.sh-completion.zsh
+    link: absolute
   f_bashrc:
     src: bash/bashrc
     dst: ~/.bashrc
-    chmod: '644'
+    chmod: "644"
     actions:
-    - install_bash_it
+      - install_bash_it
   f_tcshrc:
     src: tcsh/tcshrc
     dst: ~/.tcshrc
-    chmod: '644'
+    chmod: "644"
+    actions:
+      - check_and_create ~/.tcshrc.local
   f_tcshrc_epics:
     src: tcsh/tcshrc.epics
     dst: ~/.tcshrc.epics
-    chmod: '644'
+    chmod: "644"
+  f_konsole:
+    # https://github.com/catppuccin/konsole
+    src: konsole/Catppuccin-Latte.colorscheme
+    dst: ~/.local/share/konsole/
+    chmod: "644"
+  f_locale_conf:
+    src: etc/locale.conf
+    dst: ~/.config/locale.conf
+    chmod: "644"
+  f_gpg_conf:
+    src: gnupg/gpg.conf
+    dst: ~/.gnupg/gpg.conf
+    chmod: "644"
+
+
 profiles:
-  server-linac:
+  test:
     dotfiles:
-    - ALL
-    actions:
-    - install_pyenv
-    - install_pyenv_virtualenv
+      - ALL
+    variables:
+      USE_PROXY: "YES"
+      PROXY: "172.19.64.17:8080"
+      USE_PYENV: "YES"
+      USE_GPG: "YES"
+  basic:
+    dotfiles:
+      - f_zshrc
+      - f_zshtheme
+      - f_dotdrop_zsh_comp
+      - f_bashrc
+      - f_vimrc
+      - f_vim_theme
+      - f_tmuxconf
+      - d_common
+  git:
+    dotfiles:
+      - f_gitconfig
+      - f_gitconfig_gitlab
+
   normal:
+    include:
+      - basic
+      - git
+
+  vps:
+    include:
+      - basic
+    variables:
+      # git version may be old on some vps, so do not use shallow clone.
+      # re-define these two
+      GIT_DEPTH: "0"
+      GIT_INSTALL_SH: "bash {{@@ REPO_SCRIPT_PATH @@}}/git_install.sh {{@@ GIT_DEPTH @@}}"
+
+  wsl:
+    include:
+      - basic
+      - git
     dotfiles:
-    - f_zshrc
-    - f_zshtheme
-    - f_bashrc
-    - f_vimrc
-    - f_tmuxconf
-    - d_common
+      - f_gpg_conf
+    variables:
+      USE_GPG: "YES"
+
   raspi:
+    include:
+      - basic
+
+  server-linac:
+    include:
+      - basic
+      - git
     dotfiles:
-    - f_zshrc
-    - f_zshtheme
-    - f_bashrc
-    - f_vimrc
-    - f_tmuxconf
-    - d_common
+      - f_tcshrc
+      - f_tcshrc_epics
+      - f_screenrc
+      - f_pyenv
+    variables:
+      USE_PROXY: "YES"
+      PROXY: "172.19.64.17:8080"
+      USE_PYENV: "YES"
+
+  manjaro:
+    include:
+      - basic
+      - git
+    dotfiles:
+      - f_konsole
+      - f_locale_conf
+
   laptop-macos:
+    include:
+      - basic
+      - git
     dotfiles:
-    - f_zshrc
-    - f_zshtheme
-    - f_vimrc
-    - f_gitconfig
-    - f_tmuxconf
-    - f_alacritty
-    - d_common
-    actions:
-    - install_pyenv
-    - install_pyenv_virtualenv
+      - f_alacritty
+      - f_pyenv
+      - f_gpg_conf
+    # actions:
+    # - install_libmagic_macos
+    variables:
+      USE_PYENV: "YES"
+      USE_GPG: "YES"
+      USE_NERD_FONT: "YES"

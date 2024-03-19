@@ -3,18 +3,18 @@ if ($?prompt == 0) then
 	exit(0)
 endif
 
+{%@@ if USE_PROXY == "YES" @@%}
+# proxy server
+# if ($?HTTP_PROXY == 0) then
+#     setenv HTTP_PROXY    http://{{@@ PROXY @@}}
+#     setenv HTTPS_PROXY    https://{{@@ PROXY @@}}
+# endif
+alias setproxy    'setenv http_proxy    http://{{@@ PROXY @@}}; setenv https_proxy    https://{{@@ PROXY @@}}'
+alias noproxy    'unset http_proxy; unset https_proxy'
+{%@@ endif @@%}
+
 {%@@ if profile == "server-linac" @@%}
 source /usr/users/skelton/cmd/cshrc
-# proxy server
-set PROXY_SERVER={{@@ linac_proxy @@}}
-
-if ($?HTTP_PROXY == 0) then
-    setenv HTTP_PROXY    http://${PROXY_SERVER}
-    setenv HTTPS_PROXY    https://${PROXY_SERVER}
-endif
-
-alias setproxy    'setenv http_proxy    http://${PROXY_SERVER}; setenv https_proxy    https://${PROXY_SERVER}'
-alias noproxy    'unset http_proxy; unset https_proxy'
 # for git
 setenv PATH "/usr/new/pkg/git/current/bin:${PATH}"
 # add node and npm to path
@@ -80,9 +80,14 @@ ${yellow}%#${end} "
 set prompt2="%R?"
 set prompt3="CORRECT> %B%R%b (y|n|e)?"
 
-setenv LANG     en_US.UTF-8
-setenv LC_ALL   en_US.UTF-8
-setenv TERM     "xterm-256color"
+setenv LANG         en_US.UTF-8
+setenv LANGUAGE     en_US.UTF-8
+setenv LC_CTYPE     en_US.UTF-8
+# it is meant to be used only for testing or troubleshooting purposes
+# setenv LC_ALL   en_US.UTF-8
+if ($?TERM == 0) then
+    setenv TERM     "xterm-256color"
+endif
 setenv LESS     "-iMR"
 
 # some old server does not have vim
@@ -118,11 +123,12 @@ alias   bye     "exit"
 alias   q       "exit"
 alias   grepconf    'grep "^[^#]"'
 
-alias epics314121 "source ~/.tcshrc.epics R3.14.12.1"
+# alias epics314121 "source ~/.tcshrc.epics R3.14.12.1"
 alias epics314128 "source ~/.tcshrc.epics R3.14.12.8"
 alias epics315 "source ~/.tcshrc.epics R3.15.5"
+alias epics707 "source ~/.tcshrc.epics R7.0.7"
 
-source "${HOME}/.tcshrc.epics"
+source "${HOME}/.tcshrc.epics R7.0.7"
 
 # bindkey 
 # Select emacs bindings
@@ -162,6 +168,6 @@ endsw
 # this file is not managed by dotdrop and git
 if ( -e "~/.tcshrc.local" )  then
     source "~/.tcshrc.local"
-else
-    exit 1
+# else
+#     exit 1
 endif

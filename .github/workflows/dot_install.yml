@@ -1,0 +1,51 @@
+name: Test dotfiles install
+
+on:
+  # push:
+  #   paths-ignore:
+  #     - '**/*.md'
+  # pull_request:
+  #   paths-ignore:
+  #     - '**/*.md'
+  workflow_dispatch
+
+jobs:
+  install_all_dotfiles:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: "Set up Python 3.9"
+        uses: actions/setup-python@v5
+        with: 
+          python-version: 3.9
+      - name: "pip3 install"
+        run: |
+          pip3 install --user -r dotdrop/requirements.txt
+      - name: install all dotfiles
+        run: |
+          ./dotdrop.sh install -fp test
+      - name: 'check git config'
+        run: |
+          echo "for non gitlab repo"
+          git config user.signingkey
+          git config user.email
+          git clone https://gitlab.com/gitlab-examples/ssh-private-key.git gitlab-example
+          cd gitlab-example
+          echo "for gitlab repo"
+          git config user.signingkey
+          git config user.email
+      - uses: actions/upload-artifact@v4
+        with:
+          name: my-dotfiles
+          retention-days: 1
+          overwrite: true
+          path: |
+            ~/.config/common/
+            ~/.tmux.conf
+            ~/.vimrc
+            ~/.*rc
+            ~/.*epics
+            ~/.gitconfig*
+            ~/.gnupg/gpg.conf

@@ -16,18 +16,29 @@ source ~/.config/common/export.sh
 source ~/.config/common/proxy.sh
 source ~/.config/common/epics.sh
 # pyenv should be the last
-{%@@ if profile == "server-linac" or profile == "laptop-macos" @@%}
+{%@@ if USE_PYENV == "YES" @@%}
 source ~/.config/common/pyenv.sh
 {%@@ endif @@%}
+
+# for some temperary config like
+# export EPICS_CA_AUTO_ADDR_LIST=NO
+# export EPICS_CA_ADDR_LIST='172.19.64.78'
+# export EPICS_PVA_AUTO_ADDR_LIST=NO
+# export EPICS_PVA_ADDR_LIST='172.19.64.78'
+
+# this file is not managed by dotdrop and git
+if [ -f ~/.config/common/local.sh ]; then
+    source ~/.config/common/local.sh
+fi
 
 # remove duplicated path
 if [ -n "$PATH" ]; then
     old_PATH=$PATH:; PATH=
     while [ -n "$old_PATH" ]; do
-        x=${old_PATH%%:*}      
+        x=${old_PATH%%:*}
         case $PATH: in
-           *:"$x":*) ;;         
-           *) PATH=$PATH:$x;;  
+           *:"$x":*) ;;
+           *) PATH=$PATH:$x;;
         esac
         old_PATH=${old_PATH#*:}
     done
@@ -35,11 +46,3 @@ if [ -n "$PATH" ]; then
     unset old_PATH x
 fi
 
-# for some temperary config like 
-# export EPICS_CA_AUTO_ADDR_LIST=NO
-# export EPICS_CA_ADDR_LIST='172.19.64.78'
-
-# this file is not managed by dotdrop and git
-if [ -f ~/.config/common/local.sh ]; then
-    source ~/.config/common/local.sh
-fi

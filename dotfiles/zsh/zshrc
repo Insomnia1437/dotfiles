@@ -99,7 +99,7 @@ plugins=(git history z sudo zsh-autosuggestions zsh-completions
         zsh-syntax-highlighting
         )
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
-
+fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/completions
 source $ZSH/oh-my-zsh.sh
 
 # https://unix.stackexchange.com/questions/250690/how-to-configure-ctrlw-as-delete-word-in-zsh

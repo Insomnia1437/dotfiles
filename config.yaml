@@ -144,7 +144,7 @@ dotfiles:
     dst: ~/.oh-my-zsh/custom/themes/sdcswd.zsh-theme
   f_dotdrop_zsh_comp:
     src: zsh/_dotdrop.sh-completion.zsh
-    dst: /usr/local/share/zsh/site-functions/_dotdrop.sh-completion.zsh
+    dst: ~/.oh-my-zsh/custom/completions/_dotdrop.sh-completion.zsh
     link: absolute
   f_bashrc:
     src: bash/bashrc

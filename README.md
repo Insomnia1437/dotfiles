@@ -80,3 +80,19 @@ check it using
 |complete-word           |TAB  |
 |end-of-line             |CTRL-E  |
 |kill-line               |CTRL-K  |
+
+### Acknowledgement
+- [deadc0de6/dotdrop/](https://github.com/deadc0de6/dotdrop/)
+- [tmux-plugins/tpm](https://github.com/tmux-plugins/tpm)
+- [catppuccin/catppuccin](https://github.com/catppuccin/catppuccin)
+- [gpakosz/.vim](https://github.com/gpakosz/.vim)
+- [Bash-it/bash-it](https://github.com/Bash-it/bash-it)
+- [alacritty/alacritty-them](https://github.com/alacritty/alacritty-theme)
+- [alacritty/alacritty](https://github.com/alacritty/alacritty)
+- [robbyrussell/oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh)
+- [zsh-users/zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions)
+- [zsh-users/zsh-completions](https://github.com/zsh-users/zsh-completions)
+- [zsh-users/zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting)
+- [zsh-users/zsh-history-substring-search](https://github.com/zsh-users/zsh-history-substring-search)
+- [pyenv/pyenv](https://github.com/pyenv/pyenv)
+- [pyenv/pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv)

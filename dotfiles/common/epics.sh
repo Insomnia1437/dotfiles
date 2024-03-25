@@ -33,8 +33,9 @@ export  LD_LIBRARY_PATH="${EPICS_BASE}/lib/${EPICS_HOST_ARCH}:${LD_LIBRARY_PATH}
 
 alias cdb="cd ${EPICS_BASE}"
 alias cde="cd ${EPICS_EXTENSIONS}"
-alias cdi="cd ${EPICS_BASE}/../ioc"
-alias cdm="cd ${EPICS_BASE}/../modules"
+alias cdi="cd ${HOME}/epics/${EPICS_VERSION}/ioc"
+alias cdm="cd ${HOME}/epics/${EPICS_VERSION}/modules"
+alias cded="cd ${HOME}/epics/downloads"
 
 # export EPICS_CA_AUTO_ADDR_LIST=NO
 # export EPICS_CA_ADDR_LIST='172.19.64.78'

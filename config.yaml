@@ -49,7 +49,7 @@ variables:
 dynvariables:
   # HOME: "echo $HOME"
   # USER: "echo $USER"
-  # TMUX_VERSION: tmux -V | cut -f 2 -d " "
+  TMUX_VERSION: tmux -V | cut -f 2 -d " "
   GIT_VERSION: git --version | cut -f 3 -d " "
   EPICS_HOST_ARCH: bash {{@@ REPO_SCRIPT_PATH @@}}/epics_host_arch.sh
   GIT_EMAIL: echo "{{@@ GIT_EMAIL_B64 @@}}" | base64 --decode

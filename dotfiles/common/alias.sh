@@ -7,6 +7,9 @@ alias   vi="vim"
 alias   l="ls -AlhF"
 alias   lsd="ls -dlh"
 alias   dfh="df -h"
+# https://github.com/alacritty/alacritty/issues/3962
+# when connecting to a server where terminfo is limited, force using xterm-256color
+alias ssh="TERM=xterm-256color $(which ssh)"
 {%@@ else @@%}
 alias   l="ls -AlhF --color=auto"
 alias   lsd="ls -dlh --color=auto"

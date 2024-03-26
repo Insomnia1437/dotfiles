@@ -3,6 +3,7 @@
 > This is a personnal quick reference for tmux configuration
 
 ## Usage
+On some `choose-*` pane, e.g., `choose-buffer` pane, following keys can be used
 
 `prefix =`, choose-buffer
 - Enter 	Paste selected buffer

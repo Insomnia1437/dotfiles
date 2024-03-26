@@ -20,6 +20,11 @@ save_to_clipboard = true
 decorations = "full"
 opacity = 1.0
 
+# {%@@ profile == "wsl" @@%}
+# [shell]
+# program = "C:\\Windows\\System32\\wsl.exe ~"
+# {%@@ endif @@%}
+
 [window.dimensions]
 columns = 600
 lines = 400
@@ -32,8 +37,8 @@ y = 10
 x = 20
 y = 20
 
-[font]
 {%@@ if USE_NERD_FONT == "YES" @@%}
+[font]
 normal.family = "SauceCodePro Nerd Font Mono"
 #normal.family = "Source Code Pro for Powerline"
 normal.style = "Medium"

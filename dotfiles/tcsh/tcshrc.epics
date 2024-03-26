@@ -19,7 +19,7 @@ if ( $1 =~ "R3*" || $1 =~ "R7*" ) then
     set EPICS_VERSION=$1
     echo "Use EPICS $1"
 else
-    set EPICS_VERSION="R3.14.12.8"
+    set EPICS_VERSION="R7.0.8"
 endif
 
 setenv  EPICS_VERSION "${EPICS_VERSION}"

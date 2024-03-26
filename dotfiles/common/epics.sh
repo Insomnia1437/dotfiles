@@ -20,7 +20,7 @@ if [[ $1 = R3* || $1 = R7* ]]; then
     echo "Use EPICS $1"
 else
     # EPICS_VERSION="R3.14.12.8"
-    EPICS_VERSION="R3.15.5"
+    EPICS_VERSION="R7.0.8"
 fi
 export  EPICS_VERSION="${EPICS_VERSION}"
 export  EPICS_BASE="${HOME}/epics/${EPICS_VERSION}/base"

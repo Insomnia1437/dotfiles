@@ -100,11 +100,11 @@ dotfiles:
   f_gitconfig:
     src: git/gitconfig
     dst: ~/.gitconfig
-    chmod: "644"
+    chmod: "600"
   f_gitconfig_gitlab:
     src: git/gitconfig-gitlab
     dst: ~/.gitconfig-gitlab
-    chmod: "644"
+    chmod: "600"
   f_vim_theme:
     src: vim/catppuccin_latte.vim
     dst: ~/.vim/colors/catppuccin_latte.vim
@@ -174,7 +174,7 @@ dotfiles:
   f_gpg_conf:
     src: gnupg/gpg.conf
     dst: ~/.gnupg/gpg.conf
-    chmod: "644"
+    chmod: "600"
 
 
 profiles:

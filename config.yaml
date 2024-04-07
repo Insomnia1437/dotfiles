@@ -211,8 +211,9 @@ profiles:
       - basic
     variables:
       # git version may be old on some vps, so do not use shallow clone.
-      # re-define these two
+      # re-define GIT_DEPTH
       GIT_DEPTH: "0"
+      # we also need this to allow dotdrop to expand again
       GIT_INSTALL_SH: "bash {{@@ REPO_SCRIPT_PATH @@}}/git_install.sh {{@@ GIT_DEPTH @@}}"
 
   wsl:

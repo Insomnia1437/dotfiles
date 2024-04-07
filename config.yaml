@@ -26,6 +26,7 @@ config:
     - "*/README.md"
 variables:
   HOME: "{{@@ env['HOME'] @@}}"
+  INSTALL_HOME: "{{@@ env['HOME'] @@}}"
   REPO_HOME: "{{@@ env['PWD'] @@}}"
   REPO_SCRIPT_PATH: "{{@@ env['PWD'] @@}}/scripts"
   SSH_CONFIG: "ssh_config"
@@ -47,7 +48,6 @@ variables:
   FONT_VERSION: "v3.1.1"
   FONT_RUL: "https://github.com/ryanoasis/nerd-fonts/releases/download/{{@@ FONT_VERSION @@}}/{{@@ FONT_NAME @@}}.tar.xz"
 dynvariables:
-  # HOME: "echo $HOME"
   # USER: "echo $USER"
   TMUX_VERSION: tmux -V | cut -f 2 -d " "
   GIT_VERSION: git --version | cut -f 3 -d " "
@@ -67,71 +67,74 @@ actions:
   pre:
     install_font:
   post:
-    # create_local_file: test -e ~/.config/common/local.sh && touch ~/.config/common/local.sh
-    check_and_create: test -e {0} || touch {0}
-    # install_bash_it: test -e ~/.bash_it || (git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it)
-    install_tpm: "{{@@ GIT_INSTALL_SH @@}} https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm"
-    install_bash_it: "{{@@ GIT_INSTALL_SH @@}} https://github.com/Bash-it/bash-it.git ~/.bash_it"
-    install_oh_my_zsh: "{{@@ GIT_INSTALL_SH @@}} https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh"
-    install_alacritty_theme: "{{@@ GIT_INSTALL_SH @@}} https://github.com/alacritty/alacritty-theme ~/.config/alacritty/themes"
+    # create_local_file: test -e {{@@ INSTALL_HOME @@}}/.config/common/local.sh && touch {{@@ INSTALL_HOME @@}}/.config/common/local.sh
+    # check_and_create: test -e {0} || touch {0}
+    check_local_sh: test -e {{@@ INSTALL_HOME @@}}/.config/common/local.sh || touch {{@@ INSTALL_HOME @@}}/.config/common/local.sh
+    check_tcsh_local_sh: test -e {{@@ INSTALL_HOME @@}}/.tcshrc.local || touch {{@@ INSTALL_HOME @@}}/.tcshrc.local
+    # install_bash_it: test -e {{@@ INSTALL_HOME @@}}/.bash_it || (git clone --depth=1 https://github.com/Bash-it/bash-it.git {{@@ INSTALL_HOME @@}}/.bash_it)
+    install_tpm: "{{@@ GIT_INSTALL_SH @@}} https://github.com/tmux-plugins/tpm {{@@ INSTALL_HOME @@}}/.tmux/plugins/tpm"
+    install_bash_it: "{{@@ GIT_INSTALL_SH @@}} https://github.com/Bash-it/bash-it.git {{@@ INSTALL_HOME @@}}/.bash_it"
+    install_oh_my_zsh: "{{@@ GIT_INSTALL_SH @@}} https://github.com/robbyrussell/oh-my-zsh.git {{@@ INSTALL_HOME @@}}/.oh-my-zsh"
+    install_alacritty_theme: "{{@@ GIT_INSTALL_SH @@}} https://github.com/alacritty/alacritty-theme {{@@ INSTALL_HOME @@}}/.config/alacritty/themes"
     # install_libmagic_macos: brew install libmagic
-    install_zsh_autosuggestions: "{{@@ GIT_INSTALL_SH @@}} https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
-    install_zsh_completions: "{{@@ GIT_INSTALL_SH @@}} https://github.com/zsh-users/zsh-completions ~/.oh-my-zsh/custom/plugins/zsh-completions"
-    install_zsh_syntax_highlighting: "{{@@ GIT_INSTALL_SH @@}} https://github.com/zsh-users/zsh-syntax-highlighting ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
-    install_zsh_history_substring_search: "{{@@ GIT_INSTALL_SH @@}} https://github.com/zsh-users/zsh-history-substring-search ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search"
-    install_pyenv: "{{@@ GIT_INSTALL_SH @@}} https://github.com/pyenv/pyenv.git ~/.pyenv"
-    install_pyenv_virtualenv: "{{@@ GIT_INSTALL_SH @@}} https://github.com/pyenv/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv"
+    install_zsh_autosuggestions: "{{@@ GIT_INSTALL_SH @@}} https://github.com/zsh-users/zsh-autosuggestions {{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+    install_zsh_completions: "{{@@ GIT_INSTALL_SH @@}} https://github.com/zsh-users/zsh-completions {{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/plugins/zsh-completions"
+    install_zsh_syntax_highlighting: "{{@@ GIT_INSTALL_SH @@}} https://github.com/zsh-users/zsh-syntax-highlighting {{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+    install_zsh_history_substring_search: "{{@@ GIT_INSTALL_SH @@}} https://github.com/zsh-users/zsh-history-substring-search {{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/plugins/zsh-history-substring-search"
+    install_pyenv: "{{@@ GIT_INSTALL_SH @@}} https://github.com/pyenv/pyenv.git {{@@ INSTALL_HOME @@}}/.pyenv"
+    install_pyenv_virtualenv: "{{@@ GIT_INSTALL_SH @@}} https://github.com/pyenv/pyenv-virtualenv.git {{@@ INSTALL_HOME @@}}/.pyenv/plugins/pyenv-virtualenv"
+    # clean_all: rm -rf {{@@ INSTALL_HOME @@}}/.config/alacritty {{@@ INSTALL_HOME @@}}/.oh-my-zsh {{@@ INSTALL_HOME @@}}/.bash_it {{@@ INSTALL_HOME @@}}/.tmux/plugins/tpm {{@@ INSTALL_HOME @@}}/.pyenv
 
 dotfiles:
   d_common:
     src: common
-    dst: ~/.config/common
+    dst: "{{@@ INSTALL_HOME @@}}/.config/common"
     chmod: "744"
     ignore_missing_in_dotdrop: true
     actions:
-      - check_and_create ~/.config/common/local.sh
+      - check_local_sh
   f_pyenv:
     src: pyenv/pyenv.sh
-    dst: ~/.config/common/pyenv.sh
+    dst: "{{@@ INSTALL_HOME @@}}/.pyenv.sh"
     chmod: "744"
     actions:
       - install_pyenv
       - install_pyenv_virtualenv
   f_gitconfig:
     src: git/gitconfig
-    dst: ~/.gitconfig
+    dst: "{{@@ INSTALL_HOME @@}}/.gitconfig"
     chmod: "600"
   f_gitconfig_gitlab:
     src: git/gitconfig-gitlab
-    dst: ~/.gitconfig-gitlab
+    dst: "{{@@ INSTALL_HOME @@}}/.gitconfig-gitlab"
     chmod: "600"
   f_vim_theme:
     src: vim/catppuccin_latte.vim
-    dst: ~/.vim/colors/catppuccin_latte.vim
+    dst: "{{@@ INSTALL_HOME @@}}/.vim/colors/catppuccin_latte.vim"
     chmod: "644"
   f_vimrc:
     src: vim/vimrc
-    dst: ~/.vimrc
+    dst: "{{@@ INSTALL_HOME @@}}/.vimrc"
     chmod: "644"
   f_tmuxconf:
     src: tmux/tmux.conf
-    dst: ~/.tmux.conf
+    dst: "{{@@ INSTALL_HOME @@}}/.tmux.conf"
     chmod: "644"
     actions:
       - install_tpm
   f_screenrc:
     src: screen/screenrc
-    dst: ~/.screenrc
+    dst: "{{@@ INSTALL_HOME @@}}/.screenrc"
     chmod: "644"
   f_alacritty:
     src: config/alacritty/alacritty.yml
-    dst: ~/.config/alacritty/alacritty.yml
+    dst: "{{@@ INSTALL_HOME @@}}/.config/alacritty/alacritty.yml"
     chmod: "644"
     actions:
       - install_alacritty_theme
   f_zshrc:
     src: zsh/zshrc
-    dst: ~/.zshrc
+    dst: "{{@@ INSTALL_HOME @@}}/.zshrc"
     chmod: "644"
     actions:
       - install_oh_my_zsh
@@ -141,47 +144,52 @@ dotfiles:
       - install_zsh_history_substring_search
   f_zshtheme:
     src: zsh/sdcswd.zsh-theme
-    dst: ~/.oh-my-zsh/custom/themes/sdcswd.zsh-theme
+    dst: "{{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/themes/sdcswd.zsh-theme"
   f_dotdrop_zsh_comp:
     src: zsh/_dotdrop.sh-completion.zsh
-    dst: ~/.oh-my-zsh/custom/completions/_dotdrop.sh-completion.zsh
+    dst: "{{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/completions/_dotdrop.sh-completion.zsh"
     link: absolute
   f_bashrc:
     src: bash/bashrc
-    dst: ~/.bashrc
+    dst: "{{@@ INSTALL_HOME @@}}/.bashrc"
     chmod: "644"
     actions:
       - install_bash_it
   f_tcshrc:
     src: tcsh/tcshrc
-    dst: ~/.tcshrc
+    dst: "{{@@ INSTALL_HOME @@}}/.tcshrc"
     chmod: "644"
     actions:
-      - check_and_create ~/.tcshrc.local
+      - check_tcsh_local_sh
   f_tcshrc_epics:
     src: tcsh/tcshrc.epics
-    dst: ~/.tcshrc.epics
+    dst: "{{@@ INSTALL_HOME @@}}/.tcshrc.epics"
     chmod: "644"
   f_konsole:
     # https://github.com/catppuccin/konsole
     src: konsole/Catppuccin-Latte.colorscheme
-    dst: ~/.local/share/konsole/
+    dst: "{{@@ INSTALL_HOME @@}}/.local/share/konsole/"
     chmod: "644"
   f_locale_conf:
     src: etc/locale.conf
-    dst: ~/.config/locale.conf
+    dst: "{{@@ INSTALL_HOME @@}}/.config/locale.conf"
     chmod: "644"
   f_gpg_conf:
     src: gnupg/gpg.conf
-    dst: ~/.gnupg/gpg.conf
+    dst: "{{@@ INSTALL_HOME @@}}/.gnupg/gpg.conf"
     chmod: "600"
-
+  # fake_for_clean:
+  #   src:
+  #   dst:
+  #   actions:
+  #     - clean_all
 
 profiles:
   test:
     dotfiles:
       - ALL
     variables:
+      INSTALL_HOME: "/tmp"
       USE_PROXY: "YES"
       PROXY: "172.19.64.17:8080"
       USE_PYENV: "YES"

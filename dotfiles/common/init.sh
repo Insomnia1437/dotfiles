@@ -17,7 +17,7 @@ source ~/.config/common/proxy.sh
 source ~/.config/common/epics.sh
 # pyenv should be the last
 {%@@ if USE_PYENV == "YES" @@%}
-source ~/.config/common/pyenv.sh
+source ~/.pyenv.sh
 {%@@ endif @@%}
 
 # for some temperary config like

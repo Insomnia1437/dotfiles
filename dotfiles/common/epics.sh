@@ -37,5 +37,9 @@ alias cdi="cd ${HOME}/epics/${EPICS_VERSION}/ioc"
 alias cdm="cd ${HOME}/epics/${EPICS_VERSION}/modules"
 alias cded="cd ${HOME}/epics/downloads"
 
+# disable epics iocsh history (epics version>=7.0.8)
+export EPICS_IOCSH_HISTFILE=""
 # export EPICS_CA_AUTO_ADDR_LIST=NO
+# export EPICS_PVA_AUTO_ADDR_LIST=NO
 # export EPICS_CA_ADDR_LIST='172.19.64.78'
+# export EPICS_PVA_ADDR_LIST='172.19.64.78'

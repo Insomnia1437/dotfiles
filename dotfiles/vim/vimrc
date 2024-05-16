@@ -148,7 +148,7 @@ set cursorline  " highlight current line
 if has("autocmd")
   augroup vim
     autocmd!
-    autocmd filetype vim set textwidth=80
+    autocmd Filetype vim setlocal textwidth=80
   augroup END
   augroup windows
     autocmd!
@@ -535,7 +535,7 @@ if has("autocmd")
   augroup makefile
     autocmd!
     " don't expand tab to space in Makefiles
-    autocmd filetype make setlocal noexpandtab
+    autocmd Filetype make setlocal noexpandtab
   augroup END
 endif
 
@@ -762,7 +762,7 @@ set nospell       " disabled by default
 if has("autocmd")
   augroup spell
     autocmd!
-    "autocmd filetype vim setlocal spell " enabled when editing .vimrc
+    "autocmd Filetype vim setlocal spell " enabled when editing .vimrc
   augroup END
 endif
 

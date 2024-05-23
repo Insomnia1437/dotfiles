@@ -8,7 +8,7 @@ if ($?EPICS_VERSION != 0) then
     # use "#" for sed to avoid escape of "/"
     setenv  PATH `echo ${PATH} | sed "s#${old_path1}##g"`
     setenv  PATH `echo ${PATH} | sed "s#${old_path2}##g"`
-    setenv  LD_LIBRARY_PATH `echo ${LD_LIBRARY_PATH} | sed "s#${old_path3}##g"`
+    # setenv  LD_LIBRARY_PATH `echo ${LD_LIBRARY_PATH} | sed "s#${old_path3}##g"`
     # keep the environment clean
     unset EPICS_VERSION old_path1 old_path2 old_path3
 endif
@@ -28,11 +28,11 @@ setenv  EPICS_EXTENSIONS "${HOME}/epics/${EPICS_VERSION}/extensions"
 setenv  EPICS_CA_MAX_ARRAY_BYTES "10000000"
 setenv  PATH "${EPICS_BASE}/bin/${EPICS_HOST_ARCH}:${PATH}"
 setenv  PATH "${EPICS_EXTENSIONS}/bin/${EPICS_HOST_ARCH}:${PATH}"
-if ( $?LD_LIBRARY_PATH != 0 ) then
-    setenv  LD_LIBRARY_PATH "${EPICS_BASE}/lib/${EPICS_HOST_ARCH}:${LD_LIBRARY_PATH}"
-else
-    setenv  LD_LIBRARY_PATH "${EPICS_BASE}/lib/${EPICS_HOST_ARCH}"
-endif
+# if ( $?LD_LIBRARY_PATH != 0 ) then
+#    setenv  LD_LIBRARY_PATH "${EPICS_BASE}/lib/${EPICS_HOST_ARCH}:${LD_LIBRARY_PATH}"
+#else
+#    setenv  LD_LIBRARY_PATH "${EPICS_BASE}/lib/${EPICS_HOST_ARCH}"
+#endif
 
 alias cdb "cd ${EPICS_BASE}"
 alias cde "cd ${EPICS_EXTENSIONS}"

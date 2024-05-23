@@ -10,7 +10,7 @@ if [[ -n old_epics_version ]]; then
     # use "#" for sed to avoid escape of "/"
     export  PATH=$(echo ${PATH} | sed "s#${old_path1}##g")
     export  PATH=$(echo ${PATH} | sed "s#${old_path2}##g")
-    export  LD_LIBRARY_PATH=$(echo ${LD_LIBRARY_PATH} | sed "s#${old_path3}##g")
+    #export  LD_LIBRARY_PATH=$(echo ${LD_LIBRARY_PATH} | sed "s#${old_path3}##g")
     # keep the environment clean
     unset old_epics_version old_path1 old_path2 old_path3
 fi
@@ -29,7 +29,7 @@ export  EPICS_CA_MAX_ARRAY_BYTES="10000000"
 export  PATH="${EPICS_BASE}/bin/${EPICS_HOST_ARCH}:${PATH}"
 export  PATH="${EPICS_EXTENSIONS}/bin/${EPICS_HOST_ARCH}:${PATH}"
 
-export  LD_LIBRARY_PATH="${EPICS_BASE}/lib/${EPICS_HOST_ARCH}:${LD_LIBRARY_PATH}"
+#export  LD_LIBRARY_PATH="${EPICS_BASE}/lib/${EPICS_HOST_ARCH}:${LD_LIBRARY_PATH}"
 
 alias cdb="cd ${EPICS_BASE}"
 alias cde="cd ${EPICS_EXTENSIONS}"

@@ -5,6 +5,7 @@ alias   grep="grep --color"
 alias   vi="vim"
 {%@@ if os == "darwin" @@%}
 alias   l="ls -AlhF"
+alias   ll="ls -lhF"
 alias   lsd="ls -dlh"
 alias   dfh="df -h"
 # https://github.com/alacritty/alacritty/issues/3962
@@ -12,6 +13,7 @@ alias   dfh="df -h"
 alias ssh="TERM=xterm-256color $(which ssh)"
 {%@@ else @@%}
 alias   l="ls -AlhF --color=auto"
+alias   ll="ls -lhF --color=auto"
 alias   lsd="ls -dlh --color=auto"
 alias   dfh="df -Th"
 {%@@ endif @@%}

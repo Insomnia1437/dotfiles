@@ -108,6 +108,10 @@ dotfiles:
     src: git/gitconfig-gitlab
     dst: "{{@@ INSTALL_HOME @@}}/.gitconfig-gitlab"
     chmod: "600"
+  f_gitignore:
+    src: git/ignore
+    dst: "{{@@ INSTALL_HOME @@}}/.config/git/ignore"
+    chmod: "600"
   f_vim_theme:
     src: vim/catppuccin_latte.vim
     dst: "{{@@ INSTALL_HOME @@}}/.vim/colors/catppuccin_latte.vim"

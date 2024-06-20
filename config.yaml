@@ -111,7 +111,7 @@ dotfiles:
   f_gitignore:
     src: git/ignore
     dst: "{{@@ INSTALL_HOME @@}}/.config/git/ignore"
-    chmod: "600"
+    chmod: "644"
   f_vim_theme:
     src: vim/catppuccin_latte.vim
     dst: "{{@@ INSTALL_HOME @@}}/.vim/colors/catppuccin_latte.vim"
@@ -212,7 +212,7 @@ profiles:
     dotfiles:
       - f_gitconfig
       - f_gitconfig_gitlab
-
+      - f_gitignore
   normal:
     include:
       - basic

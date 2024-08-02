@@ -80,6 +80,11 @@ $ gpg --armor --output priv.gpg --export-secret-keys $(MASTER_KEYID)
 # # or
 # $ gpg --output subkeys_priv.gpg --export-secret-subkeys $(SUB1_KEYID)! [$(SUB2_KEYID)! ..]
 ```
+### import
+
+```shell
+gpg --import priv.gpg
+```
 
 ### Delete
 ```shell

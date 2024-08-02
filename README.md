@@ -27,7 +27,7 @@ $ pip3 install --user -r dotdrop/requirements.txt
 # For Debian > 12, python modules are managed by apt.
 $ sudo apt install dotdrop
 # Or
-$ sudo apt install python3-docopt python3-distro python3-ruamel.yaml python3-tomli-w python3-requests python3-packaging python3-jinja2 python3-magic
+$ sudo apt install python3-docopt python3-distro python3-ruamel.yaml python3-toml -tomli-w python3-requests python3-packaging python3-jinja2 python3-magic
 ```
 
 ### Update dotdrop submodule

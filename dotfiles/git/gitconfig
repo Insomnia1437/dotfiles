@@ -26,6 +26,9 @@
 [includeIf "hasconfig:remote.*.url:git@**gitlab**:**/**"]
         # Edit this line to point to your alternative configuration file
         path = ~/.gitconfig-gitlab
+[includeIf "hasconfig:remote.*.url:ssh://git@**gitlab**:**/**/**"]
+        # Edit this line to point to your alternative configuration file
+        path = ~/.gitconfig-gitlab
 [includeIf "hasconfig:remote.*.url:http*://**gitlab**/**/**"]
         # Edit this line to point to your alternative configuration file
         path = ~/.gitconfig-gitlab

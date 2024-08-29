@@ -16,13 +16,11 @@ _green() { echo -e ${green}$@${none}; }
 _yellow() { echo -e ${yellow}$@${none}; }
 _magenta() { echo -e ${magenta}$@${none}; }
 _red_bg() { echo -e "\e[41m$@${none}"; }
-err() {
-    echo -e "\n$is_err $@\n" && exit 1
-}
-# check wget git and perl command exist
+# check command exist
 check_cmd() {
     if ! [ -x "$(command -v git)" ]; then
-        err "Need ${yellow}($1)${none}... please install $1"
+        _red_bg "Need ${yellow}($1)${none}... please install $1"
+        exit 1
     fi
     return 0
 }

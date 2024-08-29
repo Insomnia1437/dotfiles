@@ -5,12 +5,12 @@
 Not only for dotdrop
 #### RHEL
 ```shell
-$ sudo yum install -y vim tar gzip bzip2 unzip perl-core pciutils net-tools lm_sensors telnet bash-completion sysstat python3 tree python3-pip git curl wget nfs-utils perf autofs rpm-build zsh tmux telnet screen
+$ sudo yum install -y vim tar gzip bzip2 unzip perl-core pciutils net-tools lm_sensors telnet bash-completion sysstat python3 tree python3-pip git curl wget nfs-utils perf autofs rpm-build zsh tmux telnet screen readline-devel
 ```
 #### Debian
 
 ```shell
-sudo apt install -y build-essential vim git tmux zsh telnet screen curl htop
+sudo apt install -y build-essential vim git tmux zsh telnet screen curl htop libreadline-dev
 ```
 
 ### Installation

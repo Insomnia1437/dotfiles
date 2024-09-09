@@ -169,10 +169,10 @@ dotfiles:
     src: tcsh/tcshrc.epics
     dst: "{{@@ INSTALL_HOME @@}}/.tcshrc.epics"
     chmod: "644"
-  f_konsole:
+  f_konsole_theme:
     # https://github.com/catppuccin/konsole
     src: konsole/Catppuccin-Latte.colorscheme
-    dst: "{{@@ INSTALL_HOME @@}}/.local/share/konsole/"
+    dst: "{{@@ INSTALL_HOME @@}}/.local/share/konsole/Catppuccin-Latte.colorscheme"
     chmod: "644"
   f_locale_conf:
     src: etc/locale.conf
@@ -260,7 +260,7 @@ profiles:
       - basic
       - git
     dotfiles:
-      - f_konsole
+      - f_konsole_theme
       - f_alacritty
       - f_locale_conf
     variables:

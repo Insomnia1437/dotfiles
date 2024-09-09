@@ -20,7 +20,7 @@ save_to_clipboard = true
 decorations = "full"
 opacity = 1.0
 
-# {%@@ profile == "wsl" @@%}
+# {%@@ if profile == "wsl" @@%}
 # [shell]
 # program = "C:\\Windows\\System32\\wsl.exe ~"
 # {%@@ endif @@%}

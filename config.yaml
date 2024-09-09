@@ -131,8 +131,8 @@ dotfiles:
     dst: "{{@@ INSTALL_HOME @@}}/.screenrc"
     chmod: "644"
   f_alacritty:
-    src: config/alacritty/alacritty.yml
-    dst: "{{@@ INSTALL_HOME @@}}/.config/alacritty/alacritty.yml"
+    src: config/alacritty/alacritty.toml
+    dst: "{{@@ INSTALL_HOME @@}}/.config/alacritty/alacritty.toml"
     chmod: "644"
     actions:
       - install_alacritty_theme

@@ -261,7 +261,10 @@ profiles:
       - git
     dotfiles:
       - f_konsole
+      - f_alacritty
       - f_locale_conf
+    variables:
+      USE_NERD_FONT: "YES"
 
   laptop-macos:
     include:

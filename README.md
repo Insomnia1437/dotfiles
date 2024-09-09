@@ -3,16 +3,22 @@
 ### System requirement
 
 Not only for dotdrop
-#### RHEL
+
+#### RHEL based
 ```shell
 $ sudo yum install -y vim tar gzip bzip2 unzip perl-core pciutils net-tools lm_sensors telnet bash-completion sysstat python3 tree python3-pip git curl wget nfs-utils perf autofs rpm-build zsh tmux telnet screen readline-devel
 ```
-#### Debian
+
+#### Debian based
 
 ```shell
 sudo apt install -y build-essential vim git tmux zsh telnet screen curl htop libreadline-dev
 ```
 
+#### Arch based
+```shell
+sudo pacman -S --needed base-devel vim git tmux zsh inetutils screen curl htop readline ttf-sourcecodepro-nerd
+```
 ### Installation
 
 ```shell
@@ -27,7 +33,9 @@ $ pip3 install --user -r dotdrop/requirements.txt
 # For Debian > 12, python modules are managed by apt.
 $ sudo apt install dotdrop
 # Or
-$ sudo apt install python3-docopt python3-distro python3-ruamel.yaml python3-toml -tomli-w python3-requests python3-packaging python3-jinja2 python3-magic
+$ sudo apt install python3-docopt python3-distro python3-ruamel.yaml python3-toml python3-tomli python3-tomli-w python3-requests python3-packaging python3-jinja2 python3-magic
+# for Arch
+sudo pacman -S python-docopt python-distro python-ruamel-yaml python-toml python-tomli python-tomli-w python-requests python-packaging python-jinja python-magic
 ```
 
 ### Update dotdrop submodule

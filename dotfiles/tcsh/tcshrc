@@ -3,6 +3,37 @@ if ($?prompt == 0) then
 	exit(0)
 endif
 
+{%@@ if USE_PROXY == "YES" @@%}
+alias setproxy    'setenv http_proxy http://{{@@ PROXY @@}}; setenv https_proxy http://{{@@ PROXY @@}}; setenv HTTP_PROXY http://{{@@ PROXY @@}}; setenv HTTPS_PROXY http://{{@@ PROXY @@}}'
+alias noproxy    'unset http_proxy; unset https_proxy; unset HTTP_PROXY; unset HTTPS_PROXY'
+{%@@ endif @@%}
+
+{%@@ if profile == "server-linac" @@%}
+source /usr/users/skelton/cmd/cshrc
+# for git
+setenv PATH "/usr/new/pkg/git/current/bin:${PATH}"
+# add node and npm to path
+setenv PATH "/usr/new/pkg/node/11.7.0_c6_x64/bin/:${PATH}"
+# for tmux
+setenv PATH "/usr/new/pkg/tmux/3.1b_x64/bin/:${PATH}"
+# tmux requires libevent 2.x
+if ( $?LD_LIBRARY_PATH != 0 ) then
+    setenv LD_LIBRARY_PATH "/usr/new/pkg/libevent/2.1.12_x64/lib/:${LD_LIBRARY_PATH}"
+else
+    setenv LD_LIBRARY_PATH "/usr/new/pkg/libevent/2.1.12_x64/lib/"
+endif
+
+# for vxworks
+switch ( $OSTYPE )
+    case "linux*":
+    eval `/cont/VxWorks/vw68/wrenv.sh -p vxworks-6.8 -o print_env -f csh`
+    setenv PATH "/usr/bin/:${PATH}"
+    breaksw;
+endsw
+# for sad
+alias   sad     "/usr/new/pkg/SAD/bin/gs"
+
+{%@@ endif @@%}
 # do not exit when pressing ctrl-D
 # set ignoreeof
 # set nobeep
@@ -122,37 +153,6 @@ switch ( $OSTYPE )
 #     breaksw;
 endsw
 
-{%@@ if USE_PROXY == "YES" @@%}
-alias setproxy    'setenv http_proxy http://{{@@ PROXY @@}}; setenv https_proxy http://{{@@ PROXY @@}}; setenv HTTP_PROXY http://{{@@ PROXY @@}}; setenv HTTPS_PROXY http://{{@@ PROXY @@}}'
-alias noproxy    'unset http_proxy; unset https_proxy; unset HTTP_PROXY; unset HTTPS_PROXY'
-{%@@ endif @@%}
-
-{%@@ if profile == "server-linac" @@%}
-source /usr/users/skelton/cmd/cshrc
-# for git
-setenv PATH "/usr/new/pkg/git/current/bin:${PATH}"
-# add node and npm to path
-setenv PATH "/usr/new/pkg/node/11.7.0_c6_x64/bin/:${PATH}"
-# for tmux
-setenv PATH "/usr/new/pkg/tmux/3.1b_x64/bin/:${PATH}"
-# tmux requires libevent 2.x
-if ( $?LD_LIBRARY_PATH != 0 ) then
-    setenv LD_LIBRARY_PATH "/usr/new/pkg/libevent/2.1.12_x64/lib/:${LD_LIBRARY_PATH}"
-else
-    setenv LD_LIBRARY_PATH "/usr/new/pkg/libevent/2.1.12_x64/lib/"
-endif
-
-# for vxworks
-switch ( $OSTYPE )
-    case "linux*":
-    eval `/cont/VxWorks/vw68/wrenv.sh -p vxworks-6.8 -o print_env -f csh`
-    setenv PATH "/usr/bin/:${PATH}"
-    breaksw;
-endsw
-# for sad
-alias   sad     "/usr/new/pkg/SAD/bin/gs"
-
-{%@@ endif @@%}
 
 # alias epics314121 "source ~/.tcshrc.epics R3.14.12.1"
 alias epics314128 "source ~/.tcshrc.epics R3.14.12.8"
@@ -162,8 +162,8 @@ alias epics708 "source ~/.tcshrc.epics R7.0.8"
 source ~/.tcshrc.epics R7.0.8
 
 # this file is not managed by dotdrop and git
-if ( -e "~/.tcshrc.local" )  then
-    source "~/.tcshrc.local"
+if ( -e ~/.tcshrc.local )  then
+    source ~/.tcshrc.local
 # else
 #     exit 1
 endif

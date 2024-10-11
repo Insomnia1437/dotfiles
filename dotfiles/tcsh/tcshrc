@@ -126,9 +126,9 @@ alias   grepconf    'grep "^[^#]"'
 # alias epics314121 "source ~/.tcshrc.epics R3.14.12.1"
 alias epics314128 "source ~/.tcshrc.epics R3.14.12.8"
 alias epics315 "source ~/.tcshrc.epics R3.15.5"
-alias epics707 "source ~/.tcshrc.epics R7.0.7"
+alias epics708 "source ~/.tcshrc.epics R7.0.8"
 
-source "${HOME}/.tcshrc.epics R7.0.7"
+source "${HOME}/.tcshrc.epics R7.0.8"
 
 # bindkey 
 # Select emacs bindings

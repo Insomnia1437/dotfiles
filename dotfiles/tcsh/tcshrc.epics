@@ -1,5 +1,6 @@
+#!/usr/bin/tcsh
 setenv EPICS_HOST_ARCH "linux-x86_64"
-if ($?EPICS_VERSION != 0) then
+if ("$?EPICS_VERSION") then
     # to match the colon. Should colon be escaped?
     set old_path1="${HOME}/epics/${EPICS_VERSION}/base/bin/${EPICS_HOST_ARCH}\(:\)\{0,1\}"
     set old_path2="${HOME}/epics/${EPICS_VERSION}/extensions/bin/${EPICS_HOST_ARCH}\(:\)\{0,1\}"
@@ -15,9 +16,9 @@ endif
 
 # https://learnxinyminutes.com/docs/tcsh/
 
-if ( $1 =~ "R3*" || $1 =~ "R7*" ) then
-    set EPICS_VERSION=$1
-    echo "Use EPICS $1"
+if ( $argv[1] =~ "R3*" || $argv[1] =~ "R7*" ) then
+    set EPICS_VERSION=$argv[1]
+    echo "Use EPICS $argv[1]"
 else
     set EPICS_VERSION="R7.0.8"
 endif
@@ -42,8 +43,8 @@ alias cded "cd ${HOME}/epics/downloads"
 
 
 # disable epics iocsh history (epics version>=7.0.8)
-setenv EPICS_IOCSH_HISTFILE=""
-# setenv EPICS_CA_AUTO_ADDR_LIST=NO
-# setenv EPICS_PVA_AUTO_ADDR_LIST=NO
-# setenv EPICS_CA_ADDR_LIST='172.19.64.78'
-# setenv EPICS_PVA_ADDR_LIST='172.19.64.78'
+setenv EPICS_IOCSH_HISTFILE ""
+# setenv EPICS_CA_AUTO_ADDR_LIST "NO"
+# setenv EPICS_PVA_AUTO_ADDR_LIST "NO"
+# setenv EPICS_CA_ADDR_LIST '172.19.64.78'
+# setenv EPICS_PVA_ADDR_LIST '172.19.64.78'

@@ -123,13 +123,8 @@ switch ( $OSTYPE )
 endsw
 
 {%@@ if USE_PROXY == "YES" @@%}
-# proxy server
-# if ($?HTTP_PROXY == 0) then
-#     setenv HTTP_PROXY    http://{{@@ PROXY @@}}
-#     setenv HTTPS_PROXY    https://{{@@ PROXY @@}}
-# endif
-alias setproxy    'setenv http_proxy    http://{{@@ PROXY @@}}; setenv https_proxy    https://{{@@ PROXY @@}}'
-alias noproxy    'unset http_proxy; unset https_proxy'
+alias setproxy    'setenv http_proxy http://{{@@ PROXY @@}}; setenv https_proxy http://{{@@ PROXY @@}}; setenv HTTP_PROXY http://{{@@ PROXY @@}}; setenv HTTPS_PROXY http://{{@@ PROXY @@}}'
+alias noproxy    'unset http_proxy; unset https_proxy; unset HTTP_PROXY; unset HTTPS_PROXY'
 {%@@ endif @@%}
 
 {%@@ if profile == "server-linac" @@%}

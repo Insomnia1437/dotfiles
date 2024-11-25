@@ -53,7 +53,7 @@ install_epics() {
 
     EPICS_ROOT=$1
     #EPICS_ROOT=/tmp
-    EPICS_VERSION="7.0.8"
+    EPICS_VERSION="7.0.8.1"
     EPICS_TOP="${EPICS_ROOT}/epics/R${EPICS_VERSION}"
     EPICS_DOWNLOADS=${EPICS_ROOT}/epics/downloads
     mkdir -p ${EPICS_DOWNLOADS}
@@ -67,7 +67,7 @@ install_epics() {
     DEVLIB2="devlib2-${DEVLIB2_VERSION}"
     MRFIOC2="mrfioc2"
     IOCSTATS_VERSION="3.2.0"
-    IOCSTATS="iocStats-{IOCSTATS_VERSION}"
+    IOCSTATS="iocStats-${IOCSTATS_VERSION}"
     PROCSERV_VERSION="2.8.0"
     PROCSERV="procServ-${PROCSERV_VERSION}"
 
@@ -136,11 +136,11 @@ install_epics() {
 
     _cyan "finish..."
 }
-
+TARGET_PATH=${HOME}
 help() {
     _cyan "Help: $0 [option]"
     _cyan "Option:"
-    _cyan "  1 - install epics to ${HOME}"
+    _cyan "  1 - install epics to ${TARGET_PATH}"
     _cyan "  2 - test install epics to /tmp"
     exit 1
 }
@@ -152,7 +152,7 @@ fi
 # run function of different stages
 case $1 in
     1)
-        install_epics ${HOME};;
+        install_epics ${TARGET_PATH};;
     2)
         install_epics /tmp;;
     *)

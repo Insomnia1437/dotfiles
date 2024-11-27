@@ -14,7 +14,10 @@ esac
 source ~/.config/common/alias.sh
 source ~/.config/common/export.sh
 source ~/.config/common/proxy.sh
-source ~/.config/common/epics.sh
+
+# enable epics env in local.sh, this gives me choice to use other epics
+# e.g., echo "epics708" >> ~/.config/common/epics.sh
+# source ~/.config/common/epics.sh
 # pyenv should be the last
 {%@@ if USE_PYENV == "YES" @@%}
 source ~/.pyenv.sh

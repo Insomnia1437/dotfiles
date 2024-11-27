@@ -54,7 +54,8 @@ export EPICS_HOST_ARCH={{@@ EPICS_HOST_ARCH @@}}
 
 alias epics314128="source ~/.config/common/epics.sh R3.14.12.8"
 # alias epics314121="source ~/.config/common/epics.sh R3.14.12.1"
-# alias epics3155="source ~/.config/common/epics.sh R3.15.5"
+alias epics3155="source ~/.config/common/epics.sh R3.15.5"
 alias epics3159="source ~/.config/common/epics.sh R3.15.9"
 
 alias epics707="source ~/.config/common/epics.sh R7.0.7"
+alias epics708="source ~/.config/common/epics.sh R7.0.8"

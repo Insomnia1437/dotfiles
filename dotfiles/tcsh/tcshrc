@@ -11,7 +11,7 @@ alias noproxy    'unset http_proxy; unset https_proxy; unset HTTP_PROXY; unset H
 {%@@ if profile == "server-linac" @@%}
 source /usr/users/skelton/cmd/cshrc
 # for git
-setenv PATH "/usr/new/pkg/git/current/bin:${PATH}"
+# setenv PATH "/usr/new/pkg/git/current/bin:${PATH}"
 # add node and npm to path
 setenv PATH "/usr/new/pkg/node/11.7.0_c6_x64/bin/:${PATH}"
 # for tmux

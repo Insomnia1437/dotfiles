@@ -21,7 +21,7 @@ export  PATH="{{@@ HOME @@}}/.local/bin:${PATH}"
 
 {%@@ if profile == "server-linac" @@%}
 # for git
-export PATH="/usr/new/pkg/git/current/bin:${PATH}"
+# export PATH="/usr/new/pkg/git/current/bin:${PATH}"
 # add node and npm to path
 export PATH="/usr/new/pkg/node/11.7.0_c6_x64/bin/:${PATH}"
 # for tmux

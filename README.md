@@ -19,23 +19,34 @@ sudo apt install -y build-essential vim git tmux zsh telnet screen curl htop lib
 ```shell
 sudo pacman -S --needed base-devel vim git tmux zsh inetutils screen curl htop readline ttf-sourcecodepro-nerd
 ```
+
+#### macOS
+```shell
+brew install vim gpg font-sauce-code-pro-nerd-font
+```
 ### Installation
 
 ```shell
+# for macOS
+$ brew install dotdrop
+
+# For Debian > 12, python modules are managed by apt.
+$ sudo apt install dotdrop
+
+# for old Debian
+$ sudo apt install python3-docopt python3-distro python3-ruamel.yaml python3-toml python3-tomli python3-tomli-w python3-requests python3-packaging python3-jinja2 python3-magic
+
+# for Arch
+$ sudo pacman -S python-docopt python-distro python-ruamel-yaml python-toml python-tomli python-tomli-w python-requests python-packaging python-jinja python-magic
+
 # https://stackoverflow.com/questions/3796927/how-to-git-clone-including-submodules
 # for version 2.13 of git and later
 $ git clone --recurse-submodules https://github.com/Insomnia1437/dotfiles.git ~/.config/dotfiles
 # otherwise
 $ git clone --recursive https://github.com/Insomnia1437/dotfiles.git ~/.config/dotfiles
 $ cd ~/.config/dotfiles
-# ./dotdrop/bootstrap.sh
 $ pip3 install --user -r dotdrop/requirements.txt
-# For Debian > 12, python modules are managed by apt.
-$ sudo apt install dotdrop
-# Or
-$ sudo apt install python3-docopt python3-distro python3-ruamel.yaml python3-toml python3-tomli python3-tomli-w python3-requests python3-packaging python3-jinja2 python3-magic
-# for Arch
-sudo pacman -S python-docopt python-distro python-ruamel-yaml python-toml python-tomli python-tomli-w python-requests python-packaging python-jinja python-magic
+# ./dotdrop/bootstrap.sh
 ```
 
 ### Update dotdrop submodule

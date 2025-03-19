@@ -112,7 +112,7 @@ install_epics() {
     cd ${EPICS_MODULE}/${DEVLIB2}
     echo "EPICS_BASE=${EPICS_BASE}" >> configure/RELEASE.local
     _cyan "Build ${DEVLIB2}..."
-    make 2>&1 | tee ${DEVLIB2}-make-${NOW}.log
+    make 2>&1 | tee make-${DEVLIB2}-${NOW}.log
 
     _yellow "Go to ${EPICS_MODULE}/${MRFIOC2}"
     cd ${EPICS_MODULE}/${MRFIOC2}

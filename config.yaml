@@ -250,6 +250,7 @@ profiles:
       - f_tcshrc_epics
       - f_screenrc
       - f_pyenv
+      - f_alacritty
     variables:
       USE_PROXY: "YES"
       PROXY: "172.19.64.17:8080"

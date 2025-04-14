@@ -20,6 +20,9 @@ export  PATH="{{@@ HOME @@}}/.local/bin:${PATH}"
 {%@@ endif @@%}
 
 {%@@ if profile == "server-linac" @@%}
+# for cargo
+export PATH="${HOME}/.cargo/bin:${PATH}"
+
 # for git
 # export PATH="/usr/new/pkg/git/current/bin:${PATH}"
 # add node and npm to path
@@ -29,7 +32,7 @@ export PATH="/usr/new/pkg/tmux/3.1b_x64/bin/:${PATH}"
 # tmux requires libevent 2.x
 if [[ -z ${LD_LIBRARY_PATH} ]]; then
     export LD_LIBRARY_PATH="/usr/new/pkg/libevent/2.1.12_x64/lib"
-else 
+else
     export LD_LIBRARY_PATH="/usr/new/pkg/libevent/2.1.12_x64/lib/:${LD_LIBRARY_PATH}"
 fi
 

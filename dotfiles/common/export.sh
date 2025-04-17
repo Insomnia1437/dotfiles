@@ -15,9 +15,9 @@ export LESS="-iMR"
 # fi
 export VISUAL="vim"
 export EDITOR="vim"
-{%@@ if profile == "wsl" @@%}
+# {%@@ if profile == "wsl" @@%}
 export  PATH="{{@@ HOME @@}}/.local/bin:${PATH}"
-{%@@ endif @@%}
+# {%@@ endif @@%}
 
 {%@@ if profile == "server-linac" @@%}
 # for cargo
@@ -37,7 +37,9 @@ else
 fi
 
 # for vxworks
-export  WIND_HOME='/cont/VxWorks/vw68'
+# export  WIND_HOME='/cont/VxWorks/vw68'
+# export  WIND_HOME='/usr/users/control/VxWorks/vw683'
+export  WIND_HOME='/cont/VxWorks/vw69'
 # for tmux
 # https://github.com/tmux/tmux/issues/2771
 
@@ -60,5 +62,12 @@ alias epics314128="source ~/.config/common/epics.sh R3.14.12.8"
 alias epics3155="source ~/.config/common/epics.sh R3.15.5"
 alias epics3159="source ~/.config/common/epics.sh R3.15.9"
 
-alias epics707="source ~/.config/common/epics.sh R7.0.7"
+# alias epics707="source ~/.config/common/epics.sh R7.0.7"
 alias epics708="source ~/.config/common/epics.sh R7.0.8"
+alias epics709="source ~/.config/common/epics.sh R7.0.9"
+
+# if [[ $(hostname) != *"mtca"* ]]; then
+#   epics709
+# else
+#   source ~/.config/common/epics.sh "R7.0.8.1" "/usr/users/control/epics/vadatech"
+# fi

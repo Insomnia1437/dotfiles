@@ -26,7 +26,7 @@ endif
 # for vxworks
 switch ( $OSTYPE )
     case "linux*":
-    eval `/cont/VxWorks/vw68/wrenv.sh -p vxworks-6.8 -o print_env -f csh`
+    eval `/cont/VxWorks/vw69/wrenv.sh -p vxworks-6.9 -o print_env -f csh`
     setenv PATH "/usr/bin/:${PATH}"
     breaksw;
 endsw
@@ -97,6 +97,7 @@ alias   cp      "cp -i"
 alias   mv      "mv -i"
 alias   grep    "grep --color"
 alias   l       "ls -AlhF --color=auto"
+alias   llt     "ls -lhF --color=auto --time-style=long-iso"
 alias   lsd     "ls -dlh --color=auto"
 alias   cd..    "cd .."
 alias   cd~     "cd ~"

@@ -15,6 +15,7 @@ alias ssh="TERM=xterm-256color $(which ssh)"
 {%@@ else @@%}
 alias   l="ls -AlhF --color=auto"
 alias   ll="ls -lhF --color=auto"
+alias   llt="ls -lhF --color=auto --time-style=long-iso"
 alias   lsd="ls -dlh --color=auto"
 alias   dfh="df -Th"
 alias   duh="du -h --max-depth=1"
@@ -41,6 +42,7 @@ alias   q="exit"
 alias   dotdrop="${HOME}/.config/dotfiles/dotdrop.sh"
 alias   grepconf='grep "^[^#]"'
 alias   histg="history | grep"
+alias   histl="history | less"
 alias   path='echo -e ${PATH//:/\\n}'
 {%@@ if profile == "server-linac" @@%}
 # for sad

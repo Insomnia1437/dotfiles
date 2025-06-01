@@ -525,6 +525,7 @@ install_epics() {
             _cyan "add EPICS env to ${HOME}/.bashrc"
             to_bashrc "export EPICS_BASE=${EPICS_BASE}"
             to_bashrc "export EPICS_HOST_ARCH=${EPICS_HOST_ARCH}"
+            to_bashrc "export EPICS_IOCSH_HISTFILE=''"
             to_bashrc "alias cdb='cd ${EPICS_BASE}'"
             to_bashrc "alias cdm='cd ${EPICS_MODULE_DIR}'"
             to_bashrc "alias cdi='cd ${EPICS_IOC_DIR}'"

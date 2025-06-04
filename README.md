@@ -52,7 +52,11 @@ $ pip3 install --user -r dotdrop/requirements.txt
 ### Update dotdrop submodule
 
 ```shell
+# init submodule
 $ git submodule update --init --recursive
+# reset submodule to parent"s version
+$ git submodule update --checkout dotdrop
+# update submodule to upstream's latest version
 $ git submodule update --remote dotdrop
 
 $ git add dotdrop

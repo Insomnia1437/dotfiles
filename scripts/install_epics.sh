@@ -73,7 +73,7 @@ set_epics_host_arch() {
                 "i*86")
                     EPICS_HOST_ARCH="linux-x86"
                     ;;
-                "arm*")
+                "arm*" | "aarch64")
                     EPICS_HOST_ARCH="linux-arm"
                     ;;
                 *)
@@ -266,9 +266,9 @@ install_epics() {
     _yellow "Changing to EPICS Base directory: ${EPICS_BASE}"
     cd "${EPICS_BASE}" || { _red "Failed to cd to ${EPICS_BASE}"; exit 1; }
     _cyan "Building EPICS Base (${EPICS_VERSION})... This may take a while."
-    make 2>&1 | tee "${EPICS_DOWNLOADS_DIR}/make-base-${EPICS_VERSION}-${NOW}.log"
+    make 2>&1 | tee "${EPICS_BASE}/make-base-${EPICS_VERSION}-${NOW}.log"
 
-    # make runtests 2>&1 | tee "${EPICS_DOWNLOADS_DIR}/make-base-runtests-${EPICS_VERSION}-${NOW}.log"
+    # make runtests 2>&1 | tee "${EPICS_BASE}/make-base-runtests-${EPICS_VERSION}-${NOW}.log"
 
     # Install procServ (and extensionsTop)
     local EXTENSIONS_TOP_ARCHIVE_FILENAME="extensionsTop_20120904.tar.gz" # As per original script
@@ -324,11 +324,11 @@ install_epics() {
 
     _cyan "Configuring procServ..."
     # Using absolute path for --with-epics-top for robustness
-    ./configure --enable-access-from-anywhere --with-epics-top="../.." 2>&1 | tee "${EPICS_DOWNLOADS_DIR}/configure-${PROCSERV_SRC_DIR_NAME}-${NOW}.log"
+    ./configure --enable-access-from-anywhere --with-epics-top="../.." 2>&1 | tee "${PROCSERV_FULL_SRC_PATH}/configure-${PROCSERV_SRC_DIR_NAME}-${NOW}.log"
 
 
     _cyan "Building procServ..."
-    make 2>&1 | tee "${EPICS_DOWNLOADS_DIR}/make-${PROCSERV_SRC_DIR_NAME}-${NOW}.log"
+    make 2>&1 | tee "${PROCSERV_FULL_SRC_PATH}/make-${PROCSERV_SRC_DIR_NAME}-${NOW}.log"
 
     # Install devlib2 if selected
     if [[ "$(get_module_selection 'devlib2')" == "Y" ]]; then
@@ -367,7 +367,7 @@ install_epics() {
         echo "EPICS_BASE=${EPICS_BASE}" > configure/RELEASE.local # Overwrite if exists, or create
 
         _cyan "Building devlib2..."
-        make 2>&1 | tee "${EPICS_DOWNLOADS_DIR}/make-${DEVLIB2_SRC_DIR_NAME}-${NOW}.log"
+        make 2>&1 | tee "${DEVLIB2_FULL_SRC_PATH}/make-${DEVLIB2_SRC_DIR_NAME}-${NOW}.log"
 
     fi
 
@@ -408,7 +408,7 @@ install_epics() {
         fi
 
         _cyan "Building mrfioc2..."
-        make 2>&1 | tee "${EPICS_DOWNLOADS_DIR}/make-${MRFIOC2_MODULE_NAME}-${NOW}.log"
+        make 2>&1 | tee "${MRFIOC2_FULL_SRC_PATH}/make-${MRFIOC2_MODULE_NAME}-${NOW}.log"
     fi
 
     # Install iocStats if selected
@@ -449,7 +449,7 @@ install_epics() {
         echo "MAKE_TEST_IOC_APP=NO" >> configure/RELEASE.local
 
         _cyan "Building iocStats..."
-        make 2>&1 | tee "${EPICS_DOWNLOADS_DIR}/make-${IOCSTATS_SRC_DIR_NAME}-${NOW}.log"
+        make 2>&1 | tee "${IOCSTATS_FULL_SRC_PATH}/make-${IOCSTATS_SRC_DIR_NAME}-${NOW}.log"
     fi
 
 
@@ -494,18 +494,18 @@ install_epics() {
         cd "${ASYN_FULL_SRC_PATH}" || { _red "Failed to cd to asyn source. Skipping."; continue; }
 
         _cyan "Configuring asyn..."
-        echo "SUPPORT=${EPICS_MODULE_DIR}" >> configure/RELEASE.local
-        echo "EPICS_BASE=${EPICS_BASE}" > configure/RELEASE.local
+        echo "SUPPORT=${EPICS_MODULE_DIR}" > configure/RELEASE.local
+        echo "EPICS_BASE=${EPICS_BASE}" >> configure/RELEASE.local
 
         case ${EPICS_HOST_ARCH} in
-            Linux*)
+            linux*)
                 _cyan "enable TIRPC on Linux..."
-                echo "TIRPC=YES" > configure/CONFIG_SITE.local
+                echo "TIRPC=YES" >> configure/CONFIG_SITE.local
                 ;;
         esac
 
         _cyan "Building asyn..."
-        make 2>&1 | tee "${EPICS_DOWNLOADS_DIR}/make-${ASYN_SRC_DIR_NAME}-${NOW}.log"
+        make 2>&1 | tee "${ASYN_FULL_SRC_PATH}/make-${ASYN_SRC_DIR_NAME}-${NOW}.log"
     fi
 
 

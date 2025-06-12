@@ -15,9 +15,7 @@ export LESS="-iMR"
 # fi
 export VISUAL="vim"
 export EDITOR="vim"
-# {%@@ if profile == "wsl" @@%}
-export  PATH="{{@@ HOME @@}}/.local/bin:${PATH}"
-# {%@@ endif @@%}
+export PATH="{{@@ HOME @@}}/.local/bin:${PATH}"
 
 {%@@ if profile == "server-linac" @@%}
 # for cargo

@@ -19,6 +19,8 @@ alias   llt="ls -lhF --color=auto --time-style=long-iso"
 alias   lsd="ls -dlh --color=auto"
 alias   dfh="df -Th"
 alias   duh="du -h --max-depth=1"
+# dotdrop is installed by brew on macos
+alias   dotdrop="${HOME}/.config/dotfiles/dotdrop.sh"
 {%@@ endif @@%}
 alias   type="type -a"
 alias   cd..="cd .."
@@ -39,7 +41,6 @@ alias   cdw="cd ${HOME}/workspace"
 # follow the XDG standards, https://wiki.archlinux.org/title/XDG_user_directories
 alias   cdd="cd ${HOME}/Downloads"
 alias   q="exit"
-alias   dotdrop="${HOME}/.config/dotfiles/dotdrop.sh"
 alias   grepconf='grep "^[^#]"'
 alias   histg="history | grep"
 alias   histl="history | less"

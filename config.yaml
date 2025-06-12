@@ -254,7 +254,7 @@ profiles:
     variables:
       USE_PROXY: "YES"
       PROXY: "172.19.64.17:8080"
-      USE_PYENV: "YES"
+      USE_PYENV: "NO"
 
   manjaro:
     include:
@@ -278,6 +278,6 @@ profiles:
     # actions:
     # - install_libmagic_macos
     variables:
-      USE_PYENV: "YES"
+      USE_PYENV: "NO"
       USE_GPG: "YES"
       USE_NERD_FONT: "YES"

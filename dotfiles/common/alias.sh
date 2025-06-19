@@ -1,7 +1,7 @@
 alias   rm="rm -i"
 alias   cp="cp -i"
 alias   mv="mv -i"
-alias   grep="grep --color"
+alias   grep="grep --color -In"
 alias   vi="vim"
 {%@@ if os == "darwin" @@%}
 alias   l="ls -AlhF"

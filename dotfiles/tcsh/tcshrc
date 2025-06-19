@@ -95,7 +95,7 @@ endif
 alias   rm      "rm -i"
 alias   cp      "cp -i"
 alias   mv      "mv -i"
-alias   grep    "grep --color"
+alias   grep    "grep --color -In"
 alias   l       "ls -AlhF --color=auto"
 alias   llt     "ls -lhF --color=auto --time-style=long-iso"
 alias   lsd     "ls -dlh --color=auto"

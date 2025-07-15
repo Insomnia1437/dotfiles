@@ -73,8 +73,11 @@ set_epics_host_arch() {
                 "i*86")
                     EPICS_HOST_ARCH="linux-x86"
                     ;;
-                "arm*" | "aarch64")
+                "arm*")
                     EPICS_HOST_ARCH="linux-arm"
+                    ;;
+                "aarch64")
+                    EPICS_HOST_ARCH="linux-aarch64"
                     ;;
                 *)
                     EPICS_HOST_ARCH="linux-unknown_arch"

@@ -50,7 +50,34 @@ export  WIND_HOME='/cont/VxWorks/vw69'
     # chmod 700 ~/.screen
     # export SCREENDIR=~/.screen
 # fi
+
+# if [[ $(hostname) != *"mtca"* ]]; then
+#   epics709
+# else
+#   source ~/.config/common/epics.sh "R7.0.8.1" "/usr/users/control/epics/vadatech"
+# fi
+
 {%@@ endif @@%}
+
+
+{%@@ if profile == "macos" @@%}
+# for GPG TTY
+export GPG_TTY=$(tty)
+
+# for MacPorts
+# export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
+# Apple Silicon
+# export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+# Intel
+# export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+if [[ -x /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x /usr/local/bin/brew ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+{%@@ endif @@%}
+
 
 # for EPICS HOST ARCH
 export EPICS_HOST_ARCH={{@@ EPICS_HOST_ARCH @@}}
@@ -63,9 +90,3 @@ alias epics3159="source ~/.config/common/epics.sh R3.15.9"
 # alias epics707="source ~/.config/common/epics.sh R7.0.7"
 alias epics708="source ~/.config/common/epics.sh R7.0.8"
 alias epics709="source ~/.config/common/epics.sh R7.0.9"
-
-# if [[ $(hostname) != *"mtca"* ]]; then
-#   epics709
-# else
-#   source ~/.config/common/epics.sh "R7.0.8.1" "/usr/users/control/epics/vadatech"
-# fi

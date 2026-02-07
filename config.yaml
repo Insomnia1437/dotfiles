@@ -283,7 +283,7 @@ profiles:
     variables:
       USE_NERD_FONT: "YES"
 
-  laptop-macos:
+  macos:
     include:
       - basic
       - git

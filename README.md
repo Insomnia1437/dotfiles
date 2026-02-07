@@ -22,7 +22,7 @@ sudo pacman -S --needed base-devel vim git tmux zsh inetutils screen curl htop r
 
 #### macOS
 ```shell
-brew install vim gpg font-sauce-code-pro-nerd-font
+brew install vim gpg pinentry-mac font-sauce-code-pro-nerd-font 
 ```
 ### Installation
 

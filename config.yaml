@@ -179,6 +179,11 @@ dotfiles:
     src: xfce4-terminal/catppuccin-latte.colorscheme
     dst: "{{@@ INSTALL_HOME @@}}/.local/share/xfce4/terminal/colorschemes/catppuccin-latte.theme"
     chmod: "644"
+  f_lxterminal_theme:
+    # https://github.com/catppuccin/lxterminal
+    src: lxterminal/lxterminal.conf
+    dst: "{{@@ INSTALL_HOME @@}}/.config/lxterminal/lxterminal.conf"
+    chmod: "600"
   f_locale_conf:
     src: etc/locale.conf
     dst: "{{@@ INSTALL_HOME @@}}/.config/locale.conf"
@@ -245,6 +250,8 @@ profiles:
   raspi:
     include:
       - basic
+    dotfiles:
+      - f_lxterminal_theme
 
   server-linac:
     include:

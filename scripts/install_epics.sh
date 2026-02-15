@@ -1,6 +1,6 @@
 #!/bin/bash
 # set -e # Keep commented out to attempt all selected installations
-
+set -o pipefail
 #### Colorized output ##############
 red='\033[31m'
 yellow='\033[33m'
@@ -33,15 +33,104 @@ _green_bg() { printf "${green_bg}$@${reset_bgcolor}\n"; }
 _red_bg() { printf "${red_bg}$@${reset_bgcolor}\n"; }
 #### Colorize output ##############
 
+
+
 #### Global Variables ##############
-TARGET_PATH=""
-TARGET_PATH_DEFAULT="${HOME}" # Default installation path (user's home)
+EPICS_ROOT_DIR=""
+EPICS_ROOT_DIR_DEFAULT="${HOME}" # Default installation path (user's home)
+
+# procServ related variables
+PROCSERV_NAME="procServ"
+PROCSERV_VERSION="2.8.0"
+PROCSERV_ARCHIVE_NAME="${PROCSERV_NAME}-${PROCSERV_VERSION}.tar.gz"
+PROCSERV_FOLDER_NAME="${PROCSERV_NAME}-${PROCSERV_VERSION}"
+# tar file from procServ's tag page needs autoconf to generate configure script
+# so we use release page to download
+# PROCSERV_DOWNLOAD_URL="https://github.com/ralphlange/${PROCSERV_NAME}/archive/refs/tags/v${PROCSERV_VERSION}.tar.gz"
+PROCSERV_DOWNLOAD_URL="https://github.com/ralphlange/${PROCSERV_NAME}/releases/download/v${PROCSERV_VERSION}/${PROCSERV_NAME}-${PROCSERV_VERSION}.tar.gz"
+
+EXTENSIONS_TOP_ARCHIVE_NAME="extensionsTop_20120904.tar.gz"
+EXTENSIONS_TOP_DOWNLOAD_URL="https://epics.anl.gov/download/extensions/${EXTENSIONS_TOP_ARCHIVE_NAME}"
+
+# devlib2 related variables
+DEVLIB2_NAME="devlib2"
+DEVLIB2_VERSION="2.14"
+DEVLIB2_ARCHIVE_NAME="${DEVLIB2_NAME}-${DEVLIB2_VERSION}.tar.gz"
+DEVLIB2_FOLDER_NAME="${DEVLIB2_NAME}-${DEVLIB2_VERSION}"
+DEVLIB2_DOWNLOAD_URL="https://github.com/epics-modules/${DEVLIB2_NAME}/archive/refs/tags/${DEVLIB2_VERSION}.tar.gz"
+
+# mrfioc2 related variables
+MRFIOC2_NAME="mrfioc2"
+MRFIOC2_VERSION="2.7.2"
+MRFIOC2_ARCHIVE_NAME="${MRFIOC2_NAME}-${MRFIOC2_VERSION}.tar.gz"
+MRFIOC2_FOLDER_NAME="${MRFIOC2_NAME}-${MRFIOC2_VERSION}"
+MRFIOC2_DOWNLOAD_URL="https://github.com/epics-modules/${MRFIOC2_NAME}/archive/refs/tags/${MRFIOC2_VERSION}.tar.gz"
+
+# iocStats related variables
+IOCSTATS_NAME="iocStats"
+IOCSTATS_VERSION="4.0.0"
+IOCSTATS_ARCHIVE_NAME="${IOCSTATS_NAME}-${IOCSTATS_VERSION}.tar.gz"
+IOCSTATS_FOLDER_NAME="${IOCSTATS_NAME}-${IOCSTATS_VERSION}"
+IOCSTATS_DOWNLOAD_URL="https://github.com/epics-modules/${IOCSTATS_NAME}/archive/refs/tags/${IOCSTATS_VERSION}.tar.gz"
+
+# asyn related variables
+ASYN_NAME="asyn"
+ASYN_VERSION="4-45"
+ASYN_ARCHIVE_NAME="${ASYN_NAME}-R${ASYN_VERSION}.tar.gz"
+ASYN_FOLDER_NAME="${ASYN_NAME}-R${ASYN_VERSION}"
+ASYN_DOWNLOAD_URL="https://github.com/epics-modules/${ASYN_NAME}/archive/refs/tags/R${ASYN_VERSION}.tar.gz"
+
+# sequencer related variables
+SEQUENCER_NAME="sequencer"
+SEQUENCER_VERSION="2-2-9"
+SEQUENCER_ARCHIVE_NAME="${SEQUENCER_NAME}-R${SEQUENCER_VERSION}.tar.gz"
+SEQUENCER_FOLDER_NAME="${SEQUENCER_NAME}-R${SEQUENCER_VERSION}"
+SEQUENCER_DOWNLOAD_URL="https://github.com/epics-modules/${SEQUENCER_NAME}/archive/refs/tags/R${SEQUENCER_VERSION}.tar.gz"
+
+
+# for module selection
+MODULE_KEYS=(${DEVLIB2_NAME} ${MRFIOC2_NAME} ${SEQUENCER_NAME} ${IOCSTATS_NAME} ${ASYN_NAME})
+MODULE_DESC=(
+    "devlib2 ${DEVLIB2_VERSION} (EPICS Device/Driver Library)"
+    "mrfioc2 ${MRFIOC2_VERSION} (MRF Timing System Support)"
+    "sequencer ${SEQUENCER_VERSION} (State Notation Language Sequencer)"
+    "iocstats ${IOCSTATS_VERSION} (ioc status and host statistics)"
+    "asyn ${ASYN_VERSION} (Asyn Support)"
+)
+MODULE_SELECTIONS=() # Array to store Y/N choices, parallel to MODULE_KEYS
+
+# for EPICS Version Selection
+EPICS_VERSIONS_LIST=(
+    "7.0.10"   # Typical URL: https://epics.anl.gov/download/base/base-7.0.10.tar.gz
+    "7.0.9"    # Typical URL: https://epics.anl.gov/download/base/base-7.0.9.tar.gz
+    "7.0.8"  # Typical URL: https://epics.anl.gov/download/base/base-7.0.8.tar.gz
+    "3.15.9"   # Typical URL: https://epics.anl.gov/download/base/base-3.15.9.tar.gz
+)
+
+BASE_DOWNLOAD_URL_PREFIXES="https://epics.anl.gov/download/base/base-"
+BASE_DOWNLOAD_URL_SUFFIXES=".tar.gz"
+EPICS_VERSION="" # Will be set based on user selection
+BASE_DOWNLOAD_URL="" # Will be set based on user selection
+BASE_ARCHIVE_NAME="" # Will be set based on user selection
+BASE_PATH_NAME_RAW="" # Will be set based on user selection
+
+# epics path structure
+EPICS_TOP_DIR="" # Will be set based on user selection
+EPICS_DOWNLOADS_DIR="" # Will be set based on user selection
+EPICS_BASE_DIR="" # Will be set based on user selection
+EPICS_MODULE_DIR="" # Will be set based on user selection
+EPICS_IOC_DIR="" # Will be set based on user selection
+EPICS_EXTENSIONS_DIR="" # Will be set based on user selection
+
+# others
+NOW=""
+CPU_CORES=""
 #### Global Variables ##############
 
 # Check if a command exists
 check_cmd() {
     if ! [ -x "$(command -v $1)" ]; then
-        _green "Command ${red}$1${green} is required but not found. Please install $1."
+        _red "Command ${red}$1${green} is required but not found. Please install $1."
         exit 1
     fi
     return 0
@@ -61,6 +150,7 @@ confirm_and_reboot() {
 
 get_cpu_cores() {
     local raw_cores
+    local jobs
     if command -v nproc > /dev/null 2>&1; then
         raw_cores=$(nproc) # Linux
     elif command -v sysctl > /dev/null 2>&1; then
@@ -70,7 +160,7 @@ get_cpu_cores() {
     fi
 
     # let's reserve 2 cores for system responsiveness
-    local jobs=$(( raw_cores - 2 ))
+    jobs=$(( raw_cores > 8 ? 8 : raw_cores-2 ))
     if [ "$jobs" -lt 1 ]; then
         echo 1
     else
@@ -109,7 +199,7 @@ set_epics_host_arch() {
                 x86_64|i386)
                     EPICS_HOST_ARCH="darwin-x86" # Intel Mac
                     ;;
-                arm*)
+                arm64|aarch64)
                     EPICS_HOST_ARCH="darwin-arm64" # Apple Silicon
                     ;;
                 *)
@@ -123,8 +213,10 @@ set_epics_host_arch() {
     esac
 
     export EPICS_HOST_ARCH
+    _magenta "==============================================="
     _cyan "Detected OS Type: $os_type, Architecture Type: $arch_type"
     _cyan "EPICS_HOST_ARCH set to: $EPICS_HOST_ARCH"
+    _magenta "===============================================\n"
 }
 
 get_module_selection() {
@@ -138,275 +230,20 @@ get_module_selection() {
     echo "N" # Default to N if not found, though should not happen
 }
 
+is_module_installed() {
+    local module_name="$1"
+    local module_path="$2"
+    local check_file="$3"  # File to check for module completion (e.g., lib/libxxx.a)
 
-install_epics() {
-    local EPICS_ROOT_DIR="$1" # Installation directory (e.g., /tmp or ${HOME})
-    local NOW
-    local CPU_CORES
-    CPU_CORES=$(get_cpu_cores)
-    NOW=$(date '+%Y%m%d_%H%M%S')
-
-    # --- Check required commands ---
-    _cyan "Checking prerequisite commands..."
-    check_cmd make
-    check_cmd tee
-    check_cmd perl
-    check_cmd git
-    check_cmd wget
-    _cyan "All prerequisite commands found."
-
-    set_epics_host_arch
-
-    # --- EPICS Version Selection ---
-    local EPICS_VERSIONS_LIST=(
-        "7.0.10"   # Typical URL: https://epics.anl.gov/download/base/base-7.0.10.tar.gz
-        "7.0.9"    # Typical URL: https://epics.anl.gov/download/base/base-7.0.9.tar.gz
-        "7.0.8.1"  # Typical URL: https://epics.anl.gov/download/base/base-7.0.8.1.tar.gz
-        "3.15.9"   # Typical URL: https://epics.anl.gov/download/base/base-3.15.9.tar.gz
-    )
-    local EPICS_VERSION_URL_PREFIXES="https://epics.anl.gov/download/base/base-"
-    local EPICS_VERSION_URL_SUFFIXES=".tar.gz"
-
-
-    _cyan "EPICS Version Selection:"
-    for i in "${!EPICS_VERSIONS_LIST[@]}"; do
-        printf "  %d) %s\n" "$((i+1))" "${EPICS_VERSIONS_LIST[$i]}"
-    done
-
-    local choice
-    local yn_choice
-    local EPICS_VERSION
-    local EPICS_BASE_DOWNLOAD_URL
-    local EPICS_BASE_ARCHIVE_NAME
-    local EXTRACTED_BASE_DIR_NAME_PATTERN # Used to find the dir after extraction
-
-    while true; do
-        read -p "Select EPICS version to install (1-${#EPICS_VERSIONS_LIST[@]}): " choice
-        if [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le "${#EPICS_VERSIONS_LIST[@]}" ]; then
-            EPICS_VERSION="${EPICS_VERSIONS_LIST[$((choice-1))]}"
-            EPICS_BASE_DOWNLOAD_URL="${EPICS_VERSION_URL_PREFIXES}${EPICS_VERSION}${EPICS_VERSION_URL_SUFFIXES}"
-
-            EPICS_BASE_ARCHIVE_NAME="base-${EPICS_VERSION}.tar.gz"
-            EXTRACTED_BASE_DIR_NAME_PATTERN="base-${EPICS_VERSION}"
-
-            _cyan "Selected EPICS version: ${EPICS_VERSION}"
-            _cyan "Download URL: ${EPICS_BASE_DOWNLOAD_URL}"
-            _cyan "Archive name for download: ${EPICS_BASE_ARCHIVE_NAME}"
-            break
-        else
-            _yellow "Invalid selection. Please enter a number between 1 and ${#EPICS_VERSIONS_LIST[@]}."
-        fi
-    done
-
-    # --- EPICS Paths Setup ---
-    local EPICS_TOP="${EPICS_ROOT_DIR}/epics/R${EPICS_VERSION}"
-    local EPICS_DOWNLOADS_DIR="${EPICS_ROOT_DIR}/epics/downloads"
-    local EPICS_BASE="${EPICS_TOP}/base"
-    local EPICS_MODULE_DIR="${EPICS_TOP}/modules"
-    local EPICS_IOC_DIR="${EPICS_TOP}/ioc"
-    local EPICS_EXTENSIONS_DIR="${EPICS_TOP}/extensions"
-
-    mkdir -p "${EPICS_TOP}"
-    mkdir -p "${EPICS_DOWNLOADS_DIR}"
-    mkdir -p "${EPICS_IOC_DIR}"
-    mkdir -p "${EPICS_MODULE_DIR}"
-
-    _cyan "EPICS_ROOT set to: ${EPICS_ROOT_DIR}"
-    _cyan "EPICS_TOP will be: ${EPICS_TOP}"
-    _cyan "EPICS modules at: ${EPICS_MODULE_DIR}"
-    _cyan "EPICS ioc at: ${EPICS_IOC_DIR}"
-    _cyan "EPICS extensions at: ${EPICS_EXTENSIONS_DIR}"
-    _cyan "Downloads will be in: ${EPICS_DOWNLOADS_DIR}"
-
-    # --- Module Selection ---
-    _cyan "EPICS Module Selection:"
-    # Module specific versions (from original script)
-    local DEVLIB2_VERSION="2.12"
-    local IOCSTATS_VERSION="3.2.0"
-    local ASYN_VERSION="4-45"
-    local PROCSERV_VERSION="2.8.0" # Used for procServ
-    # Global (within function scope) arrays for module selection
-    MODULE_KEYS=("devlib2" "mrfioc2" "iocstats" "asyn")
-    MODULE_FRIENDLY_NAMES=(
-        "devlib2 (EPICS Device/Driver Library)"
-        "mrfioc2 (MRF Timing System Support)"
-        "iocStats (IOC Status and Statistics)"
-        "asyn (Asyn Support)"
-    )
-    MODULE_SELECTIONS=() # Array to store Y/N choices, parallel to MODULE_KEYS
-
-    for i in "${!MODULE_KEYS[@]}"; do
-        local key="${MODULE_KEYS[$i]}"
-        local name="${MODULE_FRIENDLY_NAMES[$i]}"
-
-        while true; do
-            read -p "Install module: ${name}? (Y/N): " yn_choice
-            yn_choice=$(echo "${yn_choice}" | tr '[:lower:]' '[:upper:]')
-            if [[ "$yn_choice" == "Y" || "$yn_choice" == "N" ]]; then
-                MODULE_SELECTIONS[$i]=$yn_choice # Store selection
-                if [[ "$yn_choice" == "Y" ]]; then
-                    _cyan "${name} will be installed."
-                else
-                    _yellow "${name} will NOT be installed."
-                fi
-                break
-            else
-                _yellow "Invalid input. Please enter Y or N."
-            fi
-        done
-    done
-
-    # --- Handle mrfioc2 dependencies ---
-    # If mrfioc2 is selected but devlib2 is not, auto-select devlib2
-    if [[ "$(get_module_selection 'mrfioc2')" == "Y" && "$(get_module_selection 'devlib2')" == "N" ]]; then
-        _magenta "mrfioc2 depends on devlib2. Auto-enabling devlib2 installation."
-        # Update the selection for devlib2
-        for i in "${!MODULE_KEYS[@]}"; do
-            if [[ "${MODULE_KEYS[$i]}" == "devlib2" ]]; then
-                MODULE_SELECTIONS[$i]="Y"
-                break
-            fi
-        done
-    fi
-
-    # --- Install EPICS Base ---
-    _yellow "Changing to downloads directory: ${EPICS_DOWNLOADS_DIR}"
-    cd "${EPICS_DOWNLOADS_DIR}" || { _red "Failed to cd to ${EPICS_DOWNLOADS_DIR}"; exit 1; }
-
-    _cyan "Downloading EPICS Base (${EPICS_VERSION})..."
-    if [ -f "${EPICS_BASE_ARCHIVE_NAME}" ]; then
-        _yellow "EPICS Base archive ${EPICS_BASE_ARCHIVE_NAME} already exists. Skipping download."
+    if [ -d "${module_path}" ] && [ -f "${check_file}" ]; then
+        _green "${module_name} is already installed at ${module_path}"
+        _green "Found ${module_path}/${check_file}"
+        _green "Skipping ${module_name} installation.\n"
+        return 0  # Module is installed
     else
-        wget "${EPICS_BASE_DOWNLOAD_URL}" -O "${EPICS_BASE_ARCHIVE_NAME}"
-        if [ $? -ne 0 ]; then
-            _red "Failed to download EPICS Base. Check URL and network."
-            exit 1
-        fi
-    fi
-
-    _cyan "Extracting EPICS Base..."
-    tar -zxf "${EPICS_BASE_ARCHIVE_NAME}" -C "${EPICS_TOP}"
-    if [ $? -ne 0 ]; then
-        _red "Failed to extract EPICS Base."
-        exit 1
-    fi
-
-    _yellow "Changing to EPICS TOP directory: ${EPICS_TOP}"
-    cd "${EPICS_TOP}" || { _red "Failed to cd to ${EPICS_TOP}"; exit 1; }
-
-    local extracted_base_actual_path="${EPICS_TOP}/${EXTRACTED_BASE_DIR_NAME_PATTERN}"
-    if [ -d "${extracted_base_actual_path}" ]; then
-        _cyan "Found extracted base at ${extracted_base_actual_path}, renaming to 'base'."
-        # Remove existing 'base' directory if it's a symlink or an old directory to avoid mv issues
-        if [ -L "base" ] || [ -d "base" ]; then
-            _yellow "Removing existing 'base' directory/symlink before renaming."
-            mv  "base" "base-old-${NOW}"
-        fi
-        mv "${extracted_base_actual_path}" base
-        if [ $? -ne 0 ]; then
-            _red "Failed to rename extracted base directory to 'base'."
-            exit 1
-        fi
-    else
-        _red "Could not find extracted EPICS base directory (expected: ${extracted_base_actual_path}). Please check archive content and extraction path."
-        # List contents of EPICS_TOP for debugging
-        ls -l "${EPICS_TOP}"
-        exit 1
-    fi
-
-    _yellow "Changing to EPICS Base directory: ${EPICS_BASE}"
-    cd "${EPICS_BASE}" || { _red "Failed to cd to ${EPICS_BASE}"; exit 1; }
-    _cyan "Building EPICS Base (${EPICS_VERSION})... This may take a while."
-    make -j ${CPU_CORES} 2>&1 | tee "${EPICS_BASE}/make-base-${EPICS_VERSION}-${NOW}.log"
-    if [ $? -ne 0 ]; then
-        _red "EPICS Base build failed!"
-        exit 1
-    fi
-
-    # --- Install Optional Modules ---
-    _cyan "=== Installing Optional Modules ==="
-
-    # Install procServ
-    install_procserv "${EPICS_DOWNLOADS_DIR}" "${EPICS_TOP}" "${EPICS_BASE}" "${EPICS_EXTENSIONS_DIR}" "${PROCSERV_VERSION}" "${NOW}"
-    if [ $? -eq 0 ]; then
-        _green "procServ installation completed."
-    else
-        _yellow "procServ installation skipped due to errors."
-    fi
-
-    # Install devlib2 if selected
-    if [[ "$(get_module_selection 'devlib2')" == "Y" ]]; then
-        install_devlib2 "${EPICS_DOWNLOADS_DIR}" "${EPICS_MODULE_DIR}" "${EPICS_BASE}" "${DEVLIB2_VERSION}" "${NOW}"
-        if [ $? -eq 0 ]; then
-            _green "devlib2 installation completed."
-        else
-            _yellow "devlib2 installation skipped due to errors."
-        fi
-    fi
-
-    # Install mrfioc2 if selected
-    if [[ "$(get_module_selection 'mrfioc2')" == "Y" ]]; then
-        install_mrfioc2 "${EPICS_MODULE_DIR}" "${EPICS_BASE}" "${DEVLIB2_VERSION}" "${NOW}" "$(get_module_selection 'devlib2')"
-        if [ $? -eq 0 ]; then
-            _green "mrfioc2 installation completed."
-        else
-            _yellow "mrfioc2 installation skipped due to errors."
-        fi
-    fi
-
-    # Install iocStats if selected
-    if [[ "$(get_module_selection 'iocstats')" == "Y" ]]; then
-        install_iocstats "${EPICS_DOWNLOADS_DIR}" "${EPICS_MODULE_DIR}" "${EPICS_BASE}" "${IOCSTATS_VERSION}" "${NOW}"
-        if [ $? -eq 0 ]; then
-            _green "iocStats installation completed."
-        else
-            _yellow "iocStats installation skipped due to errors."
-        fi
-    fi
-
-    # Install asyn if selected
-    if [[ "$(get_module_selection 'asyn')" == "Y" ]]; then
-        install_asyn "${EPICS_DOWNLOADS_DIR}" "${EPICS_MODULE_DIR}" "${EPICS_BASE}" "${ASYN_VERSION}" "${EPICS_HOST_ARCH}" "${NOW}"
-        if [ $? -eq 0 ]; then
-            _green "asyn installation completed."
-        else
-            _yellow "asyn installation skipped due to errors."
-        fi
-    fi
-
-
-    _cyan "--- EPICS Installation Script Finished ---"
-    _cyan "EPICS Base Version: ${EPICS_VERSION}"
-    _cyan "Installed to: ${EPICS_TOP}"
-    _cyan "Selected modules processed. Check logs in ${EPICS_DOWNLOADS_DIR} for details."
-    _cyan "Remember to set up your environment variables (e.g., EPICS_HOST_ARCH, PATH, EPICS_BASE) to use this EPICS installation."
-
-    read -e -p "Do you want to set up EPICS ENVs now? (Y/N): " yn_choice
-    yn_choice=$(echo "${yn_choice}" | tr '[:lower:]' '[:upper:]')
-    if [[ "$yn_choice" == "Y" ]]; then
-        if grep -q "EPICS_BASE" ${HOME}/.bashrc; then
-            _yellow "EPICS environment variables already exist in ${HOME}/.bashrc, skipping."
-        else
-            # add env to bashrc
-            _cyan "add EPICS env to ${HOME}/.bashrc"
-            to_bashrc ""
-            to_bashrc ""
-            to_bashrc "export EPICS_BASE=${EPICS_BASE}"
-            to_bashrc "export EPICS_HOST_ARCH=${EPICS_HOST_ARCH}"
-            to_bashrc "export EPICS_IOCSH_HISTFILE=''"
-            to_bashrc "alias cdb='cd ${EPICS_BASE}'"
-            to_bashrc "alias cdm='cd ${EPICS_MODULE_DIR}'"
-            to_bashrc "alias cdi='cd ${EPICS_IOC_DIR}'"
-            to_bashrc "export PATH='${EPICS_EXTENSIONS_DIR}/bin/${EPICS_HOST_ARCH}:${EPICS_BASE}/bin/${EPICS_HOST_ARCH}:${PATH}'"
-            to_bashrc ""
-            to_bashrc ""
-        fi
+        return 1  # Module is not installed
     fi
 }
-
-# ============================================================================
-# Module Installation Functions
-# ============================================================================
 
 # Helper function: download file if not already present
 download_file() {
@@ -421,8 +258,8 @@ download_file() {
         return 0
     fi
 
-    _cyan "Downloading ${filename}..."
-    wget "${url}" -O "${filename}"
+    _cyan "Downloading ${filename} from ${url} to ${download_dir}..."
+    wget -c --timeout=30 "${url}" -O "${filename}"
     if [ $? -ne 0 ]; then
         _red "Failed to download ${filename}"
         return 1
@@ -435,7 +272,7 @@ extract_archive() {
     local filename="$1"
     local target_dir="$2"
 
-    _cyan "Extracting ${filename}..."
+    _cyan "Extracting ${filename} to ${target_dir}"
     tar -zxf "${filename}" -C "${target_dir}"
     if [ $? -ne 0 ]; then
         _red "Failed to extract ${filename}"
@@ -444,284 +281,393 @@ extract_archive() {
     return 0
 }
 
+install_base() {
+    # --- Install EPICS Base ---
+    _cyan "=== Installing EPICS base ===\n"
+    download_file "${BASE_DOWNLOAD_URL}" "${BASE_ARCHIVE_NAME}" "${EPICS_DOWNLOADS_DIR}" || return 1
+
+    extract_archive "${BASE_ARCHIVE_NAME}" "${EPICS_TOP_DIR}" || return 1
+
+    _yellow "Changing to EPICS TOP directory: ${EPICS_TOP_DIR}"
+    cd "${EPICS_TOP_DIR}" || { _red "Failed to cd to ${EPICS_TOP_DIR}"; return 1; }
+
+    if [ -d "${BASE_PATH_NAME_RAW}" ]; then
+        _cyan "Found extracted base at ${BASE_PATH_NAME_RAW}, renaming to 'base'."
+        # Remove existing 'base' directory if it's a symlink or an old non-compiled directory to avoid mv issues
+        if [ -L "base" ] || [ -d "base" ]; then
+            _yellow "Removing existing 'base' directory/symlink before renaming."
+            mv "${EPICS_BASE_DIR}" "${EPICS_BASE_DIR}-old-${NOW}"
+        fi
+        mv "${BASE_PATH_NAME_RAW}" "${EPICS_BASE_DIR}"
+        if [ $? -ne 0 ]; then
+            _red "Failed to rename extracted base directory to 'base'."
+            return 1
+        fi
+    else
+        _red "Could not find extracted EPICS base directory (expected: ${BASE_PATH_NAME_RAW}). Please check archive content and extraction path."
+        # List contents of EPICS_TOP_DIR for debugging
+        ls -l "${EPICS_TOP_DIR}"
+        return 1
+    fi
+
+    _yellow "Changing to EPICS Base directory: ${EPICS_BASE_DIR}"
+    cd "${EPICS_BASE_DIR}" || return 1
+    _cyan "=== Building EPICS Base (${EPICS_VERSION}) This may take a while ===\n"
+    make -j ${CPU_CORES} 2>&1 | tee "${EPICS_BASE_DIR}/make-base-${EPICS_VERSION}-${NOW}.log"
+    if [ $? -ne 0 ]; then
+        _red "EPICS Base build failed!"
+        return 1
+    fi
+    _green "=== EPICS base installed successfully ===\n"
+    return 0
+}
+
 # procServ installation function
 install_procserv() {
-    local EPICS_DOWNLOADS_DIR="$1"
-    local EPICS_TOP="$2"
-    local EPICS_BASE="$3"
-    local EPICS_EXTENSIONS_DIR="$4"
-    local PROCSERV_VERSION="$5"
-    local NOW="$6"
 
-    local PROCSERV_MODULE_NAME="procServ"
-    local PROCSERV_SRC_DIR_NAME="${PROCSERV_MODULE_NAME}-${PROCSERV_VERSION}"
-    local PROCSERV_ARCHIVE_FILENAME="${PROCSERV_MODULE_NAME}-${PROCSERV_VERSION}.tar.gz"
-    local PROCSERV_DOWNLOAD_URL="https://github.com/ralphlange/procServ/releases/download/v${PROCSERV_VERSION}/${PROCSERV_ARCHIVE_FILENAME}"
-
-    local EXTENSIONS_TOP_ARCHIVE_FILENAME="extensionsTop_20120904.tar.gz"
-    local EXTENSIONS_TOP_URL="https://epics.anl.gov/download/extensions/${EXTENSIONS_TOP_ARCHIVE_FILENAME}"
-
-    _cyan "=== Installing procServ (${PROCSERV_VERSION}) ==="
-
+    _cyan "=== Installing ${PROCSERV_NAME} (${PROCSERV_VERSION}) ===\n"
     # Download and extract extensionsTop first
-    download_file "${EXTENSIONS_TOP_URL}" "${EXTENSIONS_TOP_ARCHIVE_FILENAME}" "${EPICS_DOWNLOADS_DIR}" || return 1
-    extract_archive "${EXTENSIONS_TOP_ARCHIVE_FILENAME}" "${EPICS_TOP}" || return 1
+    download_file "${EXTENSIONS_TOP_DOWNLOAD_URL}" "${EXTENSIONS_TOP_ARCHIVE_NAME}" "${EPICS_DOWNLOADS_DIR}" || return 1
+    extract_archive "${EXTENSIONS_TOP_ARCHIVE_NAME}" "${EPICS_TOP_DIR}" || return 1
 
     # Download procServ
-    download_file "${PROCSERV_DOWNLOAD_URL}" "${PROCSERV_ARCHIVE_FILENAME}" "${EPICS_DOWNLOADS_DIR}" || return 1
-
+    download_file "${PROCSERV_DOWNLOAD_URL}" "${PROCSERV_ARCHIVE_NAME}" "${EPICS_DOWNLOADS_DIR}" || return 1
     # Extract procServ
     mkdir -p "${EPICS_EXTENSIONS_DIR}/src"
-    extract_archive "${PROCSERV_ARCHIVE_FILENAME}" "${EPICS_EXTENSIONS_DIR}/src" || return 1
+    extract_archive "${PROCSERV_ARCHIVE_NAME}" "${EPICS_EXTENSIONS_DIR}/src" || return 1
 
-    local PROCSERV_FULL_SRC_PATH="${EPICS_EXTENSIONS_DIR}/src/${PROCSERV_SRC_DIR_NAME}"
-    if [ ! -d "${PROCSERV_FULL_SRC_PATH}" ]; then
-        _red "Extracted procServ directory ${PROCSERV_FULL_SRC_PATH} not found."
+    local PROCSERV_SRC_PATH="${EPICS_EXTENSIONS_DIR}/src/${PROCSERV_FOLDER_NAME}"
+    if [ ! -d "${PROCSERV_SRC_PATH}" ]; then
+        _red "Extracted ${PROCSERV_NAME} directory ${PROCSERV_SRC_PATH} not found."
         ls -l "${EPICS_EXTENSIONS_DIR}/src/"
         return 1
     fi
 
     # Configure
-    cd "${PROCSERV_FULL_SRC_PATH}" || { _red "Failed to cd to procServ source."; return 1; }
-    _cyan "Configuring procServ..."
-    # ./configure --enable-access-from-anywhere --with-epics-top="../.." 2>&1 | tee "${PROCSERV_FULL_SRC_PATH}/configure-${PROCSERV_SRC_DIR_NAME}-${NOW}.log"
+    cd "${PROCSERV_SRC_PATH}" || { _red "Failed to cd to ${PROCSERV_NAME} source."; return 1; }
+    _cyan "Configuring ${PROCSERV_NAME}..."
+    ./configure --enable-access-from-anywhere --with-epics-top="../.." 2>&1 | tee "${PROCSERV_SRC_PATH}/configure-${PROCSERV_FOLDER_NAME}-${NOW}.log"
     if [ $? -ne 0 ]; then
-        _red "Failed to configure procServ."
+        _red "Failed to configure ${PROCSERV_NAME}."
         return 1
     fi
 
     # Build
-    _cyan "Building procServ..."
-    make 2>&1 | tee "${PROCSERV_FULL_SRC_PATH}/make-${PROCSERV_SRC_DIR_NAME}-${NOW}.log"
+    _cyan "=== Building ${PROCSERV_NAME} ===\n"
+    make 2>&1 | tee "${EPICS_EXTENSIONS_DIR}/make-${PROCSERV_FOLDER_NAME}-${NOW}.log"
     if [ $? -ne 0 ]; then
-        _red "Warning: procServ build failed. Check log for details."
+        _red "${PROCSERV_NAME} build failed. Check log for details."
         return 1
     fi
 
-    _green "procServ installed successfully."
+    _green "=== ${PROCSERV_NAME} installed successfully ===\n"
     return 0
 }
 
-# devlib2 installation function
-install_devlib2() {
-    local EPICS_DOWNLOADS_DIR="$1"
-    local EPICS_MODULE_DIR="$2"
-    local EPICS_BASE="$3"
-    local DEVLIB2_VERSION="$4"
-    local NOW="$5"
+# common module installation function
+module_src_prep() {
+    local module_name="$1"
+    local module_version="$2"
+    local module_archive_name="$3"
+    local module_folder_name="$4"
+    local module_download_url="$5"
 
-    local DEVLIB2_MODULE_NAME="devlib2"
-    local DEVLIB2_SRC_DIR_NAME="${DEVLIB2_MODULE_NAME}-${DEVLIB2_VERSION}"
-    local DEVLIB2_ARCHIVE_FILENAME="${DEVLIB2_MODULE_NAME}-${DEVLIB2_VERSION}.tar.gz"
-    local DEVLIB2_DOWNLOAD_URL="https://github.com/epics-modules/devlib2/archive/refs/tags/${DEVLIB2_VERSION}.tar.gz"
+    local module_src_path="${EPICS_MODULE_DIR}/${module_folder_name}"
 
-    _cyan "=== Installing devlib2 (${DEVLIB2_VERSION}) ==="
+    _cyan "=== Installing ${module_name} ===\n"
+    download_file "${module_download_url}" "${module_archive_name}" "${EPICS_DOWNLOADS_DIR}" || return 1
+    extract_archive "${module_archive_name}" "${EPICS_MODULE_DIR}" || return 1
 
-    download_file "${DEVLIB2_DOWNLOAD_URL}" "${DEVLIB2_ARCHIVE_FILENAME}" "${EPICS_DOWNLOADS_DIR}" || return 1
-    extract_archive "${DEVLIB2_ARCHIVE_FILENAME}" "${EPICS_MODULE_DIR}" || return 1
-
-    local DEVLIB2_FULL_SRC_PATH="${EPICS_MODULE_DIR}/${DEVLIB2_SRC_DIR_NAME}"
-    if [ ! -d "${DEVLIB2_FULL_SRC_PATH}" ]; then
-        _red "Extracted devlib2 directory ${DEVLIB2_FULL_SRC_PATH} not found."
+    if [ ! -d "${module_src_path}" ]; then
+        _red "Extracted ${module_name} directory ${module_src_path} not found."
         ls -l "${EPICS_MODULE_DIR}"
         return 1
     fi
 
-    cd "${DEVLIB2_FULL_SRC_PATH}" || { _red "Failed to cd to devlib2 source."; return 1; }
-
-    _cyan "Configuring devlib2..."
-    echo "EPICS_BASE=${EPICS_BASE}" > configure/RELEASE.local
-    if [ $? -ne 0 ]; then
-        _red "Failed to write devlib2 RELEASE.local"
-        return 1
-    fi
-
-    _cyan "Building devlib2..."
-    make 2>&1 | tee "${DEVLIB2_FULL_SRC_PATH}/make-${DEVLIB2_SRC_DIR_NAME}-${NOW}.log"
-    if [ $? -ne 0 ]; then
-        _red "Warning: devlib2 build failed. Check log for details."
-        return 1
-    fi
-
-    _green "devlib2 installed successfully."
+    cd "${module_src_path}" || { _red "Failed to cd to ${module_name} source."; return 1; }
     return 0
 }
+module_src_build() {
+    local module_name="$1"
+    local module_src_path="$2"
 
-# mrfioc2 installation function
-install_mrfioc2() {
-    local EPICS_MODULE_DIR="$1"
-    local EPICS_BASE="$2"
-    local DEVLIB2_VERSION="$3"
-    local NOW="$4"
-    local DEVLIB2_SELECTED="$5"
-
-    local MRFIOC2_MODULE_NAME="mrfioc2"
-    local MRFIOC2_GIT_URL="https://github.com/Insomnia1437/mrfioc2.git"
-    local MRFIOC2_FULL_SRC_PATH="${EPICS_MODULE_DIR}/${MRFIOC2_MODULE_NAME}"
-
-    _cyan "=== Installing mrfioc2 ==="
-
-    if [ -d "${MRFIOC2_FULL_SRC_PATH}" ]; then
-        _yellow "mrfioc2 directory already exists. Skipping clone."
-    else
-        cd "${EPICS_MODULE_DIR}" || { _red "Failed to cd to modules directory."; return 1; }
-        _cyan "Cloning mrfioc2..."
-        git clone "${MRFIOC2_GIT_URL}" "${MRFIOC2_FULL_SRC_PATH}"
-        if [ $? -ne 0 ]; then
-            _red "Failed to clone mrfioc2."
-            return 1
-        fi
-    fi
-
-    cd "${MRFIOC2_FULL_SRC_PATH}" || { _red "Failed to cd to mrfioc2 source."; return 1; }
-
-    _cyan "Configuring mrfioc2..."
-    echo "EPICS_BASE=${EPICS_BASE}" > configure/RELEASE.local
-
-    if [[ "$DEVLIB2_SELECTED" == "Y" ]]; then
-        local DEVLIB2_INSTALLED_PATH="${EPICS_MODULE_DIR}/devlib2-${DEVLIB2_VERSION}"
-        if [ -d "${DEVLIB2_INSTALLED_PATH}" ]; then
-            echo "DEVLIB2=${DEVLIB2_INSTALLED_PATH}" >> configure/RELEASE.local
-            _cyan "Added DEVLIB2 path to mrfioc2 RELEASE.local"
-        else
-            _red "devlib2 was selected but directory not found. DEVLIB2 path not added."
-            return 1
-        fi
-    fi
-
-    _cyan "Building mrfioc2..."
-    make 2>&1 | tee "${MRFIOC2_FULL_SRC_PATH}/make-${MRFIOC2_MODULE_NAME}-${NOW}.log"
+    cd "${module_src_path}" || { _red "Failed to cd to ${module_name} source."; return 1; }
+    _cyan "Set EPICS_BASE to configure/RELEASE.local..."
+    echo "EPICS_BASE=${EPICS_BASE_DIR}" >> configure/RELEASE.local
     if [ $? -ne 0 ]; then
-        _red "Warning: mrfioc2 build failed. Check log for details."
+        _red "Failed to write ${module_name} RELEASE.local"
         return 1
     fi
 
-    _green "mrfioc2 installed successfully."
+    _cyan "=== Building ${module_name} ===\n"
+    make 2>&1 | tee "${module_src_path}/make-${module_name}-${NOW}.log"
+    if [ $? -ne 0 ]; then
+        _red "${module_name} build failed. Check log for details."
+        return 1
+    fi
+    _green "=== ${module_name} installed successfully ===\n"
     return 0
 }
-
-# iocStats installation function
-install_iocstats() {
-    local EPICS_DOWNLOADS_DIR="$1"
-    local EPICS_MODULE_DIR="$2"
-    local EPICS_BASE="$3"
-    local IOCSTATS_VERSION="$4"
-    local NOW="$5"
-
-    local IOCSTATS_MODULE_NAME="iocStats"
-    local IOCSTATS_SRC_DIR_NAME="${IOCSTATS_MODULE_NAME}-${IOCSTATS_VERSION}"
-    local IOCSTATS_ARCHIVE_FILENAME="${IOCSTATS_MODULE_NAME}-${IOCSTATS_VERSION}.tar.gz"
-    local IOCSTATS_DOWNLOAD_URL="https://github.com/epics-modules/iocStats/archive/refs/tags/${IOCSTATS_VERSION}.tar.gz"
-
-    _cyan "=== Installing iocStats (${IOCSTATS_VERSION}) ==="
-
-    download_file "${IOCSTATS_DOWNLOAD_URL}" "${IOCSTATS_ARCHIVE_FILENAME}" "${EPICS_DOWNLOADS_DIR}" || return 1
-    extract_archive "${IOCSTATS_ARCHIVE_FILENAME}" "${EPICS_MODULE_DIR}" || return 1
-
-    local IOCSTATS_FULL_SRC_PATH="${EPICS_MODULE_DIR}/${IOCSTATS_SRC_DIR_NAME}"
-    if [ ! -d "${IOCSTATS_FULL_SRC_PATH}" ]; then
-        _red "Extracted iocStats directory ${IOCSTATS_FULL_SRC_PATH} not found."
-        ls -l "${EPICS_MODULE_DIR}"
-        return 1
-    fi
-
-    cd "${IOCSTATS_FULL_SRC_PATH}" || { _red "Failed to cd to iocStats source."; return 1; }
-
-    _cyan "Configuring iocStats..."
-    echo "EPICS_BASE=${EPICS_BASE}" > configure/RELEASE.local
-    echo "MAKE_TEST_IOC_APP=NO" >> configure/RELEASE.local
-    if [ $? -ne 0 ]; then
-        _red "Failed to write iocStats RELEASE.local"
-        return 1
-    fi
-
-    _cyan "Building iocStats..."
-    make 2>&1 | tee "${IOCSTATS_FULL_SRC_PATH}/make-${IOCSTATS_SRC_DIR_NAME}-${NOW}.log"
-    if [ $? -ne 0 ]; then
-        _red "Warning: iocStats build failed. Check log for details."
-        return 1
-    fi
-
-    _green "iocStats installed successfully."
-    return 0
-}
-
-# asyn installation function
-install_asyn() {
-    local EPICS_DOWNLOADS_DIR="$1"
-    local EPICS_MODULE_DIR="$2"
-    local EPICS_BASE="$3"
-    local ASYN_VERSION="$4"
-    local EPICS_HOST_ARCH="$5"
-    local NOW="$6"
-
-    local ASYN_MODULE_NAME="asyn"
-    local ASYN_SRC_RAW_DIR_NAME="${ASYN_MODULE_NAME}-R${ASYN_VERSION}"
-    local ASYN_SRC_DIR_NAME="${ASYN_MODULE_NAME}-${ASYN_VERSION}"
-    local ASYN_ARCHIVE_FILENAME="${ASYN_MODULE_NAME}-R${ASYN_VERSION}.tar.gz"
-    local ASYN_DOWNLOAD_URL="https://github.com/epics-modules/asyn/archive/refs/tags/R${ASYN_VERSION}.tar.gz"
-
-    _cyan "--- Installing asyn (${ASYN_VERSION}) ---"
-
-    download_file "${ASYN_DOWNLOAD_URL}" "${ASYN_ARCHIVE_FILENAME}" "${EPICS_DOWNLOADS_DIR}" || return 1
-    extract_archive "${ASYN_ARCHIVE_FILENAME}" "${EPICS_MODULE_DIR}" || return 1
-
-    local ASYN_FULL_SRC_PATH="${EPICS_MODULE_DIR}/${ASYN_SRC_RAW_DIR_NAME}"
-    if [ ! -d "${ASYN_FULL_SRC_PATH}" ]; then
-        _red "Extracted asyn directory ${ASYN_FULL_SRC_PATH} not found."
-        ls -l "${EPICS_MODULE_DIR}"
-        return 1
-    fi
-
-    # Rename directory
-    cd "${EPICS_MODULE_DIR}" || { _red "Failed to cd to modules directory."; return 1; }
-    _cyan "Renaming asyn directory..."
-    mv -f ${ASYN_SRC_RAW_DIR_NAME} ${ASYN_SRC_DIR_NAME}
-    if [ $? -ne 0 ]; then
-        _red "Failed to rename asyn directory."
-        return 1
-    fi
-
-    local ASYN_FULL_SRC_PATH="${EPICS_MODULE_DIR}/${ASYN_SRC_DIR_NAME}"
-    cd "${ASYN_FULL_SRC_PATH}" || { _red "Failed to cd to asyn source."; return 1; }
-
-    _cyan "Configuring asyn..."
-    echo "SUPPORT=${EPICS_MODULE_DIR}" > configure/RELEASE.local
-    echo "EPICS_BASE=${EPICS_BASE}" >> configure/RELEASE.local
-    if [ $? -ne 0 ]; then
-        _red "Failed to write asyn RELEASE.local"
-        return 1
-    fi
-
-    case ${EPICS_HOST_ARCH} in
-        linux*)
-            _cyan "Enabling TIRPC on Linux..."
-            echo "TIRPC=YES" >> configure/CONFIG_SITE.local
-            ;;
-    esac
-
-    _cyan "Building asyn..."
-    make 2>&1 | tee "${ASYN_FULL_SRC_PATH}/make-${ASYN_SRC_DIR_NAME}-${NOW}.log"
-    if [ $? -ne 0 ]; then
-        _red "Warning: asyn build failed. Check log for details."
-        return 1
-    fi
-
-    _green "asyn installed successfully."
-    return 0
-}
-
 
 
 to_bashrc() {
-    echo $1 >> ${HOME}/.bashrc
+    echo "$1" >> ${HOME}/.bashrc
 }
 
+install_epics() {
+    EPICS_ROOT_DIR="$1"
+    CPU_CORES=$(get_cpu_cores)
+    NOW=$(date '+%Y%m%d_%H%M%S')
+
+    # --- Check required commands ---
+    _cyan "Checking prerequisite commands..."
+    check_cmd make
+    check_cmd tee
+    check_cmd perl
+    check_cmd git
+    check_cmd wget
+    _cyan "All prerequisite commands found."
+
+    set_epics_host_arch
+
+    _cyan "EPICS Version Selection:"
+    for i in "${!EPICS_VERSIONS_LIST[@]}"; do
+        printf "  %d) %s\n" "$((i+1))" "${EPICS_VERSIONS_LIST[$i]}"
+    done
+
+    local choice
+    local yn_choice
+    local file_after_make=""
+
+    while true; do
+        read -p "Select EPICS version to install (1-${#EPICS_VERSIONS_LIST[@]}): " choice
+        if [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le "${#EPICS_VERSIONS_LIST[@]}" ]; then
+            EPICS_VERSION="${EPICS_VERSIONS_LIST[$((choice-1))]}"
+            EPICS_TOP_DIR="${EPICS_ROOT_DIR}/epics/R${EPICS_VERSION}"
+            EPICS_DOWNLOADS_DIR="${EPICS_ROOT_DIR}/epics/downloads"
+            EPICS_BASE_DIR="${EPICS_TOP_DIR}/base"
+            EPICS_MODULE_DIR="${EPICS_TOP_DIR}/modules"
+            EPICS_IOC_DIR="${EPICS_TOP_DIR}/ioc"
+            EPICS_EXTENSIONS_DIR="${EPICS_TOP_DIR}/extensions"
+
+            BASE_DOWNLOAD_URL="${BASE_DOWNLOAD_URL_PREFIXES}${EPICS_VERSION}${BASE_DOWNLOAD_URL_SUFFIXES}"
+            BASE_ARCHIVE_NAME="base-${EPICS_VERSION}.tar.gz"
+            BASE_PATH_NAME_RAW="${EPICS_BASE_DIR}-${EPICS_VERSION}"
+            _magenta "==============================================="
+            _cyan "Selected EPICS version: ${EPICS_VERSION}"
+            _cyan "Download URL: ${BASE_DOWNLOAD_URL}"
+            _cyan "Archive name for download: ${BASE_ARCHIVE_NAME}"
+            _magenta "===============================================\n"
+            break
+        else
+            _yellow "Invalid selection. Please enter a number between 1 and ${#EPICS_VERSIONS_LIST[@]}."
+        fi
+    done
+    
+    _magenta "==============================================="
+    _cyan "EPICS ROOT set to: ${EPICS_ROOT_DIR}"
+    _cyan "EPICS TOP set to: ${EPICS_TOP_DIR}"
+    _cyan "EPICS base set to: ${EPICS_BASE_DIR}"
+    _cyan "EPICS modules set to: ${EPICS_MODULE_DIR}"
+    _cyan "EPICS ioc set to: ${EPICS_IOC_DIR}"
+    _cyan "EPICS extensions set at: ${EPICS_EXTENSIONS_DIR}"
+    _cyan "Downloads will be in: ${EPICS_DOWNLOADS_DIR}"
+    _magenta "===============================================\n"
+    
+    # create necessary directories
+    # donot create base and extensions here, they will be renamed after extraction
+    mkdir -p "${EPICS_TOP_DIR}"
+    mkdir -p "${EPICS_MODULE_DIR}"
+    mkdir -p "${EPICS_IOC_DIR}"
+    mkdir -p "${EPICS_DOWNLOADS_DIR}"
+
+    # --- Module Selection ---
+    _cyan "=== EPICS Module Selection ===\n"
+
+    for i in "${!MODULE_KEYS[@]}"; do
+        local m_key="${MODULE_KEYS[$i]}"
+        local m_desc="${MODULE_DESC[$i]}"
+
+        while true; do
+            read -p "Install module: ${m_desc}? (Y/N): " yn_choice
+            yn_choice=$(echo "${yn_choice}" | tr '[:lower:]' '[:upper:]')
+            if [[ "$yn_choice" == "Y" || "$yn_choice" == "N" ]]; then
+                MODULE_SELECTIONS[$i]=$yn_choice # Store selection
+                if [[ "$yn_choice" == "Y" ]]; then
+                    _cyan "${m_key} will be installed."
+                else
+                    _yellow "${m_key} will NOT be installed."
+                fi
+                break
+            else
+                _red "Invalid input. Please enter Y or N."
+            fi
+        done
+    done
+
+    # --- Handle mrfioc2 dependencies ---
+    # If mrfioc2 is selected but devlib2 is not, auto-select devlib2
+    if [[ "$(get_module_selection "${MRFIOC2_NAME}")" == "Y" && "$(get_module_selection "${DEVLIB2_NAME}")" == "N" ]]; then
+        _cyan "mrfioc2 depends on devlib2. Auto-enabling devlib2 installation."
+        for i in "${!MODULE_KEYS[@]}"; do
+            if [[ "${MODULE_KEYS[$i]}" == ${DEVLIB2_NAME} ]]; then
+                MODULE_SELECTIONS[$i]="Y"
+                break
+            fi
+        done
+    fi
+    if [[ "$(get_module_selection "${SEQUENCER_NAME}")" == "Y" ]]; then
+        _cyan "Sequencer requires re2c for building. Checking for re2c..."
+        check_cmd re2c # sequencer build dependency
+        _green "re2c found. sequencer build should work fine.\n"
+    fi
+    
+    if [[ "$(get_module_selection "${ASYN_NAME}")" == "Y" && "${EPICS_HOST_ARCH}" == linux* ]]; then
+        _cyan "asyn requires TIRPC for building on Linux. Checking for TIRPC..."
+        if [[ -f "/usr/include/tirpc/rpc/rpc.h" ]]; then
+            _green "TIRPC header file found. asyn build should work fine.\n"
+        else
+            _yellow "TIRPC header file not found in /usr/include/tirpc/rpc/rpc.h."
+            _yellow "Please install TIRPC development package and re-run this script."
+            _yellow "  - Debian/Ubuntu: sudo apt install libtirpc-dev"
+            _yellow "  - RHEL/CentOS/Fedora: sudo dnf install libtirpc-devel"
+            exit 1
+        fi
+    fi
+
+    # see asyn issue #223, hope this will be fixed soon so that we can remove this workaround
+    if [[ "$(get_module_selection "${ASYN_NAME}")" == "Y" && ${EPICS_VERSION} == "3.15.9" ]]; then
+        _cyan "EPICS version ${EPICS_VERSION} and asyn version ${ASYN_VERSION} are selected"
+        _cyan "But asyn-R4-44 and later have compatibility issues with EPICS 3.15.9"
+        _yellow "Change asyn version to ${ASYN_VERSION} for compatibility with EPICS 3.15.9\n"
+        # asyn related variables
+        ASYN_NAME="asyn"
+        ASYN_VERSION="4-43"
+        ASYN_ARCHIVE_NAME="${ASYN_NAME}-R${ASYN_VERSION}.tar.gz"
+        ASYN_FOLDER_NAME="${ASYN_NAME}-R${ASYN_VERSION}"
+        ASYN_DOWNLOAD_URL="https://github.com/epics-modules/${ASYN_NAME}/archive/refs/tags/R${ASYN_VERSION}.tar.gz"
+    fi
+
+
+    file_after_make="${EPICS_BASE_DIR}/bin/${EPICS_HOST_ARCH}/softIoc"
+    # Check if EPICS Base is already installed
+    if ! is_module_installed "EPICS Base" "${EPICS_BASE_DIR}" "${file_after_make}"; then
+        install_base || { _red "Failed to install EPICS Base. Aborting."; exit 1; }
+    fi
+
+    # --- Install Optional Modules ---
+    _cyan "=== Installing Optional Modules ===\n"
+
+    # Check if procServ is already installed
+    file_after_make="${EPICS_EXTENSIONS_DIR}/bin/${EPICS_HOST_ARCH}/${PROCSERV_NAME}"
+    if ! is_module_installed "${PROCSERV_NAME}"  "${EPICS_EXTENSIONS_DIR}" "${file_after_make}"; then
+        install_procserv || { _red "Failed to install ${PROCSERV_NAME}. Aborting."; exit 1; }
+    fi
+
+
+    # Install devlib2 if selected
+    if [[ "$(get_module_selection "${DEVLIB2_NAME}")" == "Y" ]]; then
+        # Check if devlib2 is already installed
+        local DEVLIB2_SRC_PATH="${EPICS_MODULE_DIR}/${DEVLIB2_FOLDER_NAME}"
+        file_after_make="${DEVLIB2_SRC_PATH}/dbd/epicspci.dbd"
+        if ! is_module_installed "${DEVLIB2_NAME}"  "${DEVLIB2_SRC_PATH}" "${file_after_make}"; then
+            module_src_prep "${DEVLIB2_NAME}" "${DEVLIB2_VERSION}" "${DEVLIB2_ARCHIVE_NAME}" "${DEVLIB2_FOLDER_NAME}" "${DEVLIB2_DOWNLOAD_URL}" || { _red "Failed to prepare ${DEVLIB2_NAME} source. Aborting."; exit 1; }
+            module_src_build "${DEVLIB2_NAME}" "${DEVLIB2_SRC_PATH}" || { _red "Failed to build ${DEVLIB2_NAME}. Aborting."; exit 1; }
+        fi
+    fi
+
+
+    # Install mrfioc2 if selected
+    if [[ "$(get_module_selection "${MRFIOC2_NAME}")" == "Y" ]]; then
+        # Check if mrfioc2 is already installed
+        local MRFIOC2_SRC_PATH="${EPICS_MODULE_DIR}/${MRFIOC2_FOLDER_NAME}"
+        file_after_make="${MRFIOC2_SRC_PATH}/dbd/mrf.dbd"
+        if ! is_module_installed "${MRFIOC2_NAME}"  "${MRFIOC2_SRC_PATH}" "${file_after_make}"; then
+            module_src_prep "${MRFIOC2_NAME}" "${MRFIOC2_VERSION}" "${MRFIOC2_ARCHIVE_NAME}" "${MRFIOC2_FOLDER_NAME}" "${MRFIOC2_DOWNLOAD_URL}" || { _red "Failed to prepare ${MRFIOC2_NAME} source. Aborting."; exit 1; }
+            # extra setup
+            cd "${MRFIOC2_SRC_PATH}" || { _red "Failed to cd to ${MRFIOC2_NAME} source."; exit 1; }
+            echo "DEVLIB2=${DEVLIB2_SRC_PATH}" >> configure/RELEASE.local
+            module_src_build "${MRFIOC2_NAME}" "${MRFIOC2_SRC_PATH}" || { _red "Failed to build ${MRFIOC2_NAME}. Aborting."; exit 1; }
+        fi
+    fi
+
+
+    # Install sequencer if selected
+    if [[ "$(get_module_selection "${SEQUENCER_NAME}")" == "Y" ]]; then
+        # Check if sequencer is already installed
+        local SEQUENCER_SRC_PATH="${EPICS_MODULE_DIR}/${SEQUENCER_FOLDER_NAME}"
+        file_after_make="${SEQUENCER_SRC_PATH}/lib/${EPICS_HOST_ARCH}/libseq.a"
+        if ! is_module_installed "${SEQUENCER_NAME}"  "${SEQUENCER_SRC_PATH}" "${file_after_make}"; then
+            module_src_prep "${SEQUENCER_NAME}" "${SEQUENCER_VERSION}" "${SEQUENCER_ARCHIVE_NAME}" "${SEQUENCER_FOLDER_NAME}" "${SEQUENCER_DOWNLOAD_URL}" || { _red "Failed to prepare ${SEQUENCER_NAME} source. Aborting."; exit 1; }
+            module_src_build "${SEQUENCER_NAME}" "${SEQUENCER_SRC_PATH}" || { _red "Failed to build ${SEQUENCER_NAME}. Aborting."; exit 1; }
+        fi
+    fi
+
+    # Install iocStats if selected
+    if [[ "$(get_module_selection "${IOCSTATS_NAME}")" == "Y" ]]; then
+        # Check if iocStats is already installed
+        local IOCSTATS_SRC_PATH="${EPICS_MODULE_DIR}/${IOCSTATS_FOLDER_NAME}"
+        file_after_make="${IOCSTATS_SRC_PATH}/lib/${EPICS_HOST_ARCH}/libdevIocStats.a"
+        if ! is_module_installed "${IOCSTATS_NAME}"  "${IOCSTATS_SRC_PATH}" "${file_after_make}"; then
+            module_src_prep "${IOCSTATS_NAME}" "${IOCSTATS_VERSION}" "${IOCSTATS_ARCHIVE_NAME}" "${IOCSTATS_FOLDER_NAME}" "${IOCSTATS_DOWNLOAD_URL}" || { _red "Failed to prepare ${IOCSTATS_NAME} source. Aborting."; exit 1; }
+            # extra setup
+            cd "${IOCSTATS_SRC_PATH}" || { _red "Failed to cd to ${IOCSTATS_NAME} source."; exit 1; }
+            echo "MAKE_TEST_IOC_APP=NO" >> configure/RELEASE.local
+            module_src_build "${IOCSTATS_NAME}" "${IOCSTATS_SRC_PATH}" || { _red "Failed to build ${IOCSTATS_NAME}. Aborting."; exit 1; }
+        fi
+    fi
+
+    # Install asyn if selected
+    if [[ "$(get_module_selection "${ASYN_NAME}")" == "Y" ]]; then
+        # Check if asyn is already installed
+        local ASYN_SRC_PATH="${EPICS_MODULE_DIR}/${ASYN_FOLDER_NAME}"
+        file_after_make="${ASYN_SRC_PATH}/lib/${EPICS_HOST_ARCH}/libasyn.a"
+        if ! is_module_installed "${ASYN_NAME}"  "${ASYN_SRC_PATH}" "${file_after_make}"; then
+            module_src_prep "${ASYN_NAME}" "${ASYN_VERSION}" "${ASYN_ARCHIVE_NAME}" "${ASYN_FOLDER_NAME}" "${ASYN_DOWNLOAD_URL}" || { _red "Failed to prepare ${ASYN_NAME} source. Aborting."; exit 1; }
+            # extra setup
+            cd "${ASYN_SRC_PATH}" || { _red "Failed to cd to ${ASYN_NAME} source."; exit 1; }
+            echo "SUPPORT=${EPICS_MODULE_DIR}" >> configure/RELEASE.local
+            case ${EPICS_HOST_ARCH} in
+                linux*)
+                    _cyan "Enabling TIRPC on Linux..."
+                    echo "TIRPC=YES" >> configure/CONFIG_SITE.local
+                ;;
+            esac
+            module_src_build "${ASYN_NAME}" "${ASYN_SRC_PATH}" || { _red "Failed to build ${ASYN_NAME}. Aborting."; exit 1; }
+        fi
+    fi
+
+
+    _cyan "=== EPICS Installation Script Finished ===\n"
+    _cyan "EPICS Base Version: ${EPICS_VERSION}"
+    _cyan "Installed to: ${EPICS_TOP_DIR}"
+    _cyan "Remember to set up your environment variables to use this EPICS installation.\n"
+
+    read -e -p "Do you want to set up EPICS ENVs now? (Y/N): " yn_choice
+    yn_choice=$(echo "${yn_choice}" | tr '[:lower:]' '[:upper:]')
+    if [[ "$yn_choice" == "Y" ]]; then
+        if grep -q "EPICS_BASE_DIR" ${HOME}/.bashrc; then
+            _yellow "EPICS environment variables already exist in ${HOME}/.bashrc, skipping."
+        else
+            # add env to bashrc
+            _cyan "add EPICS env to ${HOME}/.bashrc"
+            to_bashrc ""
+            to_bashrc "export EPICS_BASE_DIR=${EPICS_BASE_DIR}"
+            to_bashrc "export EPICS_HOST_ARCH=${EPICS_HOST_ARCH}"
+            to_bashrc "export EPICS_IOCSH_HISTFILE=''"
+            to_bashrc "alias cdb='cd ${EPICS_BASE_DIR}'"
+            to_bashrc "alias cdm='cd ${EPICS_MODULE_DIR}'"
+            to_bashrc "alias cdi='cd ${EPICS_IOC_DIR}'"
+            to_bashrc "export PATH=${EPICS_EXTENSIONS_DIR}/bin/${EPICS_HOST_ARCH}:${EPICS_BASE_DIR}/bin/${EPICS_HOST_ARCH}:\${PATH}"
+            to_bashrc ""
+        fi
+    fi
+}
 
 help() {
     _cyan "Usage: $0 [option]"
     _cyan "Options:"
-    _cyan "  1 - Install EPICS to a user-defined path (default: ${TARGET_PATH_DEFAULT})"
+    _cyan "  1 - Install EPICS to a user-defined path (default: ${EPICS_ROOT_DIR_DEFAULT})"
     _cyan "  2 - Install EPICS to /tmp (for testing)"
     _cyan "  h - Display this help message"
     exit 1
@@ -736,14 +682,14 @@ fi
 # Process argument
 case $1 in
     1)
-        read -e -p "Enter the target installation path [default: ${TARGET_PATH_DEFAULT}]: " user_path
-        TARGET_PATH="${user_path:-${TARGET_PATH_DEFAULT}}" # Use default if user_path is empty
-        if [[ ! -d "$TARGET_PATH" ]]; then
-            _red "Error: ${TARGET_PATH} is not a valid path"
+        read -e -p "Enter the target installation path [default: ${EPICS_ROOT_DIR_DEFAULT}]: " user_path
+        EPICS_ROOT_DIR="${user_path:-${EPICS_ROOT_DIR_DEFAULT}}" # Use default if user_path is empty
+        if [[ ! -d "$EPICS_ROOT_DIR" ]]; then
+            _red "Error: ${EPICS_ROOT_DIR} is not a valid path"
             exit 1
         fi
-        _green "Selected installation path: ${TARGET_PATH}"
-        install_epics "${TARGET_PATH}";;
+        _green "Selected installation path: ${EPICS_ROOT_DIR}"
+        install_epics "${EPICS_ROOT_DIR}";;
     2)
         _green "Selected installation path: /tmp"
         install_epics "/tmp";;

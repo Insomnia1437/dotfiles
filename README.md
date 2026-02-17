@@ -6,13 +6,13 @@ Not only for dotdrop
 
 #### RHEL based
 ```shell
-$ sudo yum install -y vim tar gzip bzip2 unzip perl-core pciutils net-tools lm_sensors telnet bash-completion sysstat python3 tree python3-pip git curl wget nfs-utils perf autofs rpm-build zsh tmux telnet screen readline-devel
+$ sudo yum install -y vim tar gzip bzip2 unzip perl-core pciutils net-tools lm_sensors telnet bash-completion sysstat python3 tree python3-pip git curl wget nfs-utils perf autofs rpm-build zsh tmux telnet screen readline-devel libtirpc-devel
 ```
 
 #### Debian based
 
 ```shell
-sudo apt install -y build-essential vim git tmux zsh telnet screen curl htop libreadline-dev
+sudo apt install -y build-essential vim git tmux zsh telnet screen curl htop libreadline-dev libtirpc-dev
 ```
 
 #### Arch based
@@ -22,7 +22,7 @@ sudo pacman -S --needed base-devel vim git tmux zsh inetutils screen curl htop r
 
 #### macOS
 ```shell
-brew install vim gpg pinentry-mac font-sauce-code-pro-nerd-font 
+brew install vim gpg pinentry-mac font-sauce-code-pro-nerd-font re2c 
 ```
 ### Installation
 

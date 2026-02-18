@@ -176,7 +176,7 @@ dotfiles:
     chmod: "644"
   f_xfce4_terminal_theme:
     # https://github.com/catppuccin/xfce4-terminal
-    src: xfce4-terminal/catppuccin-latte.colorscheme
+    src: xfce4-terminal/catppuccin-latte.theme
     dst: "{{@@ INSTALL_HOME @@}}/.local/share/xfce4/terminal/colorschemes/catppuccin-latte.theme"
     chmod: "644"
   f_lxterminal_theme:

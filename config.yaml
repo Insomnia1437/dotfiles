@@ -263,6 +263,7 @@ profiles:
       - f_screenrc
       - f_pyenv
       - f_alacritty
+      - f_xfce4_terminal_theme
     variables:
       USE_PROXY: "YES"
       PROXY: "172.19.64.17:8080"

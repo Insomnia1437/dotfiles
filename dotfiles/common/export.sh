@@ -15,7 +15,10 @@ export LESS="-iMR"
 # fi
 export VISUAL="vim"
 export EDITOR="vim"
+# for program installed by pip install --user
 export PATH="{{@@ HOME @@}}/.local/bin:${PATH}"
+# for manually installed program
+export PATH="{{@@ HOME @@}}/local/bin:${PATH}"
 
 {%@@ if profile == "server-linac" @@%}
 # for cargo

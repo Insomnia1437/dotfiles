@@ -1,12 +1,17 @@
 " -- theme -----------------------------------------------------------------
-" theme
-if has("termguicolors")
-    " enable true color
-    set termguicolors
+if $TERM_PROGRAM ==# "Apple_Terminal"
+    "  for old terminals which do not support TrueColor like macOS Terminal 
+    set background=light
+    colorscheme shine " other themes: morning peachpuff desert
+    hi Normal ctermbg=NONE
+else
+    if has("termguicolors")
+        " enable true color
+        set termguicolors
+    endif
+    " set termguicolors
+    colorscheme catppuccin_latte
 endif
-"set background=dark
-colorscheme catppuccin_latte
-
 " Based on https://github.com/gpakosz/.vim/blob/vanilla/.vimrc
 " -- bootstrap -----------------------------------------------------------------
 

@@ -38,7 +38,7 @@ if [ -f /etc/os-release ]; then
                     exec dbus-launch --exit-with-session startxfce4
                     ;;
                 *)
-                    echo "Detected Rocky/AlmaLinux (非9版本) -> fallback"
+                    echo "Detected Rocky/AlmaLinux older than 9 -> fallback"
                     exec /etc/X11/xinit/xinitrc
                     ;;
             esac

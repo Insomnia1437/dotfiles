@@ -1,0 +1,48 @@
+[[mouse.bindings]]
+action = "Copy"
+mouse = "Left"
+
+[[mouse.bindings]]
+action = "PasteSelection"
+mouse = "Middle"
+
+[[mouse.bindings]]
+action = "PasteSelection"
+mouse = "Right"
+
+[selection]
+save_to_clipboard = true
+
+[window]
+decorations = "full"
+opacity = 1.0
+
+# {%@@ if profile == "wsl" @@%}
+# [shell]
+# program = "C:\\Windows\\System32\\wsl.exe ~"
+# {%@@ endif @@%}
+
+[window.dimensions]
+columns = 600
+lines = 400
+
+[window.padding]
+x = 10
+y = 10
+
+[window.position]
+x = 20
+y = 20
+
+{%@@ if USE_NERD_FONT == "YES" @@%}
+[font]
+normal.family = "SauceCodePro Nerd Font Mono"
+#normal.family = "Source Code Pro for Powerline"
+normal.style = "Medium"
+size = 16
+{%@@ endif @@%}
+
+[general]
+import = [
+    "~/.config/alacritty/themes/themes/catppuccin_latte.toml"
+]

@@ -131,7 +131,7 @@ dotfiles:
     dst: "{{@@ INSTALL_HOME @@}}/.screenrc"
     chmod: "644"
   f_alacritty:
-    src: config/alacritty/alacritty.toml
+    src: alacritty/alacritty.toml
     dst: "{{@@ INSTALL_HOME @@}}/.config/alacritty/alacritty.toml"
     chmod: "644"
     actions:
@@ -206,6 +206,7 @@ profiles:
       INSTALL_HOME: "/tmp"
       USE_PROXY: "YES"
       PROXY: "172.19.64.17:8080"
+      NO_PROXY: "localhost"
       USE_PYENV: "YES"
       USE_GPG: "YES"
   basic:
@@ -267,6 +268,7 @@ profiles:
     variables:
       USE_PROXY: "YES"
       PROXY: "172.19.64.17:8080"
+      NO_PROXY: "localhost,172.19.64.0/19"
       USE_PYENV: "NO"
 
   xfce4:

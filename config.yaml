@@ -153,6 +153,10 @@ dotfiles:
     src: zsh/_dotdrop.sh-completion.zsh
     dst: "{{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/completions/_dotdrop.sh-completion.zsh"
     link: absolute
+  f_zsh_syntax_highlighting:
+    src: zsh/catppuccin_latte-zsh-syntax-highlighting.zsh
+    dst: "{{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/themes/catppuccin_latte-zsh-syntax-highlighting.zsh"
+    link: absolute
   f_bashrc:
     src: bash/bashrc
     dst: "{{@@ INSTALL_HOME @@}}/.bashrc"
@@ -214,6 +218,7 @@ profiles:
       - f_zshrc
       - f_zshtheme
       - f_dotdrop_zsh_comp
+      - f_zsh_syntax_highlighting
       - f_bashrc
       - f_vimrc
       - f_vim_theme

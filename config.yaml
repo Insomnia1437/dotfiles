@@ -42,7 +42,7 @@ variables:
   GPG_KEY_GITLAB: "45B834BCEBCDEC22"
   # dir_available: (test -d /tmp/cookiedir || mkdir -p /tmp/cookiedir)
   # use this for saving disk space (really necessary?)
-  GIT_DEPTH: "5"
+  GIT_DEPTH: "8"
   GIT_INSTALL_SH: "bash {{@@ REPO_SCRIPT_PATH @@}}/git_install.sh {{@@ GIT_DEPTH @@}}"
   FONT_NAME: "SourceCodePro"
   FONT_VERSION: "v3.1.1"

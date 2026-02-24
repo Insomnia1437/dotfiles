@@ -21,7 +21,7 @@ shopt -s histappend
 export HISTTIMEFORMAT="%F %T "
 PROMPT_COMMAND="history -a"
 
-if [[ ! "$PATH" == *${HOME}/.fzf/bin* ]]; then
+if [ -d ${HOME}/.fzf/bin ]; then
   PATH="${PATH:+${PATH}:}${HOME}/.fzf/bin"
   eval "$(fzf --bash)"
 fi

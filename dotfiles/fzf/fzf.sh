@@ -24,6 +24,6 @@ export FZF_CTRL_T_OPTS="
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow \
   --exclude .git \
   --exclude node_modules \
-  --max-depth 4'
+  --max-depth 5'
 export FZF_ALT_C_OPTS='
 '

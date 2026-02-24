@@ -22,8 +22,14 @@ sudo pacman -S --needed base-devel vim git tmux zsh inetutils screen curl htop r
 
 #### macOS
 ```shell
-brew install vim gpg pinentry-mac font-sauce-code-pro-nerd-font re2c 
+brew install vim gpg pinentry-mac font-sauce-code-pro-nerd-font re2c fd fzf bat
 ```
+
+#### other tools
+```shell
+cargo install fd-find bat
+```
+
 ### Installation
 
 ```shell

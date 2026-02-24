@@ -62,7 +62,7 @@ source ~/.oh-my-zsh/custom/themes/catppuccin_latte-zsh-syntax-highlighting.zsh
 
 # load plugins
 plugins=(git
-        # z
+        z
         fzf
         sudo
         zsh-autosuggestions

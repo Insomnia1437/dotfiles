@@ -27,7 +27,12 @@ brew install vim gpg pinentry-mac font-sauce-code-pro-nerd-font re2c fd fzf bat
 
 #### other tools
 ```shell
+# use cargo to install
 cargo install fd-find bat
+# if using apt to install, link is needed
+mkdir -p ~/.local/bin
+ln -s $(which fdfind) ~/.local/bin/fd
+ln -s $(which batcat) ~/.local/bin/bat
 ```
 
 ### Installation

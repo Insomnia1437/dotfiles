@@ -75,7 +75,7 @@ actions:
     install_tpm: "{{@@ GIT_INSTALL_SH @@}} https://github.com/tmux-plugins/tpm {{@@ INSTALL_HOME @@}}/.tmux/plugins/tpm"
     # install_bash_it: "{{@@ GIT_INSTALL_SH @@}} https://github.com/Bash-it/bash-it.git {{@@ INSTALL_HOME @@}}/.bash_it"
     install_oh_my_zsh: "{{@@ GIT_INSTALL_SH @@}} https://github.com/robbyrussell/oh-my-zsh.git {{@@ INSTALL_HOME @@}}/.oh-my-zsh"
-    install_fzf: "{{@@ GIT_INSTALL_SH @@}} https://github.com/junegunn/fzf.git {{@@ INSTALL_HOME @@}}/.fzf || {{@@ INSTALL_HOME @@}}/.fzf/install --bin"
+    install_fzf: "{{@@ GIT_INSTALL_SH @@}} https://github.com/junegunn/fzf.git {{@@ INSTALL_HOME @@}}/.fzf && {{@@ INSTALL_HOME @@}}/.fzf/install --bin"
     install_alacritty_theme: "{{@@ GIT_INSTALL_SH @@}} https://github.com/alacritty/alacritty-theme {{@@ INSTALL_HOME @@}}/.config/alacritty/themes"
     # install_libmagic_macos: brew install libmagic
     install_zsh_autosuggestions: "{{@@ GIT_INSTALL_SH @@}} https://github.com/zsh-users/zsh-autosuggestions {{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"

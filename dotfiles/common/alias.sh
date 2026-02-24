@@ -3,7 +3,7 @@ alias   cp="cp -i"
 alias   mv="mv -i"
 alias   grep="grep --color -In"
 alias   vi="vim"
-{%@@ if os == "Darwin" @@%}
+{%@@ if profile == "macos" @@%}
 alias   l="ls -AlhF"
 alias   ll="ls -lhF"
 alias   lsd="ls -dlh"

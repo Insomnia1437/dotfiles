@@ -61,8 +61,17 @@ HIST_STAMPS="yyyy-mm-dd"
 source ~/.oh-my-zsh/custom/themes/catppuccin_latte-zsh-syntax-highlighting.zsh
 
 # load plugins
-plugins=(git history z sudo zsh-autosuggestions zsh-completions
-        extract safe-paste colored-man-pages history-substring-search
+plugins=(git
+        # z
+        fzf
+        sudo
+        zsh-autosuggestions
+        zsh-completions
+        extract
+        safe-paste
+        colored-man-pages
+        # history-substring-search
+        zsh-fzf-history-search
         zsh-syntax-highlighting
         )
 source $ZSH/oh-my-zsh.sh
@@ -119,8 +128,8 @@ bindkey '^[[F' end-of-line
 # If the key codes shown by cat -v don't work for you,
 # press <C-v><UP> and <C-v><DOWN> at your ZSH command line prompt for correct key codes.)
 
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
+# bindkey '^[[A' history-substring-search-up
+# bindkey '^[[B' history-substring-search-down
 
 # omz uses bindkey -s '\el' 'ls\n' to run ls, which is not suitable for me.
 bindkey -r '\el'
@@ -128,6 +137,18 @@ bindkey '^[L' down-case-word
 bindkey '^[l' down-case-word
 bindkey '^[U' up-case-word
 bindkey '^[u' up-case-word
+
+# =====start of history conf=====
+export HISTFILE=~/.zsh_history
+HISTSIZE=50000
+SAVEHIST=100000
+setopt APPEND_HISTORY
+setopt INC_APPEND_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_REDUCE_BLANKS
+setopt EXTENDED_HISTORY
+# =====end of history conf=====
 
 compinit -d ~/.config/.zcompdump-sdcswd
 

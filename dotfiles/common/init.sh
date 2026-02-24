@@ -14,6 +14,10 @@ esac
 source ~/.config/common/alias.sh
 source ~/.config/common/export.sh
 source ~/.config/common/proxy.sh
+if [ -f ~/.fzf.sh ]; then
+    source ~/.fzf.sh
+fi
+
 
 # enable epics env in local.sh, this gives me choice to use other epics
 # e.g., echo "epics708" >> ~/.config/common/epics.sh

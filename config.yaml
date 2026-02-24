@@ -73,14 +73,16 @@ actions:
     check_tcsh_local_sh: test -e {{@@ INSTALL_HOME @@}}/.tcshrc.local || touch {{@@ INSTALL_HOME @@}}/.tcshrc.local
     # install_bash_it: test -e {{@@ INSTALL_HOME @@}}/.bash_it || (git clone --depth=1 https://github.com/Bash-it/bash-it.git {{@@ INSTALL_HOME @@}}/.bash_it)
     install_tpm: "{{@@ GIT_INSTALL_SH @@}} https://github.com/tmux-plugins/tpm {{@@ INSTALL_HOME @@}}/.tmux/plugins/tpm"
-    install_bash_it: "{{@@ GIT_INSTALL_SH @@}} https://github.com/Bash-it/bash-it.git {{@@ INSTALL_HOME @@}}/.bash_it"
+    # install_bash_it: "{{@@ GIT_INSTALL_SH @@}} https://github.com/Bash-it/bash-it.git {{@@ INSTALL_HOME @@}}/.bash_it"
     install_oh_my_zsh: "{{@@ GIT_INSTALL_SH @@}} https://github.com/robbyrussell/oh-my-zsh.git {{@@ INSTALL_HOME @@}}/.oh-my-zsh"
+    install_fzf: "{{@@ GIT_INSTALL_SH @@}} https://github.com/junegunn/fzf.git {{@@ INSTALL_HOME @@}}/.fzf || {{@@ INSTALL_HOME @@}}/.fzf/install --bin"
     install_alacritty_theme: "{{@@ GIT_INSTALL_SH @@}} https://github.com/alacritty/alacritty-theme {{@@ INSTALL_HOME @@}}/.config/alacritty/themes"
     # install_libmagic_macos: brew install libmagic
     install_zsh_autosuggestions: "{{@@ GIT_INSTALL_SH @@}} https://github.com/zsh-users/zsh-autosuggestions {{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
     install_zsh_completions: "{{@@ GIT_INSTALL_SH @@}} https://github.com/zsh-users/zsh-completions {{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/plugins/zsh-completions"
     install_zsh_syntax_highlighting: "{{@@ GIT_INSTALL_SH @@}} https://github.com/zsh-users/zsh-syntax-highlighting {{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
     install_zsh_history_substring_search: "{{@@ GIT_INSTALL_SH @@}} https://github.com/zsh-users/zsh-history-substring-search {{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/plugins/zsh-history-substring-search"
+    install_zsh-fzf-history-search: "{{@@ GIT_INSTALL_SH @@}} https://github.com/zsh-users/zsh-fzf-history-search {{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/plugins/zsh-fzf-history-search"
     install_pyenv: "{{@@ GIT_INSTALL_SH @@}} https://github.com/pyenv/pyenv.git {{@@ INSTALL_HOME @@}}/.pyenv"
     install_pyenv_virtualenv: "{{@@ GIT_INSTALL_SH @@}} https://github.com/pyenv/pyenv-virtualenv.git {{@@ INSTALL_HOME @@}}/.pyenv/plugins/pyenv-virtualenv"
     # clean_all: rm -rf {{@@ INSTALL_HOME @@}}/.config/alacritty {{@@ INSTALL_HOME @@}}/.oh-my-zsh {{@@ INSTALL_HOME @@}}/.bash_it {{@@ INSTALL_HOME @@}}/.tmux/plugins/tpm {{@@ INSTALL_HOME @@}}/.pyenv
@@ -145,7 +147,13 @@ dotfiles:
       - install_zsh_autosuggestions
       - install_zsh_completions
       - install_zsh_syntax_highlighting
-      - install_zsh_history_substring_search
+      # - install_zsh_history_substring_search
+      - install_zsh-fzf-history-search
+  f_fzf:
+    src: fzf/fzf.sh
+    dst: "{{@@ INSTALL_HOME @@}}/.fzf.sh"
+    actions:
+      - install_fzf
   f_zshtheme:
     src: zsh/sdcswd.zsh-theme
     dst: "{{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/themes/sdcswd.zsh-theme"
@@ -161,8 +169,8 @@ dotfiles:
     src: bash/bashrc
     dst: "{{@@ INSTALL_HOME @@}}/.bashrc"
     chmod: "644"
-    actions:
-      - install_bash_it
+    # actions:
+    #   - install_bash_it
   f_tcshrc:
     src: tcsh/tcshrc
     dst: "{{@@ INSTALL_HOME @@}}/.tcshrc"
@@ -224,6 +232,7 @@ profiles:
       - f_vim_theme
       - f_tmuxconf
       - d_common
+      - f_fzf
   git:
     dotfiles:
       - f_gitconfig

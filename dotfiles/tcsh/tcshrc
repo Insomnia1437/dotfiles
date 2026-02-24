@@ -144,6 +144,7 @@ switch ( $OSTYPE )
     case "FreeBSD*":
     case "freebsd*":
     case "darwin*":
+    case "Darwin*":
         bindkey "^W"        backward-delete-word
         bindkey "^[[H"      beginning-of-line
         bindkey "^[[F"      end-of-line

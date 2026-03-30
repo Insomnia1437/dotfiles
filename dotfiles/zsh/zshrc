@@ -73,7 +73,7 @@ plugins=(git
         safe-paste
         colored-man-pages
         # history-substring-search
-        zsh-fzf-history-search
+        # zsh-fzf-history-search
         zsh-syntax-highlighting
         )
 source $ZSH/oh-my-zsh.sh

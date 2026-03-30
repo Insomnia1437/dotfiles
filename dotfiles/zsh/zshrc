@@ -65,7 +65,7 @@ source ~/.oh-my-zsh/custom/themes/catppuccin_latte-zsh-syntax-highlighting.zsh
 # load plugins
 plugins=(git
         z
-        fzf
+        # fzf
         sudo
         zsh-autosuggestions
         zsh-completions
@@ -151,5 +151,10 @@ setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_REDUCE_BLANKS
 setopt EXTENDED_HISTORY
 # =====end of history conf=====
+
+if [ -d ${HOME}/.fzf/bin ]; then
+  PATH="${PATH:+${PATH}:}${HOME}/.fzf/bin"
+  eval "$(fzf --zsh)"
+fi
 
 source ~/.config/common/init.sh

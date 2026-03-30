@@ -57,6 +57,8 @@ HIST_STAMPS="yyyy-mm-dd"
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
+ZSH_COMPDUMP="$HOME/.config/.zcompdump"
+
 # load catppuccin_latte theme for zsh-syntax-highlighting before loading zsh-syntax-highlighting
 source ~/.oh-my-zsh/custom/themes/catppuccin_latte-zsh-syntax-highlighting.zsh
 
@@ -149,7 +151,5 @@ setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_REDUCE_BLANKS
 setopt EXTENDED_HISTORY
 # =====end of history conf=====
-
-compinit -d ~/.config/.zcompdump-sdcswd
 
 source ~/.config/common/init.sh

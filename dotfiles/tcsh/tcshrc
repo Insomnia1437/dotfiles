@@ -1,11 +1,13 @@
 # Everything else is interactive
-if ($?prompt == 0) then	
+if ($?prompt == 0) then
 	exit(0)
 endif
 
 {%@@ if USE_PROXY == "YES" @@%}
-alias setproxy    'setenv http_proxy http://{{@@ PROXY @@}}; setenv https_proxy http://{{@@ PROXY @@}}; setenv HTTP_PROXY http://{{@@ PROXY @@}}; setenv HTTPS_PROXY http://{{@@ PROXY @@}}'
-alias noproxy    'unset http_proxy; unset https_proxy; unset HTTP_PROXY; unset HTTPS_PROXY'
+alias setproxy 'setenv http_proxy "http://172.19.32.102:8080"; setenv https_proxy "http://172.19.32.102:8080"; setenv HTTP_PROXY "http://172.19.32.102:8080"; setenv HTTPS_PROXY "http://172.19.32.102:8080"; setenv ALL_PROXY "http://172.19.32.102:8080"; setenv all_proxy "http://172.19.32.102:8080"; setenv no_proxy "localhost,172.19.64.0/19,172.19.32.0/19"; echo "Proxy on"'
+
+alias unsetproxy 'unsetenv http_proxy; unsetenv https_proxy; unsetenv HTTP_PROXY; unsetenv HTTPS_PROXY; unsetenv ALL_PROXY; unsetenv all_proxy; unsetenv no_proxy; echo "Proxy off"'
+
 {%@@ endif @@%}
 
 {%@@ if profile == "server-linac" @@%}
@@ -44,6 +46,10 @@ alias   sad     "/usr/new/pkg/SAD/bin/gs"
 # set parseoctal
 # unset noclobber
 # set history=10000
+set history = 50000
+set savehist = (100000 merge)
+set histdup = erase
+
 set inputmode=insert
 set time=(8 "\
 Time spent in user mode   (CPU seconds) : %Us\
@@ -68,7 +74,7 @@ set     end="%{\033[0m%}" # This is needed at the end... :(
 set prompt="${blue}%n ${magenta}@ ${green}%B%m%b ${white}in  ${yellow}%~ ${white}[%T]\
 ${yellow}%#${end} "
 # copy form https://learnxinyminutes.com/docs/tcsh/
-# will cause some problem on FreeBSD    2021 Jul by D.W 
+# will cause some problem on FreeBSD    2021 Jul by D.W
 # set prompt = "%{\033[32m%}%n@%m%b %C4 %B%{\033[35m%}%t\
 # %# "
 set prompt2="%R?"
@@ -118,17 +124,17 @@ alias   bye     "exit"
 alias   q       "exit"
 alias   grepconf    'grep "^[^#]"'
 
-# bindkey 
+# bindkey
 # Select emacs bindings
-# bindkey -e 
+# bindkey -e
 # Select vi bindings
 # http://www.kitebird.com/csh-tcsh-book/bindings.pdf
-# bindkey -v 
+# bindkey -v
 
 # bindkey -s '^Xp'        '. `echo $path`^X*)^A^Dset path = ( '
 switch ( $OSTYPE )
     case "linux":
-        # follow the convention of zsh, change vi-mode keybingding, 
+        # follow the convention of zsh, change vi-mode keybingding,
         # since default keybinding ESC (^[) conflicts with CTRL-LEFT (^[[1;5D)
         # bindkey "^X^V"      vi-cmd-mode
         bindkey "^W"       backward-delete-word
@@ -158,10 +164,12 @@ endsw
 
 # alias epics314121 "source ~/.tcshrc.epics R3.14.12.1"
 alias epics314128 "source ~/.tcshrc.epics R3.14.12.8"
-alias epics315 "source ~/.tcshrc.epics R3.15.5"
+alias epics3159 "source ~/.tcshrc.epics R3.15.9"
+alias epics3155 "source ~/.tcshrc.epics R3.15.5"
 alias epics708 "source ~/.tcshrc.epics R7.0.8"
+alias epics709 "source ~/.tcshrc.epics R7.0.9"
 
-source ~/.tcshrc.epics R7.0.8
+epics3159
 
 # this file is not managed by dotdrop and git
 if ( -e ~/.tcshrc.local )  then

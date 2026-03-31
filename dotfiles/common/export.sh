@@ -78,7 +78,9 @@ if [[ -x /opt/homebrew/bin/brew ]]; then
 elif [[ -x /usr/local/bin/brew ]]; then
     eval "$(/usr/local/bin/brew shellenv)"
 fi
-
+                                                                                            
+# see https://github.com/deadc0de6/dotdrop/blob/35fac6caf13655e9ff2bcfbc89d75adf98405249/docs/howto/force-mimetype-to-text.md
+export DOTDROP_MIME_TEXT="application/x-wine-extension-ini,application/json,application/xml"
 {%@@ endif @@%}
 
 {%@@ if profile == "raspi" @@%}

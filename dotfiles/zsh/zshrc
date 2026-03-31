@@ -65,7 +65,7 @@ source ~/.oh-my-zsh/custom/themes/catppuccin_latte-zsh-syntax-highlighting.zsh
 # load plugins
 plugins=(git
         z
-        # fzf
+        fzf
         sudo
         zsh-autosuggestions
         zsh-completions
@@ -73,7 +73,7 @@ plugins=(git
         safe-paste
         colored-man-pages
         # history-substring-search
-        # zsh-fzf-history-search
+        zsh-fzf-history-search
         zsh-syntax-highlighting
         )
 source $ZSH/oh-my-zsh.sh
@@ -152,9 +152,7 @@ setopt HIST_REDUCE_BLANKS
 setopt EXTENDED_HISTORY
 # =====end of history conf=====
 
-if [ -d ${HOME}/.fzf/bin ]; then
-  PATH="${PATH:+${PATH}:}${HOME}/.fzf/bin"
-  eval "$(fzf --zsh)"
-fi
-
 source ~/.config/common/init.sh
+
+# after load fzf config, define zsh-fzf-history-search
+ZSH_FZF_HISTORY_SEARCH_FZF_EXTRA_ARGS=$FZF_DEFAULT_OPTS

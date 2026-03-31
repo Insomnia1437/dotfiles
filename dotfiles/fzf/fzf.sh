@@ -14,8 +14,10 @@ FZF_DEFAULT_OPTS="
   --border
   --info=inline"
 
+# for zsh, history search is managed by zsh-fzf-history-search plugin
 FZF_CTRL_R_OPTS="
-  --prompt='History> '
+  +s +m -x -e
+  --prompt='Search> '
   --color header:italic
   --header 'Search through command history with fzf.'"
   # --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'

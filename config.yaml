@@ -148,7 +148,7 @@ dotfiles:
       - install_zsh_completions
       - install_zsh_syntax_highlighting
       # - install_zsh_history_substring_search
-      # - install_zsh-fzf-history-search
+      - install_zsh-fzf-history-search
   f_fzf:
     src: fzf/fzf.sh
     dst: "{{@@ INSTALL_HOME @@}}/.fzf.sh"

@@ -276,7 +276,7 @@ profiles:
       - f_tcshrc
       - f_tcshrc_epics
       - f_screenrc
-      - f_pyenv
+        # - f_pyenv
       - f_alacritty
       - f_xfce4_terminal_theme
     variables:
@@ -313,7 +313,7 @@ profiles:
       - git
     dotfiles:
       - f_alacritty
-      - f_pyenv
+        #- f_pyenv
       - f_gpg_conf
     # actions:
     # - install_libmagic_macos

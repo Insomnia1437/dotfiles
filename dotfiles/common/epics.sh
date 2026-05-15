@@ -27,6 +27,13 @@ else
     # EPICS_VERSION="R3.14.12.8"
     EPICS_VERSION="R7.0.8"
 fi
+
+if [[ ${EPICS_VERSION} == R3.15* ]] && [[ ${EPICS_HOST_ARCH} == "linux-aarch64" ]]; then
+    echo "Warning: EPICS 3.15 does not support linux-aarch64 host arch."
+    echo "Changing EPICS_HOST_ARCH to linux-arm."
+    EPICS_HOST_ARCH="linux-arm"
+fi
+
 export  EPICS_VERSION="${EPICS_VERSION}"
 export  EPICS_BASE="${EPICS_ROOT}/epics/${EPICS_VERSION}/base"
 export  EPICS_EXTENSIONS="${EPICS_ROOT}/epics/${EPICS_VERSION}/extensions"

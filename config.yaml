@@ -204,7 +204,11 @@ dotfiles:
     src: gnupg/gpg.conf
     dst: "{{@@ INSTALL_HOME @@}}/.gnupg/gpg.conf"
     chmod: "600"
-  # fake_for_clean:
+  f_editorconfig:
+    src: misc/editorconfig
+    dst: "{{@@ INSTALL_HOME @@}}/.editorconfig"
+    chmod: "600"
+# fake_for_clean:
   #   src:
   #   dst:
   #   actions:
@@ -233,6 +237,7 @@ profiles:
       - f_tmuxconf
       - d_common
       - f_fzf
+      - f_editorconfig
   git:
     dotfiles:
       - f_gitconfig

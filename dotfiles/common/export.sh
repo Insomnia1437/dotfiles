@@ -8,6 +8,8 @@ if [[ -z ${TERM} ]]; then
     export TERM="xterm-256color"
 fi
 export LESS="-iMR"
+# fedora enables it in /etc/profile.d/less.sh
+export LESSOPEN=""
 # if command -v nvim &> /dev/null; then
 #   alias vi='nvim'
 # else

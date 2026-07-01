@@ -200,7 +200,8 @@ set_epics_host_arch() {
                     EPICS_HOST_ARCH="darwin-x86" # Intel Mac
                     ;;
                 arm64|aarch64)
-                    EPICS_HOST_ARCH="darwin-arm64" # Apple Silicon
+                    #EPICS_HOST_ARCH="darwin-arm64" # Apple Silicon
+                    EPICS_HOST_ARCH="darwin-aarch64" # Apple Silicon
                     ;;
                 *)
                     EPICS_HOST_ARCH="darwin-unknown_arch" # PowerPC Mac still alive?

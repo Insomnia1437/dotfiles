@@ -4,8 +4,9 @@ LOCAL_DIR="${HOME}/local"
 BIN_DIR="${LOCAL_DIR}/bin"
 JDK_VER="23.0.2"
 JDK_DIR="${LOCAL_DIR}/jdk-${JDK_VER}"
-PHOEBUS_VER="5.0.2"
+PHOEBUS_VER="5.0.5"
 PHOEBUS_DIR="${LOCAL_DIR}/phoebus-${PHOEBUS_VER}"
+PHOEBUS_BIN="${BIN_DIR}/phoebus-${PHOEBUS_VER}"
 
 mkdir -p "$BIN_DIR"
 mkdir -p "$PHOEBUS_DIR"
@@ -38,7 +39,7 @@ wget https://github.com/ControlSystemStudio/phoebus/releases/download/v${PHOEBUS
 tar -xzf /tmp/phoebus.tar.gz -C "$PHOEBUS_DIR" --strip-components=1
 rm /tmp/phoebus.tar.gz
 
-cat <<EOF > "${BIN_DIR}/phoebus-${PHOEBUS_VER}"
+cat <<EOF > "${PHOEBUS_BIN}"
 #!/bin/bash
 export JAVA_HOME=${JDK_DIR}
 export PATH="\${JAVA_HOME}/bin:\${PATH}"
@@ -46,5 +47,5 @@ bash ${PHOEBUS_DIR}/phoebus.sh > /dev/null 2>&1 &
 
 EOF
 
-chmod u+x "${BIN_DIR}/phoebus-${PHOEBUS_VER}.sh"
-echo "Phoebus ${PHOEBUS_VER} has been installed. You can run it using ${BIN_DIR}/phoebus-${PHOEBUS_VER}.sh"
+chmod u+x "${PHOEBUS_BIN}"
+echo "Phoebus ${PHOEBUS_VER} has been installed. You can run it using ${PHOEBUS_BIN}"

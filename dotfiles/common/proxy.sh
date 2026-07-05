@@ -2,14 +2,15 @@
 {%@@ if USE_PROXY == "YES" @@%}
 # active proxy in ~/.config/common/local.sh
 setproxy() {
-    export http_proxy="http://{{@@ PROXY @@}}"
-    export https_proxy="http://{{@@ PROXY @@}}"
-    export HTTP_PROXY="http://{{@@ PROXY @@}}"
-    export HTTPS_PROXY="http://{{@@ PROXY @@}}"
-    export ALL_PROXY="http://{{@@ PROXY @@}}"
-    export all_proxy="http://{{@@ PROXY @@}}"
+    local proxy_addr="${1:-{{@@ PROXY @@}}}"
+    export http_proxy="http://${proxy_addr}"
+    export https_proxy="http://${proxy_addr}"
+    export HTTP_PROXY="http://${proxy_addr}"
+    export HTTPS_PROXY="http://${proxy_addr}"
+    export ALL_PROXY="http://${proxy_addr}"
+    export all_proxy="http://${proxy_addr}"
     export no_proxy="{{@@ NO_PROXY @@}}"
-    echo "Proxy on"
+    echo "Proxy on: ${proxy_addr}"
 }
 
 unsetproxy() {
@@ -22,6 +23,4 @@ unsetproxy() {
     unset no_proxy
     echo "Proxy off"
 }
-
 {%@@ endif @@%}
-

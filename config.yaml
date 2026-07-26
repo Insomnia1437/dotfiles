@@ -91,7 +91,7 @@ dotfiles:
   d_common:
     src: common
     dst: "{{@@ INSTALL_HOME @@}}/.config/common"
-    chmod: "744"
+    chmod: "700"
     ignore_missing_in_dotdrop: true
     actions:
       - check_local_sh

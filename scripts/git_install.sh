@@ -1,9 +1,7 @@
 #!/bin/bash
-# Sometimes the remote branch may modify its commit history (perhaps used rebase) and it diverges with local.
-# Set git depth to 5 so that I can reset the history and manually merge
-# Old git version may get error
-# fatal: git fetch-pack: expected shallow list
-# So we need to disable shallow clone depth to 0 sometimes
+# Clone external dependencies when they are missing. Existing repositories are
+# intentionally left untouched so a dotfiles install never performs an implicit
+# upgrade or fails because an upstream branch rewrote its history.
 set -e
 
 if [ "$#" -ne 3 ]; then
@@ -27,7 +25,7 @@ esac
 if [ ! -e "$3" ]; then
   git clone "${GIT_DEPTH_OPTIONS[@]}" "$2" "$3"
 elif [ -d "$3/.git" ]; then
-  git -C "$3" pull --ff-only "${GIT_DEPTH_OPTIONS[@]}"
+  printf 'Repository already exists, skipping update: %s\n' "$3"
 else
   echo "Destination exists but is not a Git repository: $3" >&2
   exit 1

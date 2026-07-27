@@ -243,6 +243,14 @@ dotfiles:
     src: mako/config
     dst: "{{@@ INSTALL_HOME @@}}/.config/mako/config"
     chmod: "644"
+  f_xvnc_config:
+    src: xvnc/config
+    dst: "{{@@ INSTALL_HOME @@}}/.vnc/config"
+    chmod: "600"
+  f_xvnc_xstartup:
+    src: xvnc/xstartup
+    dst: "{{@@ INSTALL_HOME @@}}/.vnc/xstartup"
+    chmod: "700"
   f_locale_conf:
     src: etc/locale.conf
     dst: "{{@@ INSTALL_HOME @@}}/.config/locale.conf"
@@ -307,6 +315,13 @@ profiles:
   feature-lxterminal:
     dotfiles:
       - f_lxterminal_theme
+    variables:
+      USE_GUI: "YES"
+
+  feature-xvnc:
+    dotfiles:
+      - f_xvnc_config
+      - f_xvnc_xstartup
     variables:
       USE_GUI: "YES"
 
@@ -410,6 +425,7 @@ profiles:
       - feature-alacritty
       - feature-tcsh
       - feature-tcsh-epics
+      - feature-xvnc
       - platform-linux
       - desktop-xfce
       - site-linac

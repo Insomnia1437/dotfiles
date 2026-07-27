@@ -84,6 +84,12 @@ if [ -f "$install_home/.inputrc" ]; then
         -c 'set -o emacs; bind -f "$INPUTRC"' >/dev/null 2>&1
 fi
 
+if [ -f "$install_home/.vnc/xstartup" ]; then
+    sh -n "$install_home/.vnc/xstartup"
+    test "$(file_mode "$install_home/.vnc/config")" = "600"
+    test "$(file_mode "$install_home/.vnc/xstartup")" = "700"
+fi
+
 if [ -f "$install_home/.config/alacritty/alacritty.toml" ]; then
     python3 - "$install_home/.config/alacritty/alacritty.toml" <<'PY'
 import sys

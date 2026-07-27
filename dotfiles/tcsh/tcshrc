@@ -1,191 +1,215 @@
-# Everything else is interactive
-if ($?prompt == 0) then
-	exit(0)
-endif
+# Keep non-interactive SSH, scp, rsync, and remote Git commands quiet and
+# functional. Everything below is only needed by an interactive shell.
+if ( $?prompt ) then
 
-{%@@ if USE_PROXY == "YES" @@%}
-alias setproxy 'setenv http_proxy "http://{{@@ PROXY @@}}"; setenv https_proxy "http://{{@@ PROXY @@}}"; setenv HTTP_PROXY "http://{{@@ PROXY @@}}"; setenv HTTPS_PROXY "http://{{@@ PROXY @@}}"; setenv ALL_PROXY "http://{{@@ PROXY @@}}"; setenv all_proxy "http://{{@@ PROXY @@}}"; setenv no_proxy "{{@@ NO_PROXY @@}}"; echo "Proxy on"'
-
-alias unsetproxy 'unsetenv http_proxy; unsetenv https_proxy; unsetenv HTTP_PROXY; unsetenv HTTPS_PROXY; unsetenv ALL_PROXY; unsetenv all_proxy; unsetenv no_proxy; echo "Proxy off"'
-
-{%@@ endif @@%}
+    # -------------------------------------------------------------------------
+    # Linac environment
+    # -------------------------------------------------------------------------
 
 {%@@ if SITE == "linac" @@%}
-if ( -e /usr/users/skelton/cmd/cshrc ) then
-    source /usr/users/skelton/cmd/cshrc
-endif
-# for git
-# setenv PATH "/usr/new/pkg/git/current/bin:${PATH}"
-# add node and npm to path
-if ( -d /usr/new/pkg/node/11.7.0_c6_x64/bin ) then
-    setenv PATH "/usr/new/pkg/node/11.7.0_c6_x64/bin/:${PATH}"
-endif
-# for tmux
-if ( -d /usr/new/pkg/tmux/3.1b_x64/bin ) then
-    setenv PATH "/usr/new/pkg/tmux/3.1b_x64/bin/:${PATH}"
-endif
-# tmux requires libevent 2.x
-if ( -d /usr/new/pkg/libevent/2.1.12_x64/lib ) then
-    if ( $?LD_LIBRARY_PATH != 0 ) then
-        setenv LD_LIBRARY_PATH "/usr/new/pkg/libevent/2.1.12_x64/lib/:${LD_LIBRARY_PATH}"
-    else
-        setenv LD_LIBRARY_PATH "/usr/new/pkg/libevent/2.1.12_x64/lib/"
+    if ( -r /usr/users/skelton/cmd/cshrc ) then
+        source /usr/users/skelton/cmd/cshrc
     endif
-endif
 
-# for vxworks
-switch ( $OSTYPE )
-    case "linux*":
-    if ( -x /cont/VxWorks/vw69/wrenv.sh ) then
-        eval `/cont/VxWorks/vw69/wrenv.sh -p vxworks-6.9 -o print_env -f csh`
+    foreach linac_path ( \
+        /usr/new/pkg/node/11.7.0_c6_x64/bin \
+        /usr/new/pkg/tmux/3.1b_x64/bin \
+    )
+        if ( -d "$linac_path" ) then
+            setenv PATH "${linac_path}:${PATH}"
+        endif
+    end
+    unset linac_path
+
+    if ( -d /usr/new/pkg/libevent/2.1.12_x64/lib ) then
+        if ( $?LD_LIBRARY_PATH ) then
+            setenv LD_LIBRARY_PATH \
+                "/usr/new/pkg/libevent/2.1.12_x64/lib:${LD_LIBRARY_PATH}"
+        else
+            setenv LD_LIBRARY_PATH "/usr/new/pkg/libevent/2.1.12_x64/lib"
+        endif
     endif
-    setenv PATH "/usr/bin/:${PATH}"
-    breaksw;
-endsw
-# for sad
-if ( -x /usr/new/pkg/SAD/bin/gs ) then
-    alias sad "/usr/new/pkg/SAD/bin/gs"
-endif
 
+    if ( "$OSTYPE" =~ linux* ) then
+        if ( -x /cont/VxWorks/vw69/wrenv.sh ) then
+            eval `/cont/VxWorks/vw69/wrenv.sh \
+                -p vxworks-6.9 -o print_env -f csh`
+        endif
+        setenv PATH "/usr/bin:${PATH}"
+    endif
+
+    if ( -x /usr/new/pkg/SAD/bin/gs ) then
+        alias sad /usr/new/pkg/SAD/bin/gs
+    endif
 {%@@ endif @@%}
-# do not exit when pressing ctrl-D
-# set ignoreeof
-# set nobeep
-# set ellipsis
-# set rmstar
-# set echo_style=both
-# set backslash_quote
-# set parseoctal
-# unset noclobber
-# set history=10000
-set history = 50000
-set savehist = (100000 merge)
-set histdup = erase
 
-set inputmode=insert
-set time=(8 "\
+    # -------------------------------------------------------------------------
+    # Proxy helpers
+    # -------------------------------------------------------------------------
+
+{%@@ if USE_PROXY == "YES" @@%}
+    alias setproxy \
+        'setenv http_proxy "http://{{@@ PROXY @@}}"; \
+        setenv https_proxy "http://{{@@ PROXY @@}}"; \
+        setenv HTTP_PROXY "http://{{@@ PROXY @@}}"; \
+        setenv HTTPS_PROXY "http://{{@@ PROXY @@}}"; \
+        setenv ALL_PROXY "http://{{@@ PROXY @@}}"; \
+        setenv all_proxy "http://{{@@ PROXY @@}}"; \
+        setenv no_proxy "{{@@ NO_PROXY @@}}"; \
+        setenv NO_PROXY "{{@@ NO_PROXY @@}}"; \
+        echo "Proxy on: {{@@ PROXY @@}}"'
+
+    alias unsetproxy \
+        'unsetenv http_proxy; unsetenv https_proxy; \
+        unsetenv HTTP_PROXY; unsetenv HTTPS_PROXY; \
+        unsetenv ALL_PROXY; unsetenv all_proxy; \
+        unsetenv no_proxy; unsetenv NO_PROXY; \
+        echo "Proxy off"'
+{%@@ endif @@%}
+
+    # -------------------------------------------------------------------------
+    # Interactive behavior
+    # -------------------------------------------------------------------------
+
+    set history = 50000
+    set savehist = ( 100000 merge )
+    set histdup = erase
+    set histlit
+
+    set autolist = ambiguous
+    set matchbeep = never
+    set recexact
+    set filec
+    set nobeep
+
+    set notify
+    set listjobs = long
+    set printexitvalue
+
+    set inputmode = insert
+    set time = ( 8 "\
 Time spent in user mode   (CPU seconds) : %Us\
 Time spent in kernel mode (CPU seconds) : %Ss\
 Total time                              : %Es\
-CPU utilisation (percentage)            : %P\
+CPU utilisation (percentage)           : %P\
 Times the process was swapped           : %W\
 Times of major page faults              : %F\
-Times of minor page faults              : %R")
+Times of minor page faults              : %R" )
 
-# https://www.cs.umd.edu/~srhuang/teaching/code_snippets/prompt_color.tcsh.html
-# Colors!
-set     red="%{\033[1;31m%}"
-set   green="%{\033[0;32m%}"
-set  yellow="%{\033[1;33m%}"
-set    blue="%{\033[1;34m%}"
-set magenta="%{\033[1;35m%}"
-set    cyan="%{\033[1;36m%}"
-set   white="%{\033[0;37m%}"
-set     end="%{\033[0m%}" # This is needed at the end... :(
+    # -------------------------------------------------------------------------
+    # Prompt and locale
+    # -------------------------------------------------------------------------
 
-set prompt="${blue}%n ${magenta}@ ${green}%B%m%b ${white}in  ${yellow}%~ ${white}[%T]\
-${yellow}%#${end} "
-# copy form https://learnxinyminutes.com/docs/tcsh/
-# will cause some problem on FreeBSD    2021 Jul by D.W
-# set prompt = "%{\033[32m%}%n@%m%b %C4 %B%{\033[35m%}%t\
-# %# "
-set prompt2="%R?"
-set prompt3="CORRECT> %B%R%b (y|n|e)?"
+    set red = "%{\033[1;31m%}"
+    set green = "%{\033[0;32m%}"
+    set yellow = "%{\033[1;33m%}"
+    set blue = "%{\033[1;34m%}"
+    set magenta = "%{\033[1;35m%}"
+    set cyan = "%{\033[1;36m%}"
+    set white = "%{\033[0;37m%}"
+    set color_end = "%{\033[0m%}"
 
-setenv LANG         en_US.UTF-8
-setenv LANGUAGE     en_US.UTF-8
-setenv LC_CTYPE     en_US.UTF-8
-# it is meant to be used only for testing or troubleshooting purposes
-# setenv LC_ALL   en_US.UTF-8
-if ($?TERM == 0) then
-    setenv TERM     "xterm-256color"
-endif
-setenv LESS     "-iMR"
+    set prompt = "${blue}%n ${magenta}@ ${green}%B%m%b ${white}in  \
+${yellow}%~ ${white}[%T]\n${yellow}%#${color_end} "
+    set prompt2 = "%R?"
+    set prompt3 = "CORRECT> %B%R%b (y|n|e)?"
 
-# some old server does not have vim
-if ( -e `where vim` ) then
-    alias   vi      "vim"
-endif
-if ( -e `where less` ) then
-    alias more 'less'
-endif
-# alias   vi      "vim"
-alias   rm      "rm -i"
-alias   cp      "cp -i"
-alias   mv      "mv -i"
-alias   grep    "grep --color -In"
-alias   l       "ls -AlhF --color=auto"
-alias   llt     "ls -lhF --color=auto --time-style=long-iso"
-alias   lsd     "ls -dlh --color=auto"
-alias   cd..    "cd .."
-alias   cd~     "cd ~"
-alias   ..      "cd .."
-alias   lsg     "ls -lhFa | grep"
-alias   duh     "du -h --max-depth=1"
-alias   dfh     "df -Th"
-alias   freeh   "free -h"
-alias   psg     'ps axuww | grep \!* | grep -v grep'
-alias   psgl    'ps axlww | grep \!* | grep -v grep'
-alias   ff      "find . -type f -name"
-alias   fd      "find . -type d -name"
-alias   cdw     "cd ${HOME}/workspace"
-# follow the XDG standards, https://wiki.archlinux.org/title/XDG_user_directories
-alias   cdd     "cd ${HOME}/Downloads"
-alias   dotdrop "${HOME}/.config/dotfiles/dotdrop.sh"
-alias   bye     "exit"
-alias   q       "exit"
-alias   grepconf    'grep "^[^#]"'
+    setenv LANG en_US.UTF-8
+    setenv LANGUAGE en_US.UTF-8
+    setenv LC_CTYPE en_US.UTF-8
+    setenv LESS "-iMR"
 
-# bindkey
-# Select emacs bindings
-# bindkey -e
-# Select vi bindings
-# http://www.kitebird.com/csh-tcsh-book/bindings.pdf
-# bindkey -v
+    if ( ! $?TERM ) then
+        setenv TERM xterm-256color
+    endif
 
-# bindkey -s '^Xp'        '. `echo $path`^X*)^A^Dset path = ( '
-switch ( $OSTYPE )
-    case "linux":
-        # follow the convention of zsh, change vi-mode keybingding,
-        # since default keybinding ESC (^[) conflicts with CTRL-LEFT (^[[1;5D)
-        # bindkey "^X^V"      vi-cmd-mode
-        bindkey "^W"       backward-delete-word
-        bindkey "^[[1;5D"  backward-word
-        bindkey "^[[1;5C"  forward-word
-        bindkey "^[[5~"    end-of-line
-        bindkey "^[[6~"    beginning-of-line
-        bindkey "^[L"      downcase-word
-        bindkey "^[U"      upcase-word
-        bindkey "^[l"      downcase-word
-        bindkey "^[u"      upcase-word
-    breaksw;
-    case "FreeBSD*":
-    case "freebsd*":
-    case "darwin*":
-    case "Darwin*":
-        bindkey "^W"        backward-delete-word
-        bindkey "^[[H"      beginning-of-line
-        bindkey "^[[F"      end-of-line
-        bindkey "^[[1;5C"   vi-word-fwd
-        bindkey "^[[1;5D"   vi-word-back
-    breaksw;
-#     default:
-#     breaksw;
-endsw
+    # -------------------------------------------------------------------------
+    # Aliases
+    # -------------------------------------------------------------------------
 
+    which vim >& /dev/null
+    if ( $status == 0 ) then
+        alias vi vim
+    endif
 
-# alias epics314121 "source ~/.tcshrc.epics R3.14.12.1"
-alias epics314128 "source ~/.tcshrc.epics R3.14.12.8"
-alias epics3159 "source ~/.tcshrc.epics R3.15.9"
-alias epics3155 "source ~/.tcshrc.epics R3.15.5"
-alias epics708 "source ~/.tcshrc.epics R7.0.8"
-alias epics709 "source ~/.tcshrc.epics R7.0.9"
+    which less >& /dev/null
+    if ( $status == 0 ) then
+        alias more less
+    endif
 
-epics3159
+    alias rm "rm -i"
+    alias cp "cp -i"
+    alias mv "mv -i"
+    alias grep "grep --color -In"
+    alias l "ls -AlhF --color=auto"
+    alias ll "ls -lhF --color=auto"
+    alias llt "ls -lhF --color=auto --time-style=long-iso"
+    alias lsd "ls -dlh --color=auto"
+    alias lsg "ls -lhFa | grep"
+    alias duh "du -h --max-depth=1"
+    alias dfh "df -Th"
+    alias freeh "free -h"
+    alias psg 'ps axuww | grep \!* | grep -v grep'
+    alias psgl 'ps axlww | grep \!* | grep -v grep'
+    alias ff "find . -type f -name"
+    alias fd "find . -type d -name"
 
-# this file is not managed by dotdrop and git
-if ( -e ~/.tcshrc.local )  then
-    source ~/.tcshrc.local
-# else
-#     exit 1
+    alias cd.. "cd .."
+    alias cd~ "cd ~"
+    alias .. "cd .."
+    alias ... "cd ../.."
+    alias cdd "cd ${HOME}/Downloads"
+    alias cdw "cd ${HOME}/workspace"
+
+    alias dotdrop "${HOME}/.config/dotfiles/dotdrop.sh"
+    alias bye exit
+    alias q exit
+    alias grepconf 'grep "^[^#]"'
+
+    # -------------------------------------------------------------------------
+    # Key bindings
+    # -------------------------------------------------------------------------
+
+    switch ( "$OSTYPE" )
+        case "linux*":
+            bindkey "^W" backward-delete-word
+            bindkey "^[[1;5D" backward-word
+            bindkey "^[[1;5C" forward-word
+            bindkey "^[[5~" end-of-line
+            bindkey "^[[6~" beginning-of-line
+            bindkey "^[L" downcase-word
+            bindkey "^[U" upcase-word
+            bindkey "^[l" downcase-word
+            bindkey "^[u" upcase-word
+            breaksw
+
+        case "FreeBSD*":
+        case "freebsd*":
+        case "Darwin*":
+        case "darwin*":
+            bindkey "^W" backward-delete-word
+            bindkey "^[[H" beginning-of-line
+            bindkey "^[[F" end-of-line
+            bindkey "^[[1;5C" vi-word-fwd
+            bindkey "^[[1;5D" vi-word-back
+            breaksw
+    endsw
+
+    # -------------------------------------------------------------------------
+    # EPICS
+    # -------------------------------------------------------------------------
+
+    alias epics314128 "source ~/.tcshrc.epics R3.14.12.8"
+    alias epics3155 "source ~/.tcshrc.epics R3.15.5"
+    alias epics3159 "source ~/.tcshrc.epics R3.15.9"
+    alias epics708 "source ~/.tcshrc.epics R7.0.8"
+    alias epics709 "source ~/.tcshrc.epics R7.0.9"
+
+    epics3159
+
+    # Local settings are intentionally not managed by Dotdrop.
+    if ( -r ~/.tcshrc.local ) then
+        source ~/.tcshrc.local
+    endif
+
 endif

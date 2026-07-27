@@ -1,39 +1,48 @@
 #!/usr/bin/tcsh
-setenv EPICS_HOST_ARCH `bash "${HOME}/.config/dotfiles/scripts/epics_host_arch.sh"`
-if ("$?EPICS_VERSION") then
-    # to match the colon. Should colon be escaped?
-    set old_path1="${HOME}/epics/${EPICS_VERSION}/base/bin/${EPICS_HOST_ARCH}\(:\)\{0,1\}"
-    set old_path2="${HOME}/epics/${EPICS_VERSION}/extensions/bin/${EPICS_HOST_ARCH}\(:\)\{0,1\}"
-    set old_path3="${HOME}/epics/${EPICS_VERSION}/base/lib/${EPICS_HOST_ARCH}\(:\)\{0,1\}"
-    # remove old path for epics base and extesion
-    # use "#" for sed to avoid escape of "/"
-    setenv  PATH `echo ${PATH} | sed "s#${old_path1}##g"`
-    setenv  PATH `echo ${PATH} | sed "s#${old_path2}##g"`
-    # setenv  LD_LIBRARY_PATH `echo ${LD_LIBRARY_PATH} | sed "s#${old_path3}##g"`
-    # keep the environment clean
-    unset EPICS_VERSION old_path1 old_path2 old_path3
+
+# Usage:
+#   source ~/.tcshrc.epics R3.15.9
+#   source ~/.tcshrc.epics R7.0.8
+
+set requested_version = "R7.0.8"
+
+if ( $#argv >= 1 ) then
+    if ( "$argv[1]" =~ R3* || "$argv[1]" =~ R7* ) then
+        set requested_version = "$argv[1]"
+    else
+        echo "Unsupported EPICS version: $argv[1]"
+        echo "Using default EPICS version: ${requested_version}"
+    endif
 endif
 
-# https://learnxinyminutes.com/docs/tcsh/
+setenv EPICS_HOST_ARCH \
+    `bash "${HOME}/.config/dotfiles/scripts/epics_host_arch.sh"`
 
-if ( $argv[1] =~ "R3*" || $argv[1] =~ "R7*" ) then
-    set EPICS_VERSION=$argv[1]
-    echo "Use EPICS $argv[1]"
-else
-    set EPICS_VERSION="R7.0.8"
+# Remove paths belonging to the previously selected EPICS version.
+if ( $?EPICS_VERSION ) then
+    set old_base_bin = \
+        "${HOME}/epics/${EPICS_VERSION}/base/bin/${EPICS_HOST_ARCH}\(:\)\{0,1\}"
+    set old_extensions_bin = \
+        "${HOME}/epics/${EPICS_VERSION}/extensions/bin/${EPICS_HOST_ARCH}\(:\)\{0,1\}"
+
+    setenv PATH `echo "$PATH" | sed "s#${old_base_bin}##g"`
+    setenv PATH `echo "$PATH" | sed "s#${old_extensions_bin}##g"`
+
+    unset old_base_bin old_extensions_bin
 endif
 
-setenv  EPICS_VERSION "${EPICS_VERSION}"
-setenv  EPICS_BASE "${HOME}/epics/${EPICS_VERSION}/base"
-setenv  EPICS_EXTENSIONS "${HOME}/epics/${EPICS_VERSION}/extensions"
-setenv  EPICS_CA_MAX_ARRAY_BYTES "10000000"
-setenv  PATH "${EPICS_BASE}/bin/${EPICS_HOST_ARCH}:${PATH}"
-setenv  PATH "${EPICS_EXTENSIONS}/bin/${EPICS_HOST_ARCH}:${PATH}"
-# if ( $?LD_LIBRARY_PATH != 0 ) then
-#    setenv  LD_LIBRARY_PATH "${EPICS_BASE}/lib/${EPICS_HOST_ARCH}:${LD_LIBRARY_PATH}"
-#else
-#    setenv  LD_LIBRARY_PATH "${EPICS_BASE}/lib/${EPICS_HOST_ARCH}"
-#endif
+setenv EPICS_VERSION "$requested_version"
+setenv EPICS_BASE "${HOME}/epics/${EPICS_VERSION}/base"
+setenv EPICS_EXTENSIONS "${HOME}/epics/${EPICS_VERSION}/extensions"
+setenv EPICS_CA_MAX_ARRAY_BYTES 10000000
+
+if ( -d "${EPICS_BASE}/bin/${EPICS_HOST_ARCH}" ) then
+    setenv PATH "${EPICS_BASE}/bin/${EPICS_HOST_ARCH}:${PATH}"
+endif
+
+if ( -d "${EPICS_EXTENSIONS}/bin/${EPICS_HOST_ARCH}" ) then
+    setenv PATH "${EPICS_EXTENSIONS}/bin/${EPICS_HOST_ARCH}:${PATH}"
+endif
 
 alias cdb "cd ${EPICS_BASE}"
 alias cde "cd ${EPICS_EXTENSIONS}"
@@ -41,10 +50,13 @@ alias cdi "cd ${HOME}/epics/${EPICS_VERSION}/ioc"
 alias cdm "cd ${HOME}/epics/${EPICS_VERSION}/modules"
 alias cded "cd ${HOME}/epics/downloads"
 
-
-# disable epics iocsh history (epics version>=7.0.8)
+# Disable IOC shell history for EPICS >= 7.0.8.
 setenv EPICS_IOCSH_HISTFILE ""
-# setenv EPICS_CA_AUTO_ADDR_LIST "NO"
-# setenv EPICS_PVA_AUTO_ADDR_LIST "NO"
-# setenv EPICS_CA_ADDR_LIST '172.19.64.78'
-# setenv EPICS_PVA_ADDR_LIST '172.19.64.78'
+
+unset requested_version
+
+# Examples for hosts that require explicit CA/PVA address lists:
+# setenv EPICS_CA_AUTO_ADDR_LIST NO
+# setenv EPICS_PVA_AUTO_ADDR_LIST NO
+# setenv EPICS_CA_ADDR_LIST 172.19.64.78
+# setenv EPICS_PVA_ADDR_LIST 172.19.64.78

@@ -1,0 +1,12 @@
+# Keep readline behavior consistent across Bash, Python, GDB, and other tools.
+set editing-mode emacs
+set completion-ignore-case on
+set completion-map-case on
+set show-all-if-ambiguous on
+set show-all-if-unmodified on
+
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+"\e[1;5C": forward-word
+"\e[1;5D": backward-word
+"\C-w": backward-kill-word

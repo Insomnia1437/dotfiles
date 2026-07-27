@@ -1,5 +1,5 @@
 #!/usr/bin/tcsh
-setenv EPICS_HOST_ARCH "linux-x86_64"
+setenv EPICS_HOST_ARCH `bash "${HOME}/.config/dotfiles/scripts/epics_host_arch.sh"`
 if ("$?EPICS_VERSION") then
     # to match the colon. Should colon be escaped?
     set old_path1="${HOME}/epics/${EPICS_VERSION}/base/bin/${EPICS_HOST_ARCH}\(:\)\{0,1\}"

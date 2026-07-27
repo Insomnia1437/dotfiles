@@ -154,7 +154,7 @@ endif
 
 " -- display -------------------------------------------------------------------
 set title       " change the terminal title
-{%@@ if profile == "wsl" @@%}
+{%@@ if IS_WSL == "YES" @@%}
     " don't change the terminal title in WSL, as it messes with Windows Terminal's tab titles
     set notitle
 {%@@ endif @@%}

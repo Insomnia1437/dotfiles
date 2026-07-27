@@ -1,0 +1,17 @@
+NetworkManager-applet
+alacritty
+brightnessctl
+grim
+mako
+pavucontrol
+playerctl
+slurp
+sway
+swaybg
+swayidle
+swaylock
+waybar
+wireplumber
+wl-clipboard
+wmenu
+xdg-desktop-portal-wlr

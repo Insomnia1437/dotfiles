@@ -4,36 +4,48 @@ if ($?prompt == 0) then
 endif
 
 {%@@ if USE_PROXY == "YES" @@%}
-alias setproxy 'setenv http_proxy "http://172.19.32.102:8080"; setenv https_proxy "http://172.19.32.102:8080"; setenv HTTP_PROXY "http://172.19.32.102:8080"; setenv HTTPS_PROXY "http://172.19.32.102:8080"; setenv ALL_PROXY "http://172.19.32.102:8080"; setenv all_proxy "http://172.19.32.102:8080"; setenv no_proxy "localhost,172.19.64.0/19,172.19.32.0/19"; echo "Proxy on"'
+alias setproxy 'setenv http_proxy "http://{{@@ PROXY @@}}"; setenv https_proxy "http://{{@@ PROXY @@}}"; setenv HTTP_PROXY "http://{{@@ PROXY @@}}"; setenv HTTPS_PROXY "http://{{@@ PROXY @@}}"; setenv ALL_PROXY "http://{{@@ PROXY @@}}"; setenv all_proxy "http://{{@@ PROXY @@}}"; setenv no_proxy "{{@@ NO_PROXY @@}}"; echo "Proxy on"'
 
 alias unsetproxy 'unsetenv http_proxy; unsetenv https_proxy; unsetenv HTTP_PROXY; unsetenv HTTPS_PROXY; unsetenv ALL_PROXY; unsetenv all_proxy; unsetenv no_proxy; echo "Proxy off"'
 
 {%@@ endif @@%}
 
-{%@@ if profile == "server-linac" @@%}
-source /usr/users/skelton/cmd/cshrc
+{%@@ if SITE == "linac" @@%}
+if ( -e /usr/users/skelton/cmd/cshrc ) then
+    source /usr/users/skelton/cmd/cshrc
+endif
 # for git
 # setenv PATH "/usr/new/pkg/git/current/bin:${PATH}"
 # add node and npm to path
-setenv PATH "/usr/new/pkg/node/11.7.0_c6_x64/bin/:${PATH}"
+if ( -d /usr/new/pkg/node/11.7.0_c6_x64/bin ) then
+    setenv PATH "/usr/new/pkg/node/11.7.0_c6_x64/bin/:${PATH}"
+endif
 # for tmux
-setenv PATH "/usr/new/pkg/tmux/3.1b_x64/bin/:${PATH}"
+if ( -d /usr/new/pkg/tmux/3.1b_x64/bin ) then
+    setenv PATH "/usr/new/pkg/tmux/3.1b_x64/bin/:${PATH}"
+endif
 # tmux requires libevent 2.x
-if ( $?LD_LIBRARY_PATH != 0 ) then
-    setenv LD_LIBRARY_PATH "/usr/new/pkg/libevent/2.1.12_x64/lib/:${LD_LIBRARY_PATH}"
-else
-    setenv LD_LIBRARY_PATH "/usr/new/pkg/libevent/2.1.12_x64/lib/"
+if ( -d /usr/new/pkg/libevent/2.1.12_x64/lib ) then
+    if ( $?LD_LIBRARY_PATH != 0 ) then
+        setenv LD_LIBRARY_PATH "/usr/new/pkg/libevent/2.1.12_x64/lib/:${LD_LIBRARY_PATH}"
+    else
+        setenv LD_LIBRARY_PATH "/usr/new/pkg/libevent/2.1.12_x64/lib/"
+    endif
 endif
 
 # for vxworks
 switch ( $OSTYPE )
     case "linux*":
-    eval `/cont/VxWorks/vw69/wrenv.sh -p vxworks-6.9 -o print_env -f csh`
+    if ( -x /cont/VxWorks/vw69/wrenv.sh ) then
+        eval `/cont/VxWorks/vw69/wrenv.sh -p vxworks-6.9 -o print_env -f csh`
+    endif
     setenv PATH "/usr/bin/:${PATH}"
     breaksw;
 endsw
 # for sad
-alias   sad     "/usr/new/pkg/SAD/bin/gs"
+if ( -x /usr/new/pkg/SAD/bin/gs ) then
+    alias sad "/usr/new/pkg/SAD/bin/gs"
+endif
 
 {%@@ endif @@%}
 # do not exit when pressing ctrl-D

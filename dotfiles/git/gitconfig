@@ -21,7 +21,7 @@
 #         proxy = https://{{@@ PROXY @@}}
 # {%@@ endif @@%}
 
-{%@@ if GIT_VERSION >= "2.13" @@%}
+{%@@ if GIT_HASCONFIG_REMOTE_URL == "YES" @@%}
 # The contents of this file are included only for GitLab.com URLs
 [includeIf "hasconfig:remote.*.url:git@**gitlab**:**/**"]
         # Edit this line to point to your alternative configuration file
@@ -33,3 +33,7 @@
         # Edit this line to point to your alternative configuration file
         path = ~/.gitconfig-gitlab
 {%@@ endif @@%}
+
+# Keep machine-, account-, and site-specific settings out of this repository.
+[include]
+        path = ~/.gitconfig.local

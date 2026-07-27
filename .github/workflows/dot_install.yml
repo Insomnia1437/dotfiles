@@ -7,45 +7,42 @@ on:
   # pull_request:
   #   paths-ignore:
   #     - '**/*.md'
-  workflow_dispatch
+  workflow_dispatch:
 
 jobs:
-  install_all_dotfiles:
+  render_profiles:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        profile:
+          - test-linux-cli
+          - test-macos
+          - test-wsl
+          - test-debian-xfce
+          - test-manjaro-kde
+          - test-linac
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           submodules: true
       - name: "Set up Python 3.9"
-        uses: actions/setup-python@v5
-        with: 
+        uses: actions/setup-python@v7
+        with:
           python-version: 3.9
       - name: "pip3 install"
         run: |
           pip3 install --user -r dotdrop/requirements.txt
-      - name: install all dotfiles
+      - name: Install validation tools
         run: |
-          ./dotdrop.sh install -fp test
-      - name: 'check git config'
-        run: |
-          echo "for non gitlab repo"
-          git config user.signingkey
-          git config user.email
-          git clone https://gitlab.com/gitlab-examples/ssh-private-key.git gitlab-example
-          cd gitlab-example
-          echo "for gitlab repo"
-          git config user.signingkey
-          git config user.email
-      - uses: actions/upload-artifact@v4
+          sudo apt-get update
+          sudo apt-get install -y gnupg openssh-client tcsh vim zsh
+      - name: Render and validate ${{ matrix.profile }}
+        id: test
+        run: bash scripts/test_profile.sh "${{ matrix.profile }}"
+      - uses: actions/upload-artifact@v7
         with:
-          name: my-dotfiles
+          name: rendered-${{ matrix.profile }}
           retention-days: 1
           overwrite: true
-          path: |
-            ~/.config/common/
-            ~/.tmux.conf
-            ~/.vimrc
-            ~/.*rc
-            ~/.*epics
-            ~/.gitconfig*
-            ~/.gnupg/gpg.conf
+          path: ${{ steps.test.outputs.review_dir }}

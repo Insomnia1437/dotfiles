@@ -57,7 +57,9 @@ HIST_STAMPS="yyyy-mm-dd"
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
-ZSH_COMPDUMP="$HOME/.config/.zcompdump"
+ZSH_COMPDUMP_DIR="${XDG_CACHE_HOME:-${HOME}/.cache}/zsh/compdump"
+mkdir -p "${ZSH_COMPDUMP_DIR}"
+ZSH_COMPDUMP="${ZSH_COMPDUMP_DIR}/zcompdump-${HOST%%.*}-${ZSH_VERSION}"
 
 # load catppuccin_latte theme for zsh-syntax-highlighting before loading zsh-syntax-highlighting
 source ~/.oh-my-zsh/custom/themes/catppuccin_latte-zsh-syntax-highlighting.zsh

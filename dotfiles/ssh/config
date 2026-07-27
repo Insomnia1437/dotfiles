@@ -1,0 +1,7 @@
+# This file is combined with config.local by install_ssh_config.sh.
+# Keep it compatible with the oldest OpenSSH client used on the Linac hosts.
+Host *
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+    TCPKeepAlive yes
+    HashKnownHosts yes

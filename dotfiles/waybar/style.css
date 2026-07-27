@@ -1,0 +1,76 @@
+@define-color base #eff1f5;
+@define-color mantle #e6e9ef;
+@define-color surface0 #ccd0da;
+@define-color surface1 #bcc0cc;
+@define-color text #4c4f69;
+@define-color subtext0 #6c6f85;
+@define-color blue #1e66f5;
+@define-color green #40a02b;
+@define-color yellow #df8e1d;
+@define-color red #d20f39;
+
+* {
+    min-height: 0;
+    border: none;
+    border-radius: 0;
+    font-family: sans;
+    font-size: 13px;
+}
+
+window#waybar {
+    background: alpha(@base, 0.96);
+    color: @text;
+    border-bottom: 2px solid @surface0;
+}
+
+#workspaces button {
+    min-width: 28px;
+    padding: 0 6px;
+    color: @subtext0;
+    background: transparent;
+}
+
+#workspaces button.focused {
+    color: @base;
+    background: @blue;
+}
+
+#workspaces button.urgent {
+    color: @base;
+    background: @red;
+}
+
+#mode {
+    color: @base;
+    background: @red;
+}
+
+#window,
+#mode,
+#tray,
+#network,
+#wireplumber,
+#cpu,
+#memory,
+#battery,
+#clock {
+    padding: 0 10px;
+}
+
+#network.disconnected,
+#wireplumber.muted {
+    color: @subtext0;
+}
+
+#battery.warning {
+    color: @yellow;
+}
+
+#battery.critical {
+    color: @red;
+}
+
+#battery.charging,
+#battery.plugged {
+    color: @green;
+}

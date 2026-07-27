@@ -22,50 +22,7 @@ export PATH="{{@@ HOME @@}}/.local/bin:${PATH}"
 # for manually installed program
 export PATH="{{@@ HOME @@}}/local/bin:${PATH}"
 
-{%@@ if profile == "server-linac" @@%}
-# for cargo
-export PATH="${HOME}/.cargo/bin:${PATH}"
-
-# for git
-# export PATH="/usr/new/pkg/git/current/bin:${PATH}"
-# add node and npm to path
-export PATH="/usr/new/pkg/node/11.7.0_c6_x64/bin/:${PATH}"
-# for tmux
-export PATH="/usr/new/pkg/tmux/3.1b_x64/bin/:${PATH}"
-# tmux requires libevent 2.x
-if [[ -z ${LD_LIBRARY_PATH} ]]; then
-    export LD_LIBRARY_PATH="/usr/new/pkg/libevent/2.1.12_x64/lib"
-else
-    export LD_LIBRARY_PATH="/usr/new/pkg/libevent/2.1.12_x64/lib/:${LD_LIBRARY_PATH}"
-fi
-
-# for vxworks
-# export  WIND_HOME='/cont/VxWorks/vw68'
-# export  WIND_HOME='/usr/users/control/VxWorks/vw683'
-export  WIND_HOME='/cont/VxWorks/vw69'
-# for tmux
-# https://github.com/tmux/tmux/issues/2771
-
-# for screen
-# socket directory is /var/run/screen at linac
-# https://superuser.com/questions/1195962/cannot-make-directory-var-run-screen-permission-denied
-# this may cause some problem since the socket file for screen is shared for many servers
-# if [[ ! -e /var/run/screen && ! -e /run/screen && ! -d ~/.screen ]];then
-    # mkdir ~/.screen
-    # chmod 700 ~/.screen
-    # export SCREENDIR=~/.screen
-# fi
-
-# if [[ $(hostname) != *"mtca"* ]]; then
-#   epics709
-# else
-#   source ~/.config/common/epics.sh "R7.0.8.1" "/usr/users/control/epics/vadatech"
-# fi
-
-{%@@ endif @@%}
-
-
-{%@@ if profile == "macos" @@%}
+{%@@ if OS_FAMILY == "macos" @@%}
 # for GPG TTY
 export GPG_TTY=$(tty)
 
@@ -83,10 +40,6 @@ fi
                                                                                             
 # see https://github.com/deadc0de6/dotdrop/blob/35fac6caf13655e9ff2bcfbc89d75adf98405249/docs/howto/force-mimetype-to-text.md
 export DOTDROP_MIME_TEXT="application/x-wine-extension-ini,application/json,application/xml"
-{%@@ endif @@%}
-
-{%@@ if profile == "raspi" @@%}
-export PATH="/opt/local/bin:${PATH}"
 {%@@ endif @@%}
 
 # for EPICS HOST ARCH

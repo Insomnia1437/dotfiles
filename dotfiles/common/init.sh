@@ -10,10 +10,27 @@ case $- in
     *) return;;
 esac
 
+# Detect the current host at runtime. This is important on the Linac NFS home,
+# where the same dotfiles are sourced by multiple Linux releases.
+source ~/.config/common/runtime-platform.sh
+
 # both for bash and zsh
 source ~/.config/common/alias.sh
 source ~/.config/common/export.sh
 source ~/.config/common/proxy.sh
+
+platform_config="${HOME}/.config/common/platform.d/${DOTFILES_PLATFORM_GROUP}.sh"
+if [ -r "$platform_config" ]; then
+    source "$platform_config"
+fi
+unset platform_config
+
+site_config="${HOME}/.config/common/site.d/${DOTFILES_SITE}.sh"
+if [ -r "$site_config" ]; then
+    source "$site_config"
+fi
+unset site_config
+
 if [ -f ~/.fzf.sh ]; then
     source ~/.fzf.sh
 fi
@@ -52,4 +69,3 @@ if [ -n "$PATH" ]; then
     PATH=${PATH#:}
     unset old_PATH x
 fi
-

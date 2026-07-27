@@ -3,7 +3,7 @@ alias   cp="cp -i"
 alias   mv="mv -i"
 alias   grep="grep --color -In"
 alias   vi="vim"
-{%@@ if profile == "macos" @@%}
+{%@@ if OS_FAMILY == "macos" @@%}
 alias   l="ls -AlhF"
 alias   ll="ls -lhF"
 alias   lsd="ls -dlh"
@@ -45,7 +45,3 @@ alias   grepconf='grep "^[^#]"'
 alias   histg="history | grep"
 alias   histl="history | less"
 alias   path='echo -e ${PATH//:/\\n}'
-{%@@ if profile == "server-linac" @@%}
-# for sad
-alias   sad="/usr/new/pkg/SAD/bin/gs"
-{%@@ endif @@%}

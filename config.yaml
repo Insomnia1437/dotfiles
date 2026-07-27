@@ -33,11 +33,22 @@ variables:
   GIT_EMAIL_B64: "c2Rjc3dkQGdtYWlsLmNvbQ=="
   GIT_NAME_B64: "RFc="
   GITLAB_EMAIL_B64: "ZGkud2FuZ0BrZWsuanA="
+  OS_FAMILY: "linux"
+  DISTRO_ID: "unknown"
+  DISTRO_MAJOR: "unknown"
+  DESKTOP_ENV: "none"
+  SITE: "personal"
+  IS_WSL: "NO"
+  USE_GUI: "NO"
   USE_PROXY: "NO"
   PROXY: ""
+  NO_PROXY: "localhost"
   USE_GPG: "NO"
   USE_PYENV: "NO"
   USE_NERD_FONT: "NO"
+  USE_EPICS: "NO"
+  USE_TCSH: "NO"
+  INSTALL_FZF_BIN: "YES"
   GPG_KEY: "DF9D81D26E95ACF5"
   GPG_KEY_GITLAB: "45B834BCEBCDEC22"
   # dir_available: (test -d /tmp/cookiedir || mkdir -p /tmp/cookiedir)
@@ -50,7 +61,8 @@ variables:
 dynvariables:
   # USER: "echo $USER"
   TMUX_VERSION: tmux -V | cut -f 2 -d " "
-  GIT_VERSION: git --version | cut -f 3 -d " "
+  GIT_HASCONFIG_REMOTE_URL: >-
+    git --version | awk '{ split($3, v, "."); if (v[1] > 2 || (v[1] == 2 && v[2] >= 36)) print "YES"; else print "NO" }'
   EPICS_HOST_ARCH: bash {{@@ REPO_SCRIPT_PATH @@}}/epics_host_arch.sh
   GIT_EMAIL: echo "{{@@ GIT_EMAIL_B64 @@}}" | base64 --decode
   GIT_NAME: echo "{{@@ GIT_NAME_B64 @@}}" | base64 --decode
@@ -71,11 +83,14 @@ actions:
     # check_and_create: test -e {0} || touch {0}
     check_local_sh: test -e {{@@ INSTALL_HOME @@}}/.config/common/local.sh || touch {{@@ INSTALL_HOME @@}}/.config/common/local.sh
     check_tcsh_local_sh: test -e {{@@ INSTALL_HOME @@}}/.tcshrc.local || touch {{@@ INSTALL_HOME @@}}/.tcshrc.local
+    check_git_local: test -e {{@@ INSTALL_HOME @@}}/.gitconfig.local || (touch {{@@ INSTALL_HOME @@}}/.gitconfig.local && chmod 600 {{@@ INSTALL_HOME @@}}/.gitconfig.local)
+    install_ssh_config: bash {{@@ REPO_SCRIPT_PATH @@}}/install_ssh_config.sh {{@@ INSTALL_HOME @@}}
+    secure_gnupg_dir: bash {{@@ REPO_SCRIPT_PATH @@}}/secure_gnupg_dir.sh {{@@ INSTALL_HOME @@}}
     # install_bash_it: test -e {{@@ INSTALL_HOME @@}}/.bash_it || (git clone --depth=1 https://github.com/Bash-it/bash-it.git {{@@ INSTALL_HOME @@}}/.bash_it)
     install_tpm: "{{@@ GIT_INSTALL_SH @@}} https://github.com/tmux-plugins/tpm {{@@ INSTALL_HOME @@}}/.tmux/plugins/tpm"
     # install_bash_it: "{{@@ GIT_INSTALL_SH @@}} https://github.com/Bash-it/bash-it.git {{@@ INSTALL_HOME @@}}/.bash_it"
     install_oh_my_zsh: "{{@@ GIT_INSTALL_SH @@}} https://github.com/robbyrussell/oh-my-zsh.git {{@@ INSTALL_HOME @@}}/.oh-my-zsh"
-    install_fzf: "{{@@ GIT_INSTALL_SH @@}} https://github.com/junegunn/fzf.git {{@@ INSTALL_HOME @@}}/.fzf && {{@@ INSTALL_HOME @@}}/.fzf/install --bin"
+    install_fzf: test "{{@@ INSTALL_FZF_BIN @@}}" != "YES" || ({{@@ GIT_INSTALL_SH @@}} https://github.com/junegunn/fzf.git {{@@ INSTALL_HOME @@}}/.fzf && {{@@ INSTALL_HOME @@}}/.fzf/install --bin)
     install_alacritty_theme: "{{@@ GIT_INSTALL_SH @@}} https://github.com/alacritty/alacritty-theme {{@@ INSTALL_HOME @@}}/.config/alacritty/themes"
     # install_libmagic_macos: brew install libmagic
     install_zsh_autosuggestions: "{{@@ GIT_INSTALL_SH @@}} https://github.com/zsh-users/zsh-autosuggestions {{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
@@ -106,6 +121,8 @@ dotfiles:
     src: git/gitconfig
     dst: "{{@@ INSTALL_HOME @@}}/.gitconfig"
     chmod: "600"
+    actions:
+      - check_git_local
   f_gitconfig_gitlab:
     src: git/gitconfig-gitlab
     dst: "{{@@ INSTALL_HOME @@}}/.gitconfig-gitlab"
@@ -113,6 +130,16 @@ dotfiles:
   f_gitignore:
     src: git/ignore
     dst: "{{@@ INSTALL_HOME @@}}/.config/git/ignore"
+    chmod: "644"
+  f_sshconfig:
+    src: ssh/config
+    dst: "{{@@ INSTALL_HOME @@}}/.ssh/config.defaults"
+    chmod: "600"
+    actions:
+      - install_ssh_config
+  f_inputrc:
+    src: readline/inputrc
+    dst: "{{@@ INSTALL_HOME @@}}/.inputrc"
     chmod: "644"
   f_vim_theme:
     src: vim/catppuccin_latte.vim
@@ -196,6 +223,26 @@ dotfiles:
     src: lxterminal/lxterminal.conf
     dst: "{{@@ INSTALL_HOME @@}}/.config/lxterminal/lxterminal.conf"
     chmod: "600"
+  f_sway_config:
+    src: sway/config
+    dst: "{{@@ INSTALL_HOME @@}}/.config/sway/config"
+    chmod: "644"
+  f_swaylock_config:
+    src: swaylock/config
+    dst: "{{@@ INSTALL_HOME @@}}/.config/swaylock/config"
+    chmod: "600"
+  f_waybar_config:
+    src: waybar/config.jsonc
+    dst: "{{@@ INSTALL_HOME @@}}/.config/waybar/config.jsonc"
+    chmod: "644"
+  f_waybar_style:
+    src: waybar/style.css
+    dst: "{{@@ INSTALL_HOME @@}}/.config/waybar/style.css"
+    chmod: "644"
+  f_mako_config:
+    src: mako/config
+    dst: "{{@@ INSTALL_HOME @@}}/.config/mako/config"
+    chmod: "644"
   f_locale_conf:
     src: etc/locale.conf
     dst: "{{@@ INSTALL_HOME @@}}/.config/locale.conf"
@@ -203,6 +250,12 @@ dotfiles:
   f_gpg_conf:
     src: gnupg/gpg.conf
     dst: "{{@@ INSTALL_HOME @@}}/.gnupg/gpg.conf"
+    chmod: "600"
+    actions:
+      - secure_gnupg_dir
+  f_gpg_agent_conf:
+    src: gnupg/gpg-agent.conf
+    dst: "{{@@ INSTALL_HOME @@}}/.gnupg/gpg-agent.conf"
     chmod: "600"
   f_editorconfig:
     src: misc/editorconfig
@@ -215,17 +268,8 @@ dotfiles:
   #     - clean_all
 
 profiles:
-  test:
-    dotfiles:
-      - ALL
-    variables:
-      INSTALL_HOME: "/tmp"
-      USE_PROXY: "YES"
-      PROXY: "172.19.64.17:8080"
-      NO_PROXY: "localhost"
-      USE_PYENV: "YES"
-      USE_GPG: "YES"
-  basic:
+  # Reusable bundles and features. Install target-* profiles directly.
+  bundle-cli:
     dotfiles:
       - f_zshrc
       - f_zshtheme
@@ -238,91 +282,267 @@ profiles:
       - d_common
       - f_fzf
       - f_editorconfig
-  git:
+      - f_inputrc
+      - f_sshconfig
+
+  feature-git:
     dotfiles:
       - f_gitconfig
       - f_gitconfig_gitlab
       - f_gitignore
-  normal:
-    include:
-      - basic
-      - git
 
-  vps:
-    include:
-      - basic
-    variables:
-      # git version may be old on some vps, so do not use shallow clone.
-      # re-define GIT_DEPTH
-      GIT_DEPTH: "0"
-      # we also need this to allow dotdrop to expand again
-      GIT_INSTALL_SH: "bash {{@@ REPO_SCRIPT_PATH @@}}/git_install.sh {{@@ GIT_DEPTH @@}}"
-
-  wsl:
-    include:
-      - basic
-      - git
+  feature-gpg:
     dotfiles:
       - f_gpg_conf
+      - f_gpg_agent_conf
     variables:
       USE_GPG: "YES"
 
-  raspi:
-    include:
-      - basic
+  feature-alacritty:
+    dotfiles:
+      - f_alacritty
+    variables:
+      USE_GUI: "YES"
+
+  feature-lxterminal:
     dotfiles:
       - f_lxterminal_theme
+    variables:
+      USE_GUI: "YES"
 
-  server-linac:
-    include:
-      - basic
-      - git
+  feature-tcsh:
     dotfiles:
       - f_tcshrc
-      - f_tcshrc_epics
       - f_screenrc
-        # - f_pyenv
-      - f_alacritty
-      - f_xfce4_terminal_theme
     variables:
+      USE_TCSH: "YES"
+
+  feature-tcsh-epics:
+    dotfiles:
+      - f_tcshrc_epics
+    variables:
+      USE_EPICS: "YES"
+
+  platform-linux:
+    variables:
+      OS_FAMILY: "linux"
+
+  platform-macos:
+    variables:
+      OS_FAMILY: "macos"
+
+  platform-wsl:
+    include:
+      - platform-linux
+    variables:
+      IS_WSL: "YES"
+
+  desktop-xfce:
+    dotfiles:
+      - f_xfce4_terminal_theme
+      - f_locale_conf
+    variables:
+      DESKTOP_ENV: "xfce"
+      USE_GUI: "YES"
+
+  desktop-kde:
+    dotfiles:
+      - f_konsole_theme
+      - f_locale_conf
+    variables:
+      DESKTOP_ENV: "kde"
+      USE_GUI: "YES"
+
+  desktop-sway:
+    dotfiles:
+      - f_locale_conf
+      - f_sway_config
+      - f_swaylock_config
+      - f_waybar_config
+      - f_waybar_style
+      - f_mako_config
+    variables:
+      DESKTOP_ENV: "sway"
+      USE_GUI: "YES"
+
+  site-linac:
+    variables:
+      SITE: "linac"
       USE_PROXY: "YES"
       PROXY: "172.19.64.17:8080"
       NO_PROXY: "localhost,172.19.64.0/19"
+      USE_EPICS: "YES"
+      INSTALL_FZF_BIN: "NO"
+
+  # Final deployment targets.
+  target-default-cli:
+    include:
+      - bundle-cli
+      - feature-git
+
+  target-vps:
+    include:
+      - bundle-cli
+    variables:
+      # Some VPS hosts still have Git versions that cannot use shallow pulls.
+      GIT_DEPTH: "0"
+      GIT_INSTALL_SH: "bash {{@@ REPO_SCRIPT_PATH @@}}/git_install.sh {{@@ GIT_DEPTH @@}}"
+
+  target-wsl:
+    include:
+      - bundle-cli
+      - feature-git
+      - feature-gpg
+      - platform-wsl
+
+  target-raspi:
+    include:
+      - bundle-cli
+      - feature-lxterminal
+      - platform-linux
+    variables:
+      DISTRO_ID: "raspios"
+
+  target-linac:
+    include:
+      - bundle-cli
+      - feature-git
+      - feature-alacritty
+      - feature-tcsh
+      - feature-tcsh-epics
+      - platform-linux
+      - desktop-xfce
+      - site-linac
+
+  target-debian13-xfce:
+    include:
+      - bundle-cli
+      - feature-git
+      - feature-alacritty
+      - platform-linux
+      - desktop-xfce
+    variables:
+      DISTRO_ID: "debian"
+      DISTRO_MAJOR: "13"
+      USE_NERD_FONT: "NO"
+
+  target-manjaro-kde:
+    include:
+      - bundle-cli
+      - feature-git
+      - feature-alacritty
+      - platform-linux
+      - desktop-kde
+    variables:
+      DISTRO_ID: "manjaro"
+      USE_NERD_FONT: "YES"
+
+  target-fedora-sway:
+    include:
+      - bundle-cli
+      - feature-git
+      - feature-alacritty
+      - platform-linux
+      - desktop-sway
+    variables:
+      DISTRO_ID: "fedora"
+
+  target-macos:
+    include:
+      - bundle-cli
+      - feature-git
+      - feature-alacritty
+      - feature-gpg
+      - platform-macos
+    variables:
       USE_PYENV: "NO"
+      USE_NERD_FONT: "YES"
+
+  # Rendering profiles for the CI matrix.
+  test:
+    dotfiles:
+      - ALL
+    variables:
+      INSTALL_HOME: "/tmp"
+      USE_PROXY: "YES"
+      PROXY: "172.19.64.17:8080"
+      NO_PROXY: "localhost"
+      USE_PYENV: "YES"
+      USE_GPG: "YES"
+
+  test-linux-cli:
+    include:
+      - target-default-cli
+    variables:
+      INSTALL_HOME: "/tmp/dotdrop-test-linux-cli"
+
+  test-macos:
+    include:
+      - target-macos
+    variables:
+      INSTALL_HOME: "/tmp/dotdrop-test-macos"
+
+  test-wsl:
+    include:
+      - target-wsl
+    variables:
+      INSTALL_HOME: "/tmp/dotdrop-test-wsl"
+
+  test-debian-xfce:
+    include:
+      - target-debian13-xfce
+    variables:
+      INSTALL_HOME: "/tmp/dotdrop-test-debian-xfce"
+
+  test-manjaro-kde:
+    include:
+      - target-manjaro-kde
+    variables:
+      INSTALL_HOME: "/tmp/dotdrop-test-manjaro-kde"
+
+  test-linac:
+    include:
+      - target-linac
+    variables:
+      INSTALL_HOME: "/tmp/dotdrop-test-linac"
+
+  # Backward-compatible aliases for existing install commands.
+  basic:
+    include:
+      - bundle-cli
+
+  git:
+    include:
+      - feature-git
+
+  normal:
+    include:
+      - target-default-cli
+
+  vps:
+    include:
+      - target-vps
+
+  wsl:
+    include:
+      - target-wsl
+
+  raspi:
+    include:
+      - target-raspi
+
+  server-linac:
+    include:
+      - target-linac
 
   xfce4:
     include:
-      - basic
-      - git
-    dotfiles:
-      - f_xfce4_terminal_theme
-      - f_alacritty
-      - f_locale_conf
-    variables:
-      USE_NERD_FONT: "NO"
+      - target-debian13-xfce
 
   manjaro:
     include:
-      - basic
-      - git
-    dotfiles:
-      - f_konsole_theme
-      - f_alacritty
-      - f_locale_conf
-    variables:
-      USE_NERD_FONT: "YES"
+      - target-manjaro-kde
 
   macos:
     include:
-      - basic
-      - git
-    dotfiles:
-      - f_alacritty
-        #- f_pyenv
-      - f_gpg_conf
-    # actions:
-    # - install_libmagic_macos
-    variables:
-      USE_PYENV: "NO"
-      USE_GPG: "YES"
-      USE_NERD_FONT: "YES"
+      - target-macos

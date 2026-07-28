@@ -34,8 +34,14 @@ trap 'rm -f "$temporary_config"' EXIT
     fi
     printf '%s\n' '# Managed defaults'
     sed -n 'p' "$defaults"
+    printf '\n'
 } > "$temporary_config"
 
 chmod 600 "$temporary_config"
+
+if [ -f "$config" ]; then
+    cp -p "$config" "${config}.bak"
+fi
+
 mv "$temporary_config" "$config"
 trap - EXIT

@@ -109,8 +109,8 @@ Times of minor page faults              : %R" )
     set white = "%{\033[0;37m%}"
     set color_end = "%{\033[0m%}"
 
-    set prompt = "${blue}%n ${magenta}@ ${green}%B%m%b ${white}in  \
-${yellow}%~ ${white}[%T]\n${yellow}%#${color_end} "
+    set prompt = "${blue}%n ${magenta}@ ${green}%B%m%b ${white}in ${yellow}%~ ${white}[%T] \
+${yellow}%#${color_end} "
     set prompt2 = "%R?"
     set prompt3 = "CORRECT> %B%R%b (y|n|e)?"
 

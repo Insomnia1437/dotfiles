@@ -43,6 +43,11 @@ indent_style = space
 indent_size = 2
 trim_trailing_whitespace = false
 
+# for epics db
+[*.db]
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = false
 
 # The tab world
 [*.{go}]

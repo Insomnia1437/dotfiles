@@ -96,7 +96,7 @@ else
 
     autoload -U compinit && compinit 2>/dev/null
 
-    for omz_plugin in git colored-man-pages; do
+    for omz_plugin in git; do
         omz_plugin_file="${HOME}/.oh-my-zsh/plugins/${omz_plugin}/${omz_plugin}.plugin.zsh"
         if [ -f "$omz_plugin_file" ]; then
             source "$omz_plugin_file"

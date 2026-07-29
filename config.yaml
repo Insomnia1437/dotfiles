@@ -430,6 +430,26 @@ profiles:
       - desktop-xfce
       - site-linac
 
+  target-debian13-cli:
+    include:
+      - bundle-cli
+      - feature-git
+      - platform-linux
+    variables:
+      DISTRO_ID: "debian"
+      DISTRO_MAJOR: "13"
+      USE_NERD_FONT: "NO"
+
+  target-almalinux9-cli:
+    include:
+      - bundle-cli
+      - feature-git
+      - platform-linux
+    variables:
+      DISTRO_ID: "rocky linux"
+      DISTRO_MAJOR: "9"
+      USE_NERD_FONT: "NO"
+
   target-debian13-xfce:
     include:
       - bundle-cli

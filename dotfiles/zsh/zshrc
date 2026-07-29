@@ -61,24 +61,50 @@ ZSH_COMPDUMP_DIR="${XDG_CACHE_HOME:-${HOME}/.cache}/zsh/compdump"
 mkdir -p "${ZSH_COMPDUMP_DIR}"
 ZSH_COMPDUMP="${ZSH_COMPDUMP_DIR}/zcompdump-${HOST%%.*}-${ZSH_VERSION}"
 
-# load catppuccin_latte theme for zsh-syntax-highlighting before loading zsh-syntax-highlighting
-source ~/.oh-my-zsh/custom/themes/catppuccin_latte-zsh-syntax-highlighting.zsh
+# Oh My Zsh requires Zsh >= 5.0.8. On legacy systems (e.g. CentOS 5 with zsh 4.2.6),
+# skip Oh My Zsh to prevent errors, and fall back to a clean default prompt.
+zsh_major="${ZSH_VERSION%%.*}"
+if [ "${zsh_major:-0}" -ge 5 ]; then
+    # load catppuccin_latte theme for zsh-syntax-highlighting before loading zsh-syntax-highlighting
+    if [ -f ~/.oh-my-zsh/custom/themes/catppuccin_latte-zsh-syntax-highlighting.zsh ]; then
+        source ~/.oh-my-zsh/custom/themes/catppuccin_latte-zsh-syntax-highlighting.zsh
+    fi
 
-# load plugins
-plugins=(git
-        z
-        fzf
-        sudo
-        zsh-autosuggestions
-        zsh-completions
-        extract
-        safe-paste
-        colored-man-pages
-        # history-substring-search
-        zsh-fzf-history-search
-        zsh-syntax-highlighting
-        )
-source $ZSH/oh-my-zsh.sh
+    # load plugins
+    plugins=(git
+            z
+            fzf
+            sudo
+            zsh-autosuggestions
+            zsh-completions
+            extract
+            safe-paste
+            colored-man-pages
+            # history-substring-search
+            zsh-fzf-history-search
+            zsh-syntax-highlighting
+            )
+    source $ZSH/oh-my-zsh.sh
+else
+    # Fallback for legacy Zsh (< 5.0): Load colors, custom theme, compinit, and compatible plugins directly
+    autoload -U colors && colors 2>/dev/null
+    if [ -f ~/.oh-my-zsh/custom/themes/sdcswd.zsh-theme ]; then
+        source ~/.oh-my-zsh/custom/themes/sdcswd.zsh-theme
+    else
+        PROMPT='%n@%m %~ %# '
+    fi
+
+    autoload -U compinit && compinit 2>/dev/null
+
+    for omz_plugin in git colored-man-pages; do
+        omz_plugin_file="${HOME}/.oh-my-zsh/plugins/${omz_plugin}/${omz_plugin}.plugin.zsh"
+        if [ -f "$omz_plugin_file" ]; then
+            source "$omz_plugin_file"
+        fi
+    done
+    unset omz_plugin omz_plugin_file
+fi
+unset zsh_major
 
 # User configuration
 # config zsh-users/zsh-autosuggestions

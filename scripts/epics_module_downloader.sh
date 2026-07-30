@@ -21,7 +21,7 @@ MODULE_REPO["MCoreUtils"]="https://github.com/epics-modules/MCoreUtils"
 
 declare -A MODULE_VERSIONS
 
-MODULE_VERSIONS["asyn"]="R4-38 R4-44 R4-45"
+MODULE_VERSIONS["asyn"]="R4-38 R4-44 R4-45 R4-46"
 MODULE_VERSIONS["stream"]="2.8.22 2.8.24 2.8.26"
 MODULE_VERSIONS["calc"]="R3-6-1 R3-7-4 R3-7-5"
 MODULE_VERSIONS["sequencer"]="R2-2-2 R2-2-8 R2-2-9"

@@ -75,7 +75,7 @@ IOCSTATS_DOWNLOAD_URL="https://github.com/epics-modules/${IOCSTATS_NAME}/archive
 
 # asyn related variables
 ASYN_NAME="asyn"
-ASYN_VERSION="4-45"
+ASYN_VERSION="4-46"
 ASYN_ARCHIVE_NAME="${ASYN_NAME}-R${ASYN_VERSION}.tar.gz"
 ASYN_FOLDER_NAME="${ASYN_NAME}-R${ASYN_VERSION}"
 ASYN_DOWNLOAD_URL="https://github.com/epics-modules/${ASYN_NAME}/archive/refs/tags/R${ASYN_VERSION}.tar.gz"
@@ -464,7 +464,7 @@ install_epics() {
             _yellow "Invalid selection. Please enter a number between 1 and ${#EPICS_VERSIONS_LIST[@]}."
         fi
     done
-    
+
     _magenta "==============================================="
     _cyan "EPICS ROOT set to: ${EPICS_ROOT_DIR}"
     _cyan "EPICS TOP set to: ${EPICS_TOP_DIR}"
@@ -474,7 +474,7 @@ install_epics() {
     _cyan "EPICS extensions set at: ${EPICS_EXTENSIONS_DIR}"
     _cyan "Downloads will be in: ${EPICS_DOWNLOADS_DIR}"
     _magenta "===============================================\n"
-    
+
     # create necessary directories
     # donot create base and extensions here, they will be renamed after extraction
     mkdir -p "${EPICS_TOP_DIR}"
@@ -522,7 +522,7 @@ install_epics() {
         check_cmd re2c # sequencer build dependency
         _green "re2c found. sequencer build should work fine.\n"
     fi
-    
+
     if [[ "$(get_module_selection "${ASYN_NAME}")" == "Y" && "${EPICS_HOST_ARCH}" == linux* ]]; then
         _cyan "asyn requires TIRPC for building on Linux. Checking for TIRPC..."
         if [[ -f "/usr/include/tirpc/rpc/rpc.h" ]]; then
@@ -537,17 +537,18 @@ install_epics() {
     fi
 
     # see asyn issue #223, hope this will be fixed soon so that we can remove this workaround
-    if [[ "$(get_module_selection "${ASYN_NAME}")" == "Y" && ${EPICS_VERSION} == "3.15.9" ]]; then
-        _cyan "EPICS version ${EPICS_VERSION} and asyn version ${ASYN_VERSION} are selected"
-        _cyan "But asyn-R4-44 and later have compatibility issues with EPICS 3.15.9"
-        _yellow "Change asyn version to ${ASYN_VERSION} for compatibility with EPICS 3.15.9\n"
-        # asyn related variables
-        ASYN_NAME="asyn"
-        ASYN_VERSION="4-43"
-        ASYN_ARCHIVE_NAME="${ASYN_NAME}-R${ASYN_VERSION}.tar.gz"
-        ASYN_FOLDER_NAME="${ASYN_NAME}-R${ASYN_VERSION}"
-        ASYN_DOWNLOAD_URL="https://github.com/epics-modules/${ASYN_NAME}/archive/refs/tags/R${ASYN_VERSION}.tar.gz"
-    fi
+    # fixed in Asyn R4-46
+    # if [[ "$(get_module_selection "${ASYN_NAME}")" == "Y" && ${EPICS_VERSION} == "3.15.9"]]; then
+    #     _cyan "EPICS version ${EPICS_VERSION} and asyn version ${ASYN_VERSION} are selected"
+    #     _cyan "But asyn-R4-44 and later have compatibility issues with EPICS 3.15.9"
+    #     _yellow "Change asyn version to ${ASYN_VERSION} for compatibility with EPICS 3.15.9\n"
+    #     # asyn related variables
+    #     ASYN_NAME="asyn"
+    #     ASYN_VERSION="4-43"
+    #     ASYN_ARCHIVE_NAME="${ASYN_NAME}-R${ASYN_VERSION}.tar.gz"
+    #     ASYN_FOLDER_NAME="${ASYN_NAME}-R${ASYN_VERSION}"
+    #     ASYN_DOWNLOAD_URL="https://github.com/epics-modules/${ASYN_NAME}/archive/refs/tags/R${ASYN_VERSION}.tar.gz"
+    # fi
 
 
     file_after_make="${EPICS_BASE_DIR}/bin/${EPICS_HOST_ARCH}/softIoc"

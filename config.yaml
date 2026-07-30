@@ -227,6 +227,14 @@ dotfiles:
     src: sway/config
     dst: "{{@@ INSTALL_HOME @@}}/.config/sway/config"
     chmod: "644"
+  f_sway_t480_config:
+    src: sway/t480.conf
+    dst: "{{@@ INSTALL_HOME @@}}/.config/sway/config.d/t480.conf"
+    chmod: "644"
+  f_desktop_bg:
+    src: misc/bliss_windows.jpeg
+    dst: "/usr/share/backgrounds/bliss_windows.jpeg"
+    chmod: "644"
   f_swaylock_config:
     src: swaylock/config
     dst: "{{@@ INSTALL_HOME @@}}/.config/swaylock/config"
@@ -372,6 +380,8 @@ profiles:
     dotfiles:
       - f_locale_conf
       - f_sway_config
+      - f_sway_t480_config
+      - f_desktop_bg
       - f_swaylock_config
       - f_waybar_config
       - f_waybar_style

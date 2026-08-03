@@ -12,7 +12,7 @@ set $rofi_cmd rofi \
         -terminal '$term'
 set $menu $rofi_cmd -show combi -combi-modes drun#run -modes combi
 
-output * bg /usr/share/backgrounds/bliss_windows.jpeg fill
+output * bg ${XDG_CONFIG_HOME:-$HOME/.config}/sway/backgrounds/bliss_windows.jpeg fill
 
 font pango:sans 10
 default_border pixel 2

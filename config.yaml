@@ -233,7 +233,7 @@ dotfiles:
     chmod: "644"
   f_desktop_bg:
     src: misc/bliss_windows.jpeg
-    dst: "/usr/share/backgrounds/bliss_windows.jpeg"
+    dst: "{{@@ INSTALL_HOME @@}}/.config/sway/backgrounds/bliss_windows.jpeg"
     chmod: "644"
   f_swaylock_config:
     src: swaylock/config

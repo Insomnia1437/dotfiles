@@ -22,6 +22,8 @@ export PATH="{{@@ HOME @@}}/.local/bin:${PATH}"
 # for manually installed program
 export PATH="{{@@ HOME @@}}/local/bin:${PATH}"
 
+export UNAME_R=$(uname -r)
+
 {%@@ if OS_FAMILY == "macos" @@%}
 # for GPG TTY
 export GPG_TTY=$(tty)

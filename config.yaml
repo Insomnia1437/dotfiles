@@ -48,7 +48,6 @@ variables:
   USE_NERD_FONT: "NO"
   USE_EPICS: "NO"
   USE_TCSH: "NO"
-  INSTALL_FZF_BIN: "YES"
   GPG_KEY: "DF9D81D26E95ACF5"
   GPG_KEY_GITLAB: "45B834BCEBCDEC22"
   # dir_available: (test -d /tmp/cookiedir || mkdir -p /tmp/cookiedir)
@@ -90,14 +89,17 @@ actions:
     install_tpm: "{{@@ INSTALL_GIT_SH @@}} https://github.com/tmux-plugins/tpm {{@@ INSTALL_HOME @@}}/.tmux/plugins/tpm"
     # install_bash_it: "{{@@ INSTALL_GIT_SH @@}} https://github.com/Bash-it/bash-it.git {{@@ INSTALL_HOME @@}}/.bash_it"
     install_oh_my_zsh: "{{@@ INSTALL_GIT_SH @@}} https://github.com/robbyrussell/oh-my-zsh.git {{@@ INSTALL_HOME @@}}/.oh-my-zsh"
-    install_fzf: test "{{@@ INSTALL_FZF_BIN @@}}" != "YES" || ({{@@ INSTALL_GIT_SH @@}} https://github.com/junegunn/fzf.git {{@@ INSTALL_HOME @@}}/.fzf && {{@@ INSTALL_HOME @@}}/.fzf/install --bin)
+    install_fzf: >-
+      command -v fzf >/dev/null 2>&1 ||
+      ({{@@ INSTALL_GIT_SH @@}} https://github.com/junegunn/fzf.git
+      {{@@ INSTALL_HOME @@}}/.fzf &&
+      {{@@ INSTALL_HOME @@}}/.fzf/install --bin)
     install_alacritty_theme: "{{@@ INSTALL_GIT_SH @@}} https://github.com/alacritty/alacritty-theme {{@@ INSTALL_HOME @@}}/.config/alacritty/themes"
     # install_libmagic_macos: brew install libmagic
     install_zsh_autosuggestions: "{{@@ INSTALL_GIT_SH @@}} https://github.com/zsh-users/zsh-autosuggestions {{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
     install_zsh_completions: "{{@@ INSTALL_GIT_SH @@}} https://github.com/zsh-users/zsh-completions {{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/plugins/zsh-completions"
     install_zsh_syntax_highlighting: "{{@@ INSTALL_GIT_SH @@}} https://github.com/zsh-users/zsh-syntax-highlighting {{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
     install_zsh_history_substring_search: "{{@@ INSTALL_GIT_SH @@}} https://github.com/zsh-users/zsh-history-substring-search {{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/plugins/zsh-history-substring-search"
-    install_zsh-fzf-history-search: "{{@@ INSTALL_GIT_SH @@}} https://github.com/joshskidmore/zsh-fzf-history-search {{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/plugins/zsh-fzf-history-search"
     install_pyenv: "{{@@ INSTALL_GIT_SH @@}} https://github.com/pyenv/pyenv.git {{@@ INSTALL_HOME @@}}/.pyenv"
     install_pyenv_virtualenv: "{{@@ INSTALL_GIT_SH @@}} https://github.com/pyenv/pyenv-virtualenv.git {{@@ INSTALL_HOME @@}}/.pyenv/plugins/pyenv-virtualenv"
     # clean_all: rm -rf {{@@ INSTALL_HOME @@}}/.config/alacritty {{@@ INSTALL_HOME @@}}/.oh-my-zsh {{@@ INSTALL_HOME @@}}/.bash_it {{@@ INSTALL_HOME @@}}/.tmux/plugins/tpm {{@@ INSTALL_HOME @@}}/.pyenv
@@ -175,7 +177,6 @@ dotfiles:
       - install_zsh_completions
       - install_zsh_syntax_highlighting
       # - install_zsh_history_substring_search
-      - install_zsh-fzf-history-search
   f_fzf:
     src: fzf/fzf.sh
     dst: "{{@@ INSTALL_HOME @@}}/.fzf.sh"
@@ -397,7 +398,6 @@ profiles:
       PROXY: "172.19.64.17:8080"
       NO_PROXY: "localhost,172.19.64.0/19"
       USE_EPICS: "YES"
-      INSTALL_FZF_BIN: "NO"
 
   # Final deployment targets.
   target-default-cli:

@@ -1,5 +1,7 @@
 NetworkManager-applet
 alacritty
+fzf
+bat
 brightnessctl
 grim
 mako

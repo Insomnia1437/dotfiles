@@ -21,10 +21,5 @@ shopt -s histappend
 export HISTTIMEFORMAT="%F %T "
 PROMPT_COMMAND="history -a"
 
-if [ -d ${HOME}/.fzf/bin ]; then
-  PATH="${PATH:+${PATH}:}${HOME}/.fzf/bin"
-  eval "$(fzf --bash)"
-fi
-
 # load my own configuration
 source ~/.config/common/init.sh

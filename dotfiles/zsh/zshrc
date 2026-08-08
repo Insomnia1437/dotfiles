@@ -75,7 +75,6 @@ if is-at-least 4.3.11; then
     # load plugins
     plugins=(git
             z
-            fzf
             sudo
             zsh-autosuggestions
             zsh-completions
@@ -83,7 +82,6 @@ if is-at-least 4.3.11; then
             safe-paste
             colored-man-pages
             # history-substring-search
-            zsh-fzf-history-search
             zsh-syntax-highlighting
             )
     source $ZSH/oh-my-zsh.sh
@@ -183,6 +181,3 @@ setopt EXTENDED_HISTORY
 # =====end of history conf=====
 
 source ~/.config/common/init.sh
-
-# after load fzf config, define zsh-fzf-history-search
-ZSH_FZF_HISTORY_SEARCH_FZF_EXTRA_ARGS=$FZF_DEFAULT_OPTS

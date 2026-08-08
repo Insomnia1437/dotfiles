@@ -35,6 +35,14 @@ if [ -f ~/.fzf.sh ]; then
     source ~/.fzf.sh
 fi
 
+if [ -n "${FZF_BIN:-}" ]; then
+    if [ -n "${BASH_VERSION:-}" ]; then
+        eval "$($FZF_BIN --bash)"
+    elif [ -n "${ZSH_VERSION:-}" ]; then
+        source <($FZF_BIN --zsh)
+    fi
+fi
+
 
 # enable epics env in local.sh, this gives me choice to use other epics
 # e.g., echo "epics708" >> ~/.config/common/epics.sh

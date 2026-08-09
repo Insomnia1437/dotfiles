@@ -21,10 +21,11 @@ export PATH FZF_HOME FZF_BIN
 # Leave the input commands unset so fzf and its shell integration use the
 # built-in walker instead of fd/find.  The same exclusions apply everywhere.
 unset FZF_DEFAULT_COMMAND FZF_CTRL_T_COMMAND FZF_ALT_C_COMMAND
+FZF_WALKER_SKIP=".git,node_modules,target,dist,build,.cache"
 
 FZF_DEFAULT_OPTS="
   --walker=file,follow,hidden
-  --walker-skip=.git,node_modules,target,dist,build,.cache
+  --walker-skip=${FZF_WALKER_SKIP}
   --height=70%
   --min-height=20
   --layout=reverse
@@ -45,7 +46,7 @@ FZF_CTRL_R_OPTS="
 # the portable final fallback.  Directories get a dependency-free ls preview.
 FZF_CTRL_T_OPTS="
   --walker=file,dir,follow,hidden
-  --walker-skip=.git,node_modules,target,dist,build,.cache
+  --walker-skip=${FZF_WALKER_SKIP}
   --prompt='Files> '
   --preview-window='right,60%,border-left,wrap,<80(up,50%,border-bottom)'
   --preview 'if [ -f {} ]; then
@@ -63,9 +64,14 @@ FZF_CTRL_T_OPTS="
 
 FZF_ALT_C_OPTS="
   --walker=dir,follow,hidden
-  --walker-skip=.git,node_modules,target,dist,build,.cache
+  --walker-skip=${FZF_WALKER_SKIP}
   --prompt='Directories> '
   --preview-window='right,50%,border-left,<80(up,50%,border-bottom)'
-  --preview='ls -la -- {}'"
+  --preview=\"if command -v tree >/dev/null 2>&1; then
+    tree -C -L 2 --dirsfirst -I '${FZF_WALKER_SKIP//,/|}' -- {}
+  else
+    ls -la -- {}
+  fi\""
 
-export FZF_DEFAULT_OPTS FZF_CTRL_R_OPTS FZF_CTRL_T_OPTS FZF_ALT_C_OPTS
+export FZF_WALKER_SKIP FZF_DEFAULT_OPTS FZF_CTRL_R_OPTS
+export FZF_CTRL_T_OPTS FZF_ALT_C_OPTS

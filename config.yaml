@@ -56,6 +56,7 @@ variables:
   INSTALL_GIT_SH: "bash {{@@ REPO_SCRIPT_PATH @@}}/install_git.sh {{@@ GIT_DEPTH @@}}"
   FONT_NAME: "SourceCodePro"
   FONT_VERSION: "v3.1.1"
+  FZF_VERSION: "0.65.2"
   FONT_RUL: "https://github.com/ryanoasis/nerd-fonts/releases/download/{{@@ FONT_VERSION @@}}/{{@@ FONT_NAME @@}}.tar.xz"
 dynvariables:
   # USER: "echo $USER"
@@ -90,8 +91,8 @@ actions:
     # install_bash_it: "{{@@ INSTALL_GIT_SH @@}} https://github.com/Bash-it/bash-it.git {{@@ INSTALL_HOME @@}}/.bash_it"
     install_oh_my_zsh: "{{@@ INSTALL_GIT_SH @@}} https://github.com/robbyrussell/oh-my-zsh.git {{@@ INSTALL_HOME @@}}/.oh-my-zsh"
     install_fzf: >-
-      bash {{@@ REPO_SCRIPT_PATH @@}}/install_fzf.sh
-      {{@@ INSTALL_HOME @@}}
+      bash "{{@@ REPO_SCRIPT_PATH @@}}/install_fzf.sh"
+      "{{@@ INSTALL_HOME @@}}" "{{@@ FZF_VERSION @@}}"
     install_alacritty_theme: "{{@@ INSTALL_GIT_SH @@}} https://github.com/alacritty/alacritty-theme {{@@ INSTALL_HOME @@}}/.config/alacritty/themes"
     # install_libmagic_macos: brew install libmagic
     install_zsh_autosuggestions: "{{@@ INSTALL_GIT_SH @@}} https://github.com/zsh-users/zsh-autosuggestions {{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"

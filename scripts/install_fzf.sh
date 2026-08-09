@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
-# Install a pinned fzf release into ~/.fzf. Override the default with, for
-# example, FZF_VERSION=0.65.2.
+# Install a specified fzf release into ~/.fzf.
 set -euo pipefail
 
-if [ "$#" -ne 1 ]; then
-  echo "Usage: $0 <home-directory>" >&2
+if [ "$#" -ne 2 ]; then
+  echo "Usage: $0 <home-directory> <fzf-version>" >&2
   exit 2
 fi
 
-fzf_version="${FZF_VERSION:-0.65.2}"
+fzf_version="$2"
 fzf_version="${fzf_version#v}"
 case "$fzf_version" in
   ''|*[!0-9.]*|.*|*..*|*.)

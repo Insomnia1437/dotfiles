@@ -7,7 +7,6 @@ curl
 fastfetch
 fd
 file
-fzf
 git
 gnupg
 htop

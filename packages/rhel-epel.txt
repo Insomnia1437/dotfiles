@@ -1,6 +1,5 @@
 bat
 fastfetch
 fd-find
-fzf
 htop
 ripgrep

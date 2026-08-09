@@ -90,10 +90,8 @@ actions:
     # install_bash_it: "{{@@ INSTALL_GIT_SH @@}} https://github.com/Bash-it/bash-it.git {{@@ INSTALL_HOME @@}}/.bash_it"
     install_oh_my_zsh: "{{@@ INSTALL_GIT_SH @@}} https://github.com/robbyrussell/oh-my-zsh.git {{@@ INSTALL_HOME @@}}/.oh-my-zsh"
     install_fzf: >-
-      command -v fzf >/dev/null 2>&1 ||
-      ({{@@ INSTALL_GIT_SH @@}} https://github.com/junegunn/fzf.git
-      {{@@ INSTALL_HOME @@}}/.fzf &&
-      {{@@ INSTALL_HOME @@}}/.fzf/install --bin)
+      bash {{@@ REPO_SCRIPT_PATH @@}}/install_fzf.sh
+      {{@@ INSTALL_HOME @@}}
     install_alacritty_theme: "{{@@ INSTALL_GIT_SH @@}} https://github.com/alacritty/alacritty-theme {{@@ INSTALL_HOME @@}}/.config/alacritty/themes"
     # install_libmagic_macos: brew install libmagic
     install_zsh_autosuggestions: "{{@@ INSTALL_GIT_SH @@}} https://github.com/zsh-users/zsh-autosuggestions {{@@ INSTALL_HOME @@}}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
@@ -551,4 +549,3 @@ profiles:
       - target-linac
     variables:
       INSTALL_HOME: "/tmp/dotdrop-test-linac"
-

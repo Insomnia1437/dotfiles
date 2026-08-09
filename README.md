@@ -23,13 +23,15 @@ sudo apt-get update
 xargs -a packages/debian.txt sudo apt-get install -y
 ```
 
-Debian installs `fd` and `bat` as `fdfind` and `batcat`. Provide the command names
-used by the shared shell configuration:
+The dotdrop install action clones fzf into `~/.fzf`; the shell configuration
+always uses that copy and its built-in walker. `bat`/`batcat` is optional for
+file previews, with an automatic fallback to `cat`.
+
+fzf is pinned to version `0.65.2` for cross-platform compatibility. Override it
+for an install by setting `FZF_VERSION` (with or without the leading `v`):
 
 ```shell
-mkdir -p ~/.local/bin
-ln -sfn "$(command -v fdfind)" ~/.local/bin/fd
-ln -sfn "$(command -v batcat)" ~/.local/bin/bat
+FZF_VERSION=0.65.2 dotdrop install -p profile_name
 ```
 
 #### Arch Linux / Manjaro

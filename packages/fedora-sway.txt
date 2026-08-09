@@ -1,6 +1,6 @@
 NetworkManager-applet
 alacritty
-fzf
+fd-find
 bat
 brightnessctl
 grim

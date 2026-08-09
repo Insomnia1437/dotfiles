@@ -8,7 +8,6 @@ dotdrop
 fastfetch
 fd-find
 file
-fzf
 git
 gnupg
 htop

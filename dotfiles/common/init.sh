@@ -37,9 +37,9 @@ fi
 
 if [ -n "${FZF_BIN:-}" ]; then
     if [ -n "${BASH_VERSION:-}" ]; then
-        eval "$($FZF_BIN --bash)"
+        eval "$("$FZF_BIN" --bash)"
     elif [ -n "${ZSH_VERSION:-}" ]; then
-        source <($FZF_BIN --zsh)
+        source <("$FZF_BIN" --zsh)
     fi
 fi
 

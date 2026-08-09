@@ -6,3 +6,4 @@ Host *
     TCPKeepAlive yes
     HashKnownHosts no
 
+Include ~/.ssh/conf.d/*.conf

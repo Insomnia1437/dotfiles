@@ -52,7 +52,7 @@ After enabling EPEL (and any required CRB repository) using the instructions for
 the specific distribution, install the optional modern CLI tools:
 
 ```shell
-xargs -a packages/rhel-epel.txt sudo dnf install -y
+xargs -a packages/rhel-epel.txt sudo dnf --enablerepo=epel,crb install -y
 ```
 
 For the Fedora Sway target, install its desktop packages as well:

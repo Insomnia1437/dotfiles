@@ -299,7 +299,7 @@ profiles:
       - f_fzf
       - f_editorconfig
       - f_inputrc
-      - f_sshconfig
+      # - f_sshconfig
 
   feature-git:
     dotfiles:

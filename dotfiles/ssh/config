@@ -5,5 +5,3 @@ Host *
     ServerAliveCountMax 3
     TCPKeepAlive yes
     HashKnownHosts no
-
-Include ~/.ssh/conf.d/*.conf

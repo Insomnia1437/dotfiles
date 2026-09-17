@@ -10,7 +10,6 @@ git
 gnupg2
 jq
 less
-libtirpc-devel
 lm_sensors
 make
 net-tools
@@ -25,7 +24,6 @@ python3-pip
 readline-devel
 rpm-build
 rsync
-screen
 sysstat
 tar
 telnet
@@ -37,3 +35,4 @@ wget
 xz
 zip
 zsh
+python3-pip

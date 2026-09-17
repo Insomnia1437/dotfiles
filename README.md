@@ -52,6 +52,8 @@ After enabling EPEL (and any required CRB repository) using the instructions for
 the specific distribution, install the optional modern CLI tools:
 
 ```shell
+sudo dnf config-manager --set-enabled crb
+sudo dnf install epel-release -y
 xargs -a packages/rhel-epel.txt sudo dnf --enablerepo=epel,crb install -y
 ```
 
@@ -60,6 +62,13 @@ For the Fedora Sway target, install its desktop packages as well:
 ```shell
 xargs -a packages/fedora-sway.txt sudo dnf install -y
 ```
+
+```shell
+pip3 install --user -r dotdrop/requirements.txt
+./dotdrop.sh profiles
+```
+
+#### Others
 
 The macOS and Debian manifests install Dotdrop from the system package manager.
 On systems without a packaged Dotdrop, use the embedded submodule:

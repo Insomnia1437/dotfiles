@@ -475,6 +475,25 @@ install_epics() {
     _cyan "Downloads will be in: ${EPICS_DOWNLOADS_DIR}"
     _magenta "===============================================\n"
 
+    local RAM_BUILD_DIR=""
+    if [ "${BUILD_IN_RAM:-false}" = true ]; then
+        RAM_BUILD_DIR="/dev/shm/epics_build_R${EPICS_VERSION}_${NOW}"
+        _cyan "Setting up RAM build directory: ${RAM_BUILD_DIR}"
+        mkdir -p "${RAM_BUILD_DIR}"
+        mkdir -p "${EPICS_ROOT_DIR}/epics"
+
+        if [ -e "${EPICS_TOP_DIR}" ] || [ -L "${EPICS_TOP_DIR}" ]; then
+            _yellow "Existing ${EPICS_TOP_DIR} found. Backing up to ${EPICS_TOP_DIR}-old-${NOW}..."
+            mv "${EPICS_TOP_DIR}" "${EPICS_TOP_DIR}-old-${NOW}"
+        fi
+
+        ln -sfn "${RAM_BUILD_DIR}" "${EPICS_TOP_DIR}"
+        _green "Linked ${EPICS_TOP_DIR} -> ${RAM_BUILD_DIR} (all build I/O routed to RAM)"
+
+        # Clean up symlink and temporary directory if interrupted
+        trap 'if [ -L "${EPICS_TOP_DIR}" ]; then rm -f "${EPICS_TOP_DIR}"; fi; rm -rf "${RAM_BUILD_DIR}"; _red "\nBuild interrupted. Cleaned up RAM disk."; exit 1' INT TERM
+    fi
+
     # create necessary directories
     # donot create base and extensions here, they will be renamed after extraction
     mkdir -p "${EPICS_TOP_DIR}"
@@ -639,6 +658,19 @@ install_epics() {
         fi
     fi
 
+    if [ "${BUILD_IN_RAM:-false}" = true ] && [ -n "${RAM_BUILD_DIR}" ]; then
+        _magenta "==============================================="
+        _cyan "=== Syncing EPICS build from RAM (/dev/shm) to disk ==="
+        _yellow "Removing symlink and copying compiled files to ${EPICS_TOP_DIR}..."
+        rm -f "${EPICS_TOP_DIR}"
+        cp -a "${RAM_BUILD_DIR}" "${EPICS_TOP_DIR}"
+        _green "Build files successfully saved to disk."
+        _yellow "Cleaning up RAM disk directory ${RAM_BUILD_DIR}..."
+        rm -rf "${RAM_BUILD_DIR}"
+        trap - INT TERM
+        _green "RAM disk cleaned up successfully."
+        _magenta "===============================================\n"
+    fi
 
     _cyan "=== EPICS Installation Script Finished ===\n"
     _cyan "EPICS Base Version: ${EPICS_VERSION}"
@@ -666,11 +698,35 @@ install_epics() {
     fi
 }
 
+check_ram_disk() {
+    if [ ! -d /dev/shm ]; then
+        _red "Error: /dev/shm is not available on this system (RAM build requires /dev/shm)."
+        return 1
+    fi
+    local avail_kb
+    avail_kb=$(df -k /dev/shm 2>/dev/null | awk 'NR==2 {print $4}')
+    if [ -n "$avail_kb" ]; then
+        local avail_mb=$((avail_kb / 1024))
+        _cyan "Available memory in /dev/shm: ${avail_mb} MB"
+        if [ "$avail_mb" -lt 1000 ]; then
+            _yellow "Warning: /dev/shm has less than 1000 MB free space."
+            _yellow "EPICS Base + modules build might run out of memory."
+            read -p "Do you want to continue anyway? (y/N): " cont
+            if [[ ! "$cont" =~ ^[Yy]$ ]]; then
+                _red "Build aborted."
+                return 1
+            fi
+        fi
+    fi
+    return 0
+}
+
 help() {
     _cyan "Usage: $0 [option]"
     _cyan "Options:"
     _cyan "  1 - Install EPICS to a user-defined path (default: ${EPICS_ROOT_DIR_DEFAULT})"
     _cyan "  2 - Install EPICS to /tmp (for testing)"
+    _cyan "  3 - Build in RAM (/dev/shm) and install to target path (SD-card friendly)"
     _cyan "  h - Display this help message"
     exit 1
 }
@@ -695,6 +751,17 @@ case $1 in
     2)
         _green "Selected installation path: /tmp"
         install_epics "/tmp";;
+    3)
+        check_ram_disk || exit 1
+        read -e -p "Enter the final target installation path [default: ${EPICS_ROOT_DIR_DEFAULT}]: " user_path
+        EPICS_ROOT_DIR="${user_path:-${EPICS_ROOT_DIR_DEFAULT}}"
+        if [[ ! -d "$EPICS_ROOT_DIR" ]]; then
+            _red "Error: ${EPICS_ROOT_DIR} is not a valid path"
+            exit 1
+        fi
+        BUILD_IN_RAM=true
+        _green "Selected installation path: ${EPICS_ROOT_DIR} (Build mode: in-RAM)"
+        install_epics "${EPICS_ROOT_DIR}";;
     h | --help | -h )
         help;;
     *)

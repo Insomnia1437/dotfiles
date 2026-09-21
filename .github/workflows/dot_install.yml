@@ -19,8 +19,9 @@ jobs:
           - test-linux-cli
           - test-macos
           - test-wsl
-          - test-debian-xfce
-          - test-manjaro-kde
+          - test-desktop-xfce
+          - test-desktop-kde
+          - test-desktop-sway
           - test-linac
     steps:
       - uses: actions/checkout@v7

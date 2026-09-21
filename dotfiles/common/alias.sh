@@ -3,25 +3,25 @@ alias   cp="cp -i"
 alias   mv="mv -i"
 alias   grep="grep --color -In"
 alias   vi="vim"
-{%@@ if OS_FAMILY == "macos" @@%}
-alias   l="ls -AlhF"
-alias   ll="ls -lhF"
-alias   lsd="ls -dlh"
-alias   dfh="df -h"
-alias   duh="du -h -d1"
-# https://github.com/alacritty/alacritty/issues/3962
-# when connecting to a server where terminfo is limited, force using xterm-256color
-alias ssh="TERM=xterm-256color $(which ssh)"
-{%@@ else @@%}
-alias   l="ls -AlhF --color=auto"
-alias   ll="ls -lhF --color=auto"
-alias   llt="ls -lhF --color=auto --time-style=long-iso"
-alias   lsd="ls -dlh --color=auto"
-alias   dfh="df -Th"
-alias   duh="du -h --max-depth=1"
-# dotdrop is installed by brew on macos
-alias   dotdrop="${HOME}/.config/dotfiles/dotdrop.sh"
-{%@@ endif @@%}
+if [ "${DOTFILES_OS_FAMILY:-}" = "macos" ]; then
+    alias   l="ls -AlhF"
+    alias   ll="ls -lhF"
+    alias   lsd="ls -dlh"
+    alias   dfh="df -h"
+    alias   duh="du -h -d1"
+    # https://github.com/alacritty/alacritty/issues/3962
+    # when connecting to a server where terminfo is limited, force using xterm-256color
+    alias ssh="TERM=xterm-256color $(which ssh)"
+else
+    alias   l="ls -AlhF --color=auto"
+    alias   ll="ls -lhF --color=auto"
+    alias   llt="ls -lhF --color=auto --time-style=long-iso"
+    alias   lsd="ls -dlh --color=auto"
+    alias   dfh="df -Th"
+    alias   duh="du -h --max-depth=1"
+    # dotdrop is installed by brew on macos
+    alias   dotdrop="${HOME}/.config/dotfiles/dotdrop.sh"
+fi
 alias   type="type -a"
 alias   cd..="cd .."
 alias   cd~="cd ~"

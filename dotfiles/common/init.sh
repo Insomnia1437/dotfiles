@@ -13,6 +13,7 @@ esac
 # Detect the current host at runtime. This is important on the Linac NFS home,
 # where the same dotfiles are sourced by multiple Linux releases.
 source ~/.config/common/runtime-platform.sh
+source ~/.config/common/runtime-site.sh
 
 # both for bash and zsh
 source ~/.config/common/alias.sh
@@ -48,9 +49,9 @@ fi
 # e.g., echo "epics708" >> ~/.config/common/epics.sh
 # source ~/.config/common/epics.sh
 # pyenv should be the last
-{%@@ if USE_PYENV == "YES" @@%}
-source ~/.pyenv.sh
-{%@@ endif @@%}
+if [ -f ~/.pyenv.sh ]; then
+    source ~/.pyenv.sh
+fi
 
 # for some temperary config like
 # export EPICS_CA_AUTO_ADDR_LIST=NO

@@ -4,7 +4,6 @@ DOTFILES_OS_FAMILY="unknown"
 DOTFILES_DISTRO_ID="unknown"
 DOTFILES_DISTRO_MAJOR="unknown"
 DOTFILES_PLATFORM_GROUP="unknown"
-DOTFILES_SITE="{{@@ SITE @@}}"
 
 case "$(uname -s 2>/dev/null)" in
     Darwin)
@@ -17,11 +16,13 @@ case "$(uname -s 2>/dev/null)" in
         if [ -r /etc/os-release ]; then
             DOTFILES_DISTRO_ID=$(
                 . /etc/os-release
-                printf '%s' "${ID:-unknown}"
+                printf '%s' "${ID:-unknown}" | tr '[:upper:]' '[:lower:]' | tr -d '"'\'' '
             )
             DOTFILES_DISTRO_MAJOR=$(
                 . /etc/os-release
-                printf '%s' "${VERSION_ID%%.*}"
+                raw_ver="${VERSION_ID:-unknown}"
+                raw_ver="${raw_ver%%.*}"
+                printf '%s' "$raw_ver" | tr -d '"'\'' '
             )
         elif [ -r /etc/redhat-release ]; then
             DOTFILES_DISTRO_ID="rhel"
@@ -54,4 +55,3 @@ export DOTFILES_OS_FAMILY
 export DOTFILES_DISTRO_ID
 export DOTFILES_DISTRO_MAJOR
 export DOTFILES_PLATFORM_GROUP
-export DOTFILES_SITE

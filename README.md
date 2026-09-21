@@ -124,9 +124,9 @@ target-vps
 target-wsl
 target-raspi
 target-linac
-target-debian13-xfce
-target-manjaro-kde
-target-fedora-sway
+target-desktop-xfce
+target-desktop-kde
+target-desktop-sway
 target-macos
 ```
 
@@ -134,8 +134,8 @@ For example:
 
 ```shell
 dotdrop install -p target-vps
-dotdrop install -p target-debian13-xfce
-dotdrop install -p target-fedora-sway
+dotdrop install -p target-desktop-xfce
+dotdrop install -p target-desktop-sway
 dotdrop install -p target-linac
 ```
 

@@ -11,17 +11,30 @@ if ( $?prompt ) then
         source /usr/users/skelton/cmd/cshrc
     endif
 
-    foreach linac_path ( \
-        /usr/new/pkg/node/11.7.0_c6_x64/bin \
-        /usr/new/pkg/tmux/3.1b_x64/bin \
-    )
-        if ( -d "$linac_path" ) then
-            setenv PATH "${linac_path}:${PATH}"
+    set use_pkg_tmux = 1
+    if ( -x /usr/bin/tmux ) then
+        set tmux_ver = ( `/usr/bin/tmux -V | awk '{print $2}'` )
+        if ( $#tmux_ver > 0 ) then
+            set first_ver = ( `printf "3.1\n%s\n" "$tmux_ver[1]" | sort -V | head -n 1` )
+            if ( $#first_ver > 0 ) then
+                if ( "$first_ver[1]" == "3.1" && "$tmux_ver[1]" != "3.1" ) then
+                    set use_pkg_tmux = 0
+                endif
+            endif
+            unset first_ver
         endif
-    end
-    unset linac_path
+        unset tmux_ver
+    endif
 
-    if ( -d /usr/new/pkg/libevent/2.1.12_x64/lib ) then
+    if ( -d /usr/new/pkg/node/11.7.0_c6_x64/bin ) then
+        setenv PATH "/usr/new/pkg/node/11.7.0_c6_x64/bin:${PATH}"
+    endif
+
+    if ( $use_pkg_tmux && -d /usr/new/pkg/tmux/3.1b_x64/bin ) then
+        setenv PATH "/usr/new/pkg/tmux/3.1b_x64/bin:${PATH}"
+    endif
+
+    if ( $use_pkg_tmux && -d /usr/new/pkg/libevent/2.1.12_x64/lib ) then
         if ( $?LD_LIBRARY_PATH ) then
             setenv LD_LIBRARY_PATH \
                 "/usr/new/pkg/libevent/2.1.12_x64/lib:${LD_LIBRARY_PATH}"
@@ -29,6 +42,7 @@ if ( $?prompt ) then
             setenv LD_LIBRARY_PATH "/usr/new/pkg/libevent/2.1.12_x64/lib"
         endif
     endif
+    unset use_pkg_tmux
 
     if ( "$OSTYPE" =~ linux* ) then
         if ( -x /cont/VxWorks/vw69/wrenv.sh ) then

@@ -45,6 +45,10 @@ variables:
   GIT_DEPTH: "8"
   INSTALL_GIT_SH: "bash {{@@ REPO_SCRIPT_PATH @@}}/install_git.sh {{@@ GIT_DEPTH @@}}"
   FZF_VERSION: "0.65.2"
+  ALACRITTY_STARTUP_MODE: "Windowed"
+  ALACRITTY_FONT: "SauceCodePro Nerd Font"
+  ALACRITTY_FONT_DEFAULT: "monospace"
+
 dynvariables:
   # USER: "echo $USER"
   TMUX_VERSION: tmux -V | cut -f 2 -d " "
@@ -409,6 +413,8 @@ profiles:
       - feature-gpg
     variables:
       USE_NERD_FONT: "YES"
+      ALACRITTY_STARTUP_MODE: "Maximized"
+
 
   # Rendering profiles for the CI matrix.
   test-all:

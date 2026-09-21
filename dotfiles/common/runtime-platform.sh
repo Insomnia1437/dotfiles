@@ -38,11 +38,17 @@ case "$(uname -s 2>/dev/null)" in
             rhel|centos|rocky|almalinux)
                 DOTFILES_PLATFORM_GROUP="rhel-${DOTFILES_DISTRO_MAJOR}"
                 ;;
+            fedora)
+                DOTFILES_PLATFORM_GROUP="fedora"
+                ;;
             ubuntu)
                 DOTFILES_PLATFORM_GROUP="ubuntu-${DOTFILES_DISTRO_MAJOR}"
                 ;;
             debian)
                 DOTFILES_PLATFORM_GROUP="debian-${DOTFILES_DISTRO_MAJOR}"
+                ;;
+            arch|manjaro)
+                DOTFILES_PLATFORM_GROUP="arch"
                 ;;
             raspbian)
                 DOTFILES_PLATFORM_GROUP="raspios"
@@ -53,6 +59,11 @@ case "$(uname -s 2>/dev/null)" in
         esac
         ;;
 esac
+
+# Honor install-time platform override if present (e.g. raspios)
+if [ -n "${DOTFILES_PLATFORM_OVERRIDE:-}" ]; then
+    DOTFILES_PLATFORM_GROUP="$DOTFILES_PLATFORM_OVERRIDE"
+fi
 
 export DOTFILES_OS_FAMILY
 export DOTFILES_DISTRO_ID

@@ -10,10 +10,9 @@ case $- in
     *) return;;
 esac
 
-# Detect the current host at runtime. This is important on the Linac NFS home,
-# where the same dotfiles are sourced by multiple Linux releases.
-source ~/.config/common/runtime-platform.sh
+# Load deployment metadata and detect the current host at runtime.
 source ~/.config/common/runtime-site.sh
+source ~/.config/common/runtime-platform.sh
 
 # both for bash and zsh
 source ~/.config/common/alias.sh

@@ -9,6 +9,9 @@ case "$(uname -s 2>/dev/null)" in
     Darwin)
         DOTFILES_OS_FAMILY="macos"
         DOTFILES_DISTRO_ID="macos"
+        raw_major=$(sw_vers -productVersion 2>/dev/null | cut -d. -f1)
+        DOTFILES_DISTRO_MAJOR="${raw_major:-unknown}"
+        unset raw_major
         DOTFILES_PLATFORM_GROUP="macos"
         ;;
     Linux)

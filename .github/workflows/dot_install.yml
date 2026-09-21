@@ -22,6 +22,8 @@ jobs:
           - test-desktop-xfce
           - test-desktop-kde
           - test-desktop-sway
+          - test-desktop-lxde
+          - test-raspi
           - test-linac
     steps:
       - uses: actions/checkout@v7

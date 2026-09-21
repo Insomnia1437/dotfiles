@@ -127,6 +127,7 @@ target-linac
 target-desktop-xfce
 target-desktop-kde
 target-desktop-sway
+target-desktop-lxde
 target-macos
 ```
 

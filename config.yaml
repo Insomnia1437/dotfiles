@@ -33,6 +33,7 @@ variables:
   GIT_NAME_B64: "RFc="
   GITLAB_EMAIL_B64: "ZGkud2FuZ0BrZWsuanA="
   SITE: "personal"
+  PLATFORM_OVERRIDE: ""
   IS_WSL: "NO"
   USE_PROXY: "NO"
   PROXY: ""
@@ -284,7 +285,7 @@ profiles:
     dotfiles:
       - f_alacritty
 
-  feature-lxterminal:
+  desktop-lxde:
     dotfiles:
       - f_lxterminal_theme
 
@@ -355,10 +356,16 @@ profiles:
       - feature-gpg
       - platform-wsl
 
-  target-raspi:
+  target-desktop-lxde:
     include:
       - bundle-cli
-      - feature-lxterminal
+      - desktop-lxde
+
+  target-raspi:
+    include:
+      - target-desktop-lxde
+    variables:
+      PLATFORM_OVERRIDE: "raspios"
 
   target-linac:
     include:
@@ -404,7 +411,7 @@ profiles:
       USE_NERD_FONT: "YES"
 
   # Rendering profiles for the CI matrix.
-  test:
+  test-all:
     dotfiles:
       - ALL
     variables:
@@ -449,6 +456,18 @@ profiles:
       - target-desktop-sway
     variables:
       INSTALL_HOME: "/tmp/dotdrop-test-desktop-sway"
+
+  test-desktop-lxde:
+    include:
+      - target-desktop-lxde
+    variables:
+      INSTALL_HOME: "/tmp/dotdrop-test-desktop-lxde"
+
+  test-raspi:
+    include:
+      - target-raspi
+    variables:
+      INSTALL_HOME: "/tmp/dotdrop-test-raspi"
 
   test-linac:
     include:

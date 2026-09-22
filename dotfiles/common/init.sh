@@ -10,8 +10,13 @@ case $- in
     *) return;;
 esac
 
-# Load deployment metadata and detect the current host at runtime.
-source ~/.config/common/runtime-site.sh
+# Deployment metadata injected by Dotdrop during installation
+DOTFILES_SITE="{{@@ SITE @@}}"
+DOTFILES_PLATFORM_OVERRIDE="{{@@ PLATFORM_OVERRIDE @@}}"
+export DOTFILES_SITE
+export DOTFILES_PLATFORM_OVERRIDE
+
+# Detect the current host at runtime.
 source ~/.config/common/runtime-platform.sh
 
 # both for bash and zsh

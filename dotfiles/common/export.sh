@@ -24,25 +24,6 @@ export PATH="{{@@ HOME @@}}/local/bin:${PATH}"
 
 export UNAME_R=$(uname -r)
 
-if [ "${DOTFILES_OS_FAMILY:-}" = "macos" ]; then
-    # for GPG TTY
-    export GPG_TTY=$(tty)
-
-    # for MacPorts
-    # export PATH="/opt/local/bin:/opt/local/sbin:${PATH}"
-    # Apple Silicon
-    # export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}"
-    # Intel
-    # export PATH="/usr/local/bin:/usr/local/sbin:${PATH}"
-    if [[ -x /opt/homebrew/bin/brew ]]; then
-        eval "$(/opt/homebrew/bin/brew shellenv)"
-    elif [[ -x /usr/local/bin/brew ]]; then
-        eval "$(/usr/local/bin/brew shellenv)"
-    fi
-
-    # see https://github.com/deadc0de6/dotdrop/blob/35fac6caf13655e9ff2bcfbc89d75adf98405249/docs/howto/force-mimetype-to-text.md
-    export DOTDROP_MIME_TEXT="application/x-wine-extension-ini,application/json,application/xml"
-fi
 
 # for EPICS HOST ARCH
 export EPICS_HOST_ARCH={{@@ EPICS_HOST_ARCH @@}}

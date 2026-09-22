@@ -10,6 +10,7 @@ fi
 profile="$1"
 repo_root=$(cd "$(dirname "$0")/.." && pwd)
 dotdrop_bin="${DOTDROP_BIN:-$repo_root/dotdrop.sh}"
+dotdrop_config="${DOTDROP_CONFIG:-$repo_root/tests.yaml}"
 
 file_mode() {
     if stat -c '%a' "$1" >/dev/null 2>&1; then
@@ -21,7 +22,7 @@ file_mode() {
 
 render_output=$(
     "$dotdrop_bin" install -btfn \
-        -c "$repo_root/config.yaml" \
+        -c "$dotdrop_config" \
         -p "$profile" 2>&1
 )
 printf '%s\n' "$render_output"

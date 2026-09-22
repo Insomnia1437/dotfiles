@@ -1,0 +1,71 @@
+config:
+  import_configs:
+    - config.yaml
+
+dotfiles: {}
+
+profiles:
+  # Rendering profiles for the CI matrix and local validation.
+  test-all:
+    dotfiles:
+      - ALL
+    variables:
+      INSTALL_HOME: "/tmp"
+      USE_PROXY: "YES"
+      PROXY: "172.19.64.17:8080"
+      NO_PROXY: "localhost"
+      USE_GPG: "YES"
+
+  test-linux-cli:
+    include:
+      - target-default-cli
+    variables:
+      INSTALL_HOME: "/tmp/dotdrop-test-linux-cli"
+
+  test-macos:
+    include:
+      - target-macos
+    variables:
+      INSTALL_HOME: "/tmp/dotdrop-test-macos"
+
+  test-wsl:
+    include:
+      - target-wsl
+    variables:
+      INSTALL_HOME: "/tmp/dotdrop-test-wsl"
+
+  test-desktop-xfce:
+    include:
+      - target-desktop-xfce
+    variables:
+      INSTALL_HOME: "/tmp/dotdrop-test-desktop-xfce"
+
+  test-desktop-kde:
+    include:
+      - target-desktop-kde
+    variables:
+      INSTALL_HOME: "/tmp/dotdrop-test-desktop-kde"
+
+  test-desktop-sway:
+    include:
+      - target-desktop-sway
+    variables:
+      INSTALL_HOME: "/tmp/dotdrop-test-desktop-sway"
+
+  test-desktop-lxde:
+    include:
+      - target-desktop-lxde
+    variables:
+      INSTALL_HOME: "/tmp/dotdrop-test-desktop-lxde"
+
+  test-raspi:
+    include:
+      - target-raspi
+    variables:
+      INSTALL_HOME: "/tmp/dotdrop-test-raspi"
+
+  test-linac:
+    include:
+      - target-linac
+    variables:
+      INSTALL_HOME: "/tmp/dotdrop-test-linac"

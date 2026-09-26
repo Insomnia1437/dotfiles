@@ -36,3 +36,4 @@ wget
 xz-utils
 zip
 zsh
+lm-sensors

@@ -23,16 +23,9 @@ sudo apt-get update
 xargs -a packages/debian.txt sudo apt-get install -y
 ```
 
-The dotdrop install action clones fzf into `~/.fzf`; the shell configuration
-always uses that copy and its built-in walker. `bat`/`batcat` is optional for
-file previews, with an automatic fallback to `cat`.
-
-fzf is pinned to version `0.65.2` for cross-platform compatibility. Change the
-`FZF_VERSION` variable in `config.yaml` to select another release (with or
-without the leading `v`), then run the normal install command:
-
+##### Raspberry Pi OS
 ```shell
-dotdrop install -p profile_name
+cat packages/debian.txt packages/raspi.txt | xargs sudo apt-get install -y
 ```
 
 #### Arch Linux / Manjaro
@@ -57,21 +50,26 @@ sudo dnf install epel-release -y
 xargs -a packages/rhel-epel.txt sudo dnf --enablerepo=epel,crb install -y
 ```
 
+#### Fedora
 For the Fedora Sway target, install its desktop packages as well:
 
 ```shell
 xargs -a packages/fedora-sway.txt sudo dnf install -y
 ```
 
+
+
+#### dotdrop install
+
+The macOS and Debian manifests install Dotdrop from the system package manager.
+On systems without a packaged Dotdrop, use the embedded submodule:
+
 ```shell
 pip3 install --user -r dotdrop/requirements.txt
 ./dotdrop.sh profiles
 ```
 
-#### Others
-
-The macOS and Debian manifests install Dotdrop from the system package manager.
-On systems without a packaged Dotdrop, use the embedded submodule:
+or
 
 ```shell
 python3 -m venv ~/.local/share/dotdrop-venv
@@ -148,6 +146,7 @@ Package lists used when bootstrapping a new machine are stored under
 ```text
 packages/Brewfile
 packages/debian.txt
+packages/raspi.txt
 packages/arch.txt
 packages/fedora-sway.txt
 packages/rhel.txt

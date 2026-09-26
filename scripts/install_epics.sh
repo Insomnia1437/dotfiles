@@ -68,7 +68,7 @@ MRFIOC2_DOWNLOAD_URL="https://github.com/epics-modules/${MRFIOC2_NAME}/archive/r
 
 # iocStats related variables
 IOCSTATS_NAME="iocStats"
-IOCSTATS_VERSION="4.0.0"
+IOCSTATS_VERSION="4.0.1"
 IOCSTATS_ARCHIVE_NAME="${IOCSTATS_NAME}-${IOCSTATS_VERSION}.tar.gz"
 IOCSTATS_FOLDER_NAME="${IOCSTATS_NAME}-${IOCSTATS_VERSION}"
 IOCSTATS_DOWNLOAD_URL="https://github.com/epics-modules/${IOCSTATS_NAME}/archive/refs/tags/${IOCSTATS_VERSION}.tar.gz"
@@ -177,16 +177,16 @@ set_epics_host_arch() {
     case "$os_type" in
         "Linux")
             case "$arch_type" in
-                "x86_64")
+                x86_64)
                     EPICS_HOST_ARCH="linux-x86_64"
                     ;;
-                "i*86")
+                i*86)
                     EPICS_HOST_ARCH="linux-x86"
                     ;;
-                "arm*")
+                arm*)
                     EPICS_HOST_ARCH="linux-arm"
                     ;;
-                "aarch64")
+                aarch64*)
                     EPICS_HOST_ARCH="linux-aarch64"
                     ;;
                 *)

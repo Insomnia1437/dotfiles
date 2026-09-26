@@ -19,11 +19,6 @@ export DOTFILES_PLATFORM_OVERRIDE
 # Detect the current host at runtime.
 source ~/.config/common/runtime-platform.sh
 
-# both for bash and zsh
-source ~/.config/common/alias.sh
-source ~/.config/common/export.sh
-source ~/.config/common/proxy.sh
-
 platform_config="${HOME}/.config/common/platform.d/${DOTFILES_PLATFORM_GROUP}.sh"
 if [ -r "$platform_config" ]; then
     source "$platform_config"
@@ -35,6 +30,11 @@ if [ -r "$site_config" ]; then
     source "$site_config"
 fi
 unset site_config
+
+# both for bash and zsh
+source ~/.config/common/alias.sh
+source ~/.config/common/export.sh
+source ~/.config/common/proxy.sh
 
 if [ -f ~/.fzf.sh ]; then
     source ~/.fzf.sh
@@ -48,10 +48,6 @@ if [ -n "${FZF_BIN:-}" ]; then
     fi
 fi
 
-
-# enable epics env in local.sh, this gives me choice to use other epics
-# e.g., echo "epics708" >> ~/.config/common/epics.sh
-# source ~/.config/common/epics.sh
 # pyenv should be the last
 if [ -f ~/.pyenv.sh ]; then
     source ~/.pyenv.sh

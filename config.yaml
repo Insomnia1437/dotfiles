@@ -317,6 +317,11 @@ profiles:
       - f_konsole_theme
       - f_locale_conf
 
+  desktop-gnome:
+    dotfiles:
+      # - f_gnome_terminal_theme
+      - f_locale_conf
+
   desktop-sway:
     dotfiles:
       - f_locale_conf
@@ -361,6 +366,12 @@ profiles:
       - feature-git
       - feature-alacritty
       - desktop-sway
+  target-desktop-gnome:
+    include:
+      - bundle-cli
+      - feature-git
+      - feature-alacritty
+      - desktop-gnome
 
   target-vps:
     include:

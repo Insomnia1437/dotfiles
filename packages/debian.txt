@@ -16,6 +16,7 @@ jq
 less
 libreadline-dev
 libtirpc-dev
+re2c
 locales
 ninja-build
 openssh-client

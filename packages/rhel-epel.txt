@@ -1,4 +1,5 @@
 libtirpc-devel
+re2c
 screen
 bat
 fastfetch

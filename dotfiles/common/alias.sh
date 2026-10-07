@@ -36,9 +36,9 @@ alias   path='echo -e ${PATH//:/\\n}'
 
 # ps related
 alias psd="ps -eo stat,pid,user,wchan:20,comm,args | awk 'NR==1 || \$1 ~ /^D/'"
-alias psz="ps -eo stat,pidid,user,comm | awk 'NR==1 || \$1 ~ /^Z/'"
-alias pscpu="ps -eo pidid,user,pcpu,pmem,stat,comm --sort=-pcpu | head -n 11"
-alias psmem="ps -eo pidid,user,pmem,rss,vsz,comm --sort=-rss | head -n 11"
+alias psz="ps -eo stat,pid,ppid,user,comm | awk 'NR==1 || \$1 ~ /^Z/'"
+alias pscpu="ps -eo pid,ppid,user,pcpu,pmem,stat,comm --sort=-pcpu | head -n 11"
+alias psmem="ps -eo pid,ppid,user,pmem,rss,vsz,comm --sort=-rss | head -n 11"
 alias psforest="ps aux --forest"
 alias psnew="ps -eo pid,user,lstart,etimes,comm,args --sort=-etimes | head -n 15"
 alias psold="ps -eo pid,user,etime,comm,args --sort=-etimes | tail -n +2 | head -n 15"

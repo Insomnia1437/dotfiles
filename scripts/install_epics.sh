@@ -101,6 +101,7 @@ MODULE_SELECTIONS=() # Array to store Y/N choices, parallel to MODULE_KEYS
 
 # for EPICS Version Selection
 EPICS_VERSIONS_LIST=(
+    "7.0.11"   # Typical URL: https://epics.anl.gov/download/base/base-7.0.11.tar.gz
     "7.0.10"   # Typical URL: https://epics.anl.gov/download/base/base-7.0.10.tar.gz
     "7.0.9"    # Typical URL: https://epics.anl.gov/download/base/base-7.0.9.tar.gz
     "7.0.8"  # Typical URL: https://epics.anl.gov/download/base/base-7.0.8.tar.gz
